@@ -22,6 +22,12 @@
 <button onclick="loadData()">불러오기</button>
 <ul id="list"></ul>
 
+<hr>
+
+<h2>관리자 페이지</h2>
+<button onclick="loadAdmin()">강사 목록 불러오기</button>
+<ul id="adminList"></ul>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
@@ -39,7 +45,8 @@ async function submitForm() {
       email: document.getElementById('email').value,
       region: document.getElementById('region').value,
       intro: document.getElementById('intro').value,
-      public_status: '검토중'
+      public_status: '검토중',
+      show_profile: true
     }])
 
   if (error) {
@@ -53,6 +60,7 @@ async function loadData() {
   const { data, error } = await supabaseClient
     .from('instructors')
     .select('*')
+    .eq('public_status', '공개')
 
   if (error) {
     alert("불러오기 실패: " + error.message)
@@ -63,7 +71,7 @@ async function loadData() {
   list.innerHTML = ''
 
   if (!data || data.length === 0) {
-    list.innerHTML = '<li>데이터 없음</li>'
+    list.innerHTML = '<li>공개된 강사가 없습니다.</li>'
     return
   }
 
@@ -73,52 +81,51 @@ async function loadData() {
     list.appendChild(li)
   })
 }
-<hr>
-<h2>관리자 페이지</h2>
-<button onclick="loadAdmin()">강사 목록 불러오기</button>
-<ul id="adminList"></ul>
-  
+
 async function loadAdmin() {
   const { data, error } = await supabaseClient
     .from('instructors')
     .select('*')
 
   if (error) {
-    alert("관리자 불러오기 실패")
+    alert("관리자 불러오기 실패: " + error.message)
     return
   }
 
   const list = document.getElementById('adminList')
   list.innerHTML = ''
 
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li>등록된 강사가 없습니다.</li>'
+    return
+  }
+
   data.forEach(item => {
     const li = document.createElement('li')
 
     li.innerHTML = `
-      ${item.name} / ${item.region} / 상태: ${item.public_status}
+      ${item.name || '-'} / ${item.region || '-'} / 상태: ${item.public_status || '-'}
       <button onclick="approve('${item.id}')">승인</button>
     `
 
     list.appendChild(li)
   })
 }
-  async function approve(id) {
+
+async function approve(id) {
   const { error } = await supabaseClient
     .from('instructors')
     .update({ public_status: '공개' })
     .eq('id', id)
 
   if (error) {
-    alert("승인 실패")
+    alert("승인 실패: " + error.message)
   } else {
     alert("공개 완료")
     loadAdmin()
   }
 }
-  const { data } = await supabaseClient
-  .from('instructors')
-  .select('*')
-  .eq('public_status', '공개')
 </script>
+
 </body>
 </html>
