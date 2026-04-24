@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>강사뱅크</title>
+  <title>성인권 교육 강사뱅크</title>
 </head>
 <body>
 
@@ -39,6 +39,18 @@
 
 <hr>
 
+<h2>관리자 로그인</h2>
+
+<input id="adminEmail" placeholder="관리자 이메일"><br><br>
+<input id="adminPassword" type="password" placeholder="관리자 비밀번호"><br><br>
+
+<button onclick="adminLogin()">로그인</button>
+<button onclick="adminLogout()">로그아웃</button>
+
+<p id="loginStatus">로그인 상태: 미로그인</p>
+
+<hr>
+
 <h2>관리자 페이지</h2>
 
 <button onclick="loadAdmin()">강사 목록 불러오기</button>
@@ -56,6 +68,39 @@ const supabaseClient = window.supabase.createClient(
 
 let adminData = []
 
+async function checkLogin() {
+  const { data } = await supabaseClient.auth.getSession()
+  const user = data.session?.user
+
+  document.getElementById('loginStatus').innerText =
+    user ? "로그인 상태: " + user.email : "로그인 상태: 미로그인"
+
+  return !!user
+}
+
+async function adminLogin() {
+  const email = document.getElementById('adminEmail').value
+  const password = document.getElementById('adminPassword').value
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) {
+    alert("로그인 실패: " + error.message)
+  } else {
+    alert("로그인 완료")
+    checkLogin()
+  }
+}
+
+async function adminLogout() {
+  await supabaseClient.auth.signOut()
+  alert("로그아웃 완료")
+  checkLogin()
+}
+
 async function submitForm() {
   const { error } = await supabaseClient
     .from('instructors')
@@ -65,9 +110,9 @@ async function submitForm() {
       email: document.getElementById('email').value,
       region: document.getElementById('region').value,
       main_topic: document.getElementById('main_topic').value,
-      targets: document.getElementById('targets').value.split(',').map(v => v.trim()),
-      types: document.getElementById('types').value.split(',').map(v => v.trim()),
-      specialties: document.getElementById('specialties').value.split(',').map(v => v.trim()),
+      targets: document.getElementById('targets').value.split(',').map(v => v.trim()).filter(Boolean),
+      types: document.getElementById('types').value.split(',').map(v => v.trim()).filter(Boolean),
+      specialties: document.getElementById('specialties').value.split(',').map(v => v.trim()).filter(Boolean),
       intro: document.getElementById('intro').value,
       show_phone: document.getElementById('show_phone').checked,
       show_email: document.getElementById('show_email').checked,
@@ -108,7 +153,7 @@ async function loadData() {
 
     return (
       (!keyword || text.includes(keyword)) &&
-      (!region || item.region.includes(region)) &&
+      (!region || (item.region || '').includes(region)) &&
       (!target || (item.targets || []).join(' ').includes(target)) &&
       (!type || (item.types || []).join(' ').includes(type))
     )
@@ -138,7 +183,18 @@ async function loadData() {
   })
 }
 
+async function requireAdmin() {
+  const loggedIn = await checkLogin()
+  if (!loggedIn) {
+    alert("관리자 로그인이 필요합니다.")
+    return false
+  }
+  return true
+}
+
 async function loadAdmin() {
+  if (!(await requireAdmin())) return
+
   const { data, error } = await supabaseClient
     .from('instructors')
     .select('*')
@@ -181,6 +237,8 @@ async function loadAdmin() {
 }
 
 async function approve(id) {
+  if (!(await requireAdmin())) return
+
   const { error } = await supabaseClient
     .from('instructors')
     .update({ public_status: '공개' })
@@ -194,6 +252,8 @@ async function approve(id) {
 }
 
 async function hideInstructor(id) {
+  if (!(await requireAdmin())) return
+
   const { error } = await supabaseClient
     .from('instructors')
     .update({ public_status: '비공개' })
@@ -207,6 +267,8 @@ async function hideInstructor(id) {
 }
 
 async function editInstructor(id) {
+  if (!(await requireAdmin())) return
+
   const item = adminData.find(v => v.id === id)
   if (!item) return
 
@@ -231,6 +293,7 @@ async function editInstructor(id) {
 }
 
 async function deleteInstructor(id) {
+  if (!(await requireAdmin())) return
   if (!confirm("정말 삭제하시겠습니까?")) return
 
   const { error } = await supabaseClient
@@ -245,7 +308,9 @@ async function deleteInstructor(id) {
   }
 }
 
-function downloadCSV() {
+async function downloadCSV() {
+  if (!(await requireAdmin())) return
+
   if (!adminData || adminData.length === 0) {
     alert("먼저 관리자 목록을 불러오세요.")
     return
@@ -282,6 +347,8 @@ function downloadCSV() {
 
   URL.revokeObjectURL(url)
 }
+
+checkLogin()
 </script>
 
 </body>
