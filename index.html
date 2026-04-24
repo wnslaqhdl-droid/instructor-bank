@@ -50,12 +50,22 @@ async function submitForm() {
 }
 
 async function loadData() {
-  const { data } = await supabase
+  const { data, error } = await supabaseClient
     .from('instructors')
     .select('*')
 
+  if (error) {
+    alert("불러오기 실패: " + error.message)
+    return
+  }
+
   const list = document.getElementById('list')
   list.innerHTML = ''
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li>데이터 없음</li>'
+    return
+  }
 
   data.forEach(item => {
     const li = document.createElement('li')
