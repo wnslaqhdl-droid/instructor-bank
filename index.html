@@ -73,7 +73,52 @@ async function loadData() {
     list.appendChild(li)
   })
 }
-</script>
+<hr>
+<h2>관리자 페이지</h2>
+<button onclick="loadAdmin()">강사 목록 불러오기</button>
+<ul id="adminList"></ul>
+  
+async function loadAdmin() {
+  const { data, error } = await supabaseClient
+    .from('instructors')
+    .select('*')
 
+  if (error) {
+    alert("관리자 불러오기 실패")
+    return
+  }
+
+  const list = document.getElementById('adminList')
+  list.innerHTML = ''
+
+  data.forEach(item => {
+    const li = document.createElement('li')
+
+    li.innerHTML = `
+      ${item.name} / ${item.region} / 상태: ${item.public_status}
+      <button onclick="approve('${item.id}')">승인</button>
+    `
+
+    list.appendChild(li)
+  })
+}
+  async function approve(id) {
+  const { error } = await supabaseClient
+    .from('instructors')
+    .update({ public_status: '공개' })
+    .eq('id', id)
+
+  if (error) {
+    alert("승인 실패")
+  } else {
+    alert("공개 완료")
+    loadAdmin()
+  }
+}
+  const { data } = await supabaseClient
+  .from('instructors')
+  .select('*')
+  .eq('public_status', '공개')
+</script>
 </body>
 </html>
