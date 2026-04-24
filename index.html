@@ -1,12 +1,69 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>강사뱅크</title>
-  </head>
-  <body>
-    <h1>강사뱅크 테스트</h1>
-    <p>배포 확인용</p>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>강사 등록</title>
+</head>
+<body>
+
+<h2>강사 등록</h2>
+
+<input id="name" placeholder="이름"><br><br>
+<input id="phone" placeholder="전화번호"><br><br>
+<input id="email" placeholder="이메일"><br><br>
+<input id="region" placeholder="지역"><br><br>
+<textarea id="intro" placeholder="소개"></textarea><br><br>
+
+<button onclick="submitForm()">등록하기</button>
+
+<hr>
+
+<h2>강사 목록</h2>
+<button onclick="loadData()">불러오기</button>
+<ul id="list"></ul>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const supabase = supabase.createClient(
+  "https://bvjyvmbdvusbmrjckeuy.supabase.co",
+  "sb_publishable_DtORcLUabLDYYVyh62wLHw_W9ZCmSxo"
+)
+
+async function submitForm() {
+  const { error } = await supabase
+    .from('instructors')
+    .insert([{
+      name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      region: document.getElementById('region').value,
+      intro: document.getElementById('intro').value,
+      public_status: '검토중'
+    }])
+
+  if (error) {
+    alert("저장 실패: " + error.message)
+  } else {
+    alert("등록 완료")
+  }
+}
+
+async function loadData() {
+  const { data } = await supabase
+    .from('instructors')
+    .select('*')
+
+  const list = document.getElementById('list')
+  list.innerHTML = ''
+
+  data.forEach(item => {
+    const li = document.createElement('li')
+    li.innerText = item.name + " / " + item.region
+    list.appendChild(li)
+  })
+}
+</script>
+
+</body>
 </html>
