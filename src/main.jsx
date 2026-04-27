@@ -11,8 +11,28 @@ function Field({ label, required, help, children }) {
 }
 
 function CheckboxGroup({ options, values, onChange }) {
-  const toggle = (option) => values.includes(option) ? onChange(values.filter((v) => v !== option)) : onChange([...values, option]);
-  return <div className="check-grid">{options.map((option) => <label className="check" key={option}><input type="checkbox" checked={values.includes(option)} onChange={() => toggle(option)} />{option}</label>)}</div>;
+  function toggle(option) {
+    if (values.includes(option)) {
+      onChange(values.filter((v) => v !== option));
+    } else {
+      onChange([...values, option]);
+    }
+  }
+
+  return (
+    <div className="check-grid">
+      {options.map((option) => (
+        <label key={option} className="check">
+          <input
+            type="checkbox"
+            checked={values.includes(option)}
+            onChange={() => toggle(option)}
+          />
+          <span>{option}</span>
+        </label>
+      ))}
+    </div>
+  );
 }
 
 function Repeater({ title, help, items, setItems, emptyItem, render }) {
