@@ -228,7 +228,13 @@ function SearchPage(){
     </button>
   </div>
 </div>
- </section><div className="list">{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
+ </section><div className="list">  <div className="compact-row header-row">
+    <span className="compact-name">이름</span>
+    <span>한줄소개</span>
+    <span className="col-region">활동지역</span>
+    <span className="col-target">교육대상</span>
+    <span className="col-type">교육유형</span>
+  </div>{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
 >
   <div className="compact-row">
     <span className="compact-name">{item.name || "-"}</span>
