@@ -64,7 +64,7 @@ function RegisterPage() {
     if (validWelfare.length) { const { error } = await supabase.from("welfare_experiences").insert(validWelfare); if (error) setError("실무경력 저장 오류: " + error.message); }
     if (validLectures.length) { const { error } = await supabase.from("lecture_experiences").insert(validLectures); if (error) setError("강의경력 저장 오류: " + error.message); }
     setMessage("등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다.");
-    setForm(clone(emptyInstructor)); setTrainingCourses([clone(emptyTraining)]); setWelfareExperiences([clone(emptyWelfare)]); setLectureExperiences([clone(emptyLecture)]);
+    setForm(clone(emptyInstructor)); setTrainingCourses([clone(emptyTraining)]); setWelfareExperiences([clone(emptyWelfare)]); setLectureExperiences([clone(emptyLecture)]);window.scrollTo({top: 0,  behavior: "smooth"});
   }
 
   return <div><section className="hero"><h1>성인권 교육 강사 등록</h1><p>입력하신 정보는 관리자 검토 후 강사뱅크에 공개됩니다. 실무경력 및 강의경력은 강사 본인의 자기신고 내용을 기준으로 관리되며, 중앙센터는 발달장애인 성인권 부모교육지원사업 내 양성과정 수료 여부만 확인합니다.</p></section>{message ? <div className="notice">{message}</div> : null}{error ? <div className="error">{error}</div> : null}
