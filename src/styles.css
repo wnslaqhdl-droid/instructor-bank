@@ -93,10 +93,14 @@ th{background:#f8fafc;color:#334155}
 /* 카드 선택 강조: 지금 보고 있는 강사 표시 */
 .instructor-card.active {  border-color: #2563eb;  background: #f0f7ff;}
 
-/* 검색페이지에서 이름/지역/대상 줄 꾸미기. 위에서부터 글씨폰트, 배경색, 모서리 둥글게, 위아래-좌우 여백 */
-.header-row {
-  font-weight: 700;
-  background: #f1f5f9;
-  border-radius: 10px;
-  padding: 8px 12px;
-}
+/* 검색페이지에서 이름/지역/대상 줄 꾸미기. 글씨폰트, 배경색, 모서리 둥글게, 위아래-좌우 여백 순 */
+.header-row { font-weight: 700;   background: #f1f5f9;  border-radius: 10px;  padding: 8px 12px;}
+
+/* 검색페이지에서 이름/지역/대상 부분 크기 조정 */
+.compact-row {  display: grid;  grid-template-columns:    120px    minmax(120px, 2fr)    minmax(100px, 1fr)    minmax(120px, 1fr)    minmax(100px, 1fr);  gap: 12px;  align-items: center;}
+
+/* 텍스트 넘침 방지 */
+.compact-row span {  overflow: hidden;  text-overflow: ellipsis;  white-space: nowrap;}
+
+/* 모바일 대응 */
+@media (max-width: 700px) {  .compact-row {    grid-template-columns: 120px 1fr 1fr;  }}
