@@ -75,7 +75,51 @@ function AdminPage(){
  async function deleteItem(id){ if(!confirm("정말 삭제하시겠습니까?"))return; const {error}=await supabase.from("instructors").delete().eq("id",id); if(error)setMessage("삭제 실패: "+error.message); else{setMessage("삭제 완료"); loadAdmin();} }
  async function quickEdit(item){ const name=prompt("성명",item.name||""); if(name===null)return; const region=prompt("거주지역",item.region||""); if(region===null)return; const main_topic=prompt("주요 강의주제",item.main_topic||""); if(main_topic===null)return; const {error}=await supabase.from("instructors").update({name,region,main_topic}).eq("id",item.id); if(error)setMessage("수정 실패: "+error.message); else{setMessage("수정 완료"); loadAdmin();} }
  function downloadCSV(){ if(!items.length){alert("먼저 목록을 불러오세요.");return;} const headers=["성명","전화","이메일","지역","활동지역","주요강의주제","교육대상","교육유형","강의분야","그외주제","공개상태"]; const rows=items.map((item)=>[item.name||"",item.phone||"",item.email||"",item.region||"",(item.activity_regions||[]).join(", "),item.main_topic||"",(item.targets||[]).join(", "),(item.types||[]).join(", "),(item.specialties||[]).join(", "),item.other_specialty||"",item.public_status||""]); const csv=[headers,...rows].map((row)=>row.map((v)=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n"); const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="강사목록.csv"; a.click(); URL.revokeObjectURL(url); }
- return <div><section className="hero"><h1>관리자 페이지</h1><p>관리자 로그인 후 강사 승인, 비공개, 수정, 삭제, CSV 다운로드를 수행합니다.</p></section>{message?<div className="notice">{message}</div>:null}<section className="card"><h2>관리자 로그인</h2><p className="muted small">현재 상태: {session?`${session.user.email} 로그인`:"미로그인"}</p><div className="grid grid-3"><Field label="이메일"><input value={email} onChange={(e)=>setEmail(e.target.value)}/></Field><Field label="비밀번호"><input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/></Field><div style={{display:"flex",gap:8,alignItems:"end"}}><button className="btn primary" onClick={login}>로그인</button><button className="btn" onClick={logout}>로그아웃</button></div></div></section><section className="card"><div className="actions"><button className="btn primary" onClick={loadAdmin}>목록 불러오기</button><button className="btn" onClick={downloadCSV}>CSV 다운로드</button></div><div className="table-wrap"><table><thead><tr><th>성명</th><th>지역</th><th>주요 주제</th><th>상태</th><th>연락처</th><th>관리</th></tr></thead><tbody>{items.map((item)=><tr key={item.id}><td>{item.name||"-"}</td><td>{item.region||"-"}</td><td>{item.main_topic||"-"}</td><td>{item.public_status||"-"}</td><td>{item.phone||"-"}<br/>{item.email||"-"}</td><td><button className="btn success" onClick={()=>updateStatus(item.id,"공개")}>승인</button> <button className="btn" onClick={()=>updateStatus(item.id,"비공개")}>비공개</button> <button className="btn" onClick={()=>quickEdit(item)}>수정</button> <button className="btn danger" onClick={()=>deleteItem(item.id)}>삭제</button></td></tr>)}{!items.length?<tr><td colSpan="6" className="muted">목록을 불러오세요.</td></tr>:null}</tbody></table></div></section></div>;
+ return <div><section className="hero"><h1>관리자 페이지</h1><p>관리자 로그인 후 강사 승인, 비공개, 수정, 삭제, CSV 다운로드를 수행합니다.</p></section>{message?<div className="notice">{message}</div>:null}<section className="card"><h2>관리자 로그인</h2><p className="muted small">현재 상태: {session?`${session.user.email} 로그인`:"미로그인"}</p><div className="grid grid-3"><Field label="이메일"><input value={email} onChange={(e)=>setEmail(e.target.value)}/></Field><Field label="비밀번호"><input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/></Field><div style={{display:"flex",gap:8,alignItems:"end"}}><button className="btn primary" onClick={login}>로그인</button><button className="btn" onClick={logout}>로그아웃</button></div></div></section><section className="card"><div className="actions"><button className="btn primary" onClick={loadAdmin}>목록 불러오기</button><button className="btn" onClick={downloadCSV}>CSV 다운로드</button></div><div className="table-wrap"><table><thead><tr><th>성명</th><th>지역</th><th>주요 주제</th><th>양성과정</th><th>실무경력</th><th>강의경력</th><th>상태</th><th>연락처</th><th>관리</th></tr></thead><tbody>{items.map((item)=><tr key={item.id}>
+  <td>{item.name || "-"}</td>
+  <td>{item.region || "-"}</td>
+  <td>{item.main_topic || "-"}</td>
+
+  <td>
+    {item.training_courses?.length
+      ? item.training_courses.map((c) => (
+          <div key={c.id}>
+            {c.course_name || "-"} / {c.institution || "-"} / {c.completion_year || "-"}
+          </div>
+        ))
+      : "-"}
+  </td>
+
+  <td>
+    {item.welfare_experiences?.length
+      ? item.welfare_experiences.map((w) => (
+          <div key={w.id}>
+            {w.organization || "-"} / {w.role || "-"}
+          </div>
+        ))
+      : "-"}
+  </td>
+
+  <td>
+    {item.lecture_experiences?.length
+      ? item.lecture_experiences.map((l) => (
+          <div key={l.id}>
+            {l.organization || "-"} / {l.topic || "-"} / {l.count || "-"}
+          </div>
+        ))
+      : "-"}
+  </td>
+
+  <td>{item.public_status || "-"}</td>
+  <td>{item.phone || "-"}<br />{item.email || "-"}</td>
+
+  <td>
+    <button className="btn success" onClick={() => updateStatus(item.id, "공개")}>승인</button>{" "}
+    <button className="btn" onClick={() => updateStatus(item.id, "비공개")}>비공개</button>{" "}
+    <button className="btn" onClick={() => quickEdit(item)}>수정</button>{" "}
+    <button className="btn danger" onClick={() => deleteItem(item.id)}>삭제</button>
+  </td>
+</tr>)}{!items.length?<tr><td colSpan="9" className="muted">목록을 불러오세요.</td></tr>:null}</tbody></table></div></section></div>;
 }
 function App(){
   const [page,setPage]=useState(()=>window.location.hash.replace("#","")||"search")
