@@ -80,3 +80,7 @@ th{background:#f8fafc;color:#334155}
 
 /* 펼침 시 배경 강조, 현재 선택된 카드 표시 */
 .instructor-card.active {  border-color: #2563eb;  background: #f0f7ff;}
+
+/* 이메일이랑 전화번호가 클릭 가능함을 보여주게 하는 효과_색 변경 및 가져다댈 때 밑줄 */
+.detail-box a {  color: #2563eb;  text-decoration: none;  font-weight: 500;}
+.detail-box a:hover {  text-decoration: underline;}
