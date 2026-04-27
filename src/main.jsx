@@ -78,6 +78,27 @@ function AdminPage(){
  return <div><section className="hero"><h1>관리자 페이지</h1><p>관리자 로그인 후 강사 승인, 비공개, 수정, 삭제, CSV 다운로드를 수행합니다.</p></section>{message?<div className="notice">{message}</div>:null}<section className="card"><h2>관리자 로그인</h2><p className="muted small">현재 상태: {session?`${session.user.email} 로그인`:"미로그인"}</p><div className="grid grid-3"><Field label="이메일"><input value={email} onChange={(e)=>setEmail(e.target.value)}/></Field><Field label="비밀번호"><input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/></Field><div style={{display:"flex",gap:8,alignItems:"end"}}><button className="btn primary" onClick={login}>로그인</button><button className="btn" onClick={logout}>로그아웃</button></div></div></section><section className="card"><div className="actions"><button className="btn primary" onClick={loadAdmin}>목록 불러오기</button><button className="btn" onClick={downloadCSV}>CSV 다운로드</button></div><div className="table-wrap"><table><thead><tr><th>성명</th><th>지역</th><th>주요 주제</th><th>상태</th><th>연락처</th><th>관리</th></tr></thead><tbody>{items.map((item)=><tr key={item.id}><td>{item.name||"-"}</td><td>{item.region||"-"}</td><td>{item.main_topic||"-"}</td><td>{item.public_status||"-"}</td><td>{item.phone||"-"}<br/>{item.email||"-"}</td><td><button className="btn success" onClick={()=>updateStatus(item.id,"공개")}>승인</button> <button className="btn" onClick={()=>updateStatus(item.id,"비공개")}>비공개</button> <button className="btn" onClick={()=>quickEdit(item)}>수정</button> <button className="btn danger" onClick={()=>deleteItem(item.id)}>삭제</button></td></tr>)}{!items.length?<tr><td colSpan="6" className="muted">목록을 불러오세요.</td></tr>:null}</tbody></table></div></section></div>;
 }
 
-function App(){ const [page,setPage]=useState(()=>window.location.hash.replace("#","")||"search"); function go(next){window.location.hash=next;setPage(next)} useEffect(()=>{const onHash=()=>setPage(window.location.hash.replace("#","")||"search");window.addEventListener("hashchange",onHash);return()=>window.removeEventListener("hashchange",onHash)},[]); return <div className="app"><nav className="nav"><div className="nav-inner"><div className="brand">성인권 교육 강사뱅크</div><div className="nav-links"><button className={page==="search"?"active":""} onClick={()=>go("search")}>검색</button><button className={page==="register"?"active":""} onClick={()=>go("register")}>강사 등록</button><button className={page==="admin"?"active":""} onClick={()=>go("admin")}>관리자</button></div></div></nav><main className="container">{page==="search"?<SearchPage/>:null}{page==="register"?<RegisterPage/>:null}{page==="admin"?<AdminPage/>:null}</main></div> }
+function App(){
+  const [page,setPage]=useState(()=>window.location.hash.replace("#","")||"search"); function go(next){window.location.hash=next;setPage(next)} useEffect(()=>{const onHash=()=>setPage(window.location.hash.replace("#","")||"search");window.addEventListener("hashchange",onHash);return()=>window.removeEventListener("hashchange",onHash)},[]); return <div className="app"><nav className="nav"><div className="nav-inner"><div className="brand">성인권 교육 강사뱅크</div><div className="nav-links"><button className={page==="search"?"active":""} onClick={()=>go("search")}>검색</button><button className={page==="register"?"active":""} onClick={()=>go("register")}>강사 등록</button><button className={page==="admin"?"active":""} onClick={()=>go("admin")}>관리자</button></div></div></nav><main className="container">{page==="search"?<SearchPage/>:null}{page==="register"?<RegisterPage/>:null}{page==="admin"?<AdminPage/>:null}</main></div> 
+const [isAdmin, setIsAdmin] = useState(false)
+const [user, setUser] = useState(null)
+  useEffect(() => {
+  async function checkUser() {
+    const { data: { user } } = await supabase.auth.getUser()
+    setUser(user)
+
+    if (!user) return
+
+    const { data } = await supabase
+      .from('admin_users')
+      .select('*')
+      .eq('user_id', user.id)
+      .single()
+
+    if (data) setIsAdmin(true)
+  }
+
+  checkUser()
+}, [])
 
 createRoot(document.getElementById("root")).render(<App />);
