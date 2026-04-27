@@ -65,61 +65,279 @@ function SearchPage(){
 }
 
 function AdminPage(){
- const [session,setSession]=useState(null); const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const [items,setItems]=useState([]); const [message,setMessage]=useState("");
- async function refreshSession(){ const {data}=await supabase.auth.getSession(); setSession(data.session); }
- useEffect(()=>{refreshSession()},[]);
- async function login(){ const {error}=await supabase.auth.signInWithPassword({email,password}); if(error)setMessage("로그인 실패: "+error.message); else{setMessage("로그인 완료"); refreshSession();} }
- async function logout(){ await supabase.auth.signOut(); setSession(null); setItems([]); setMessage("로그아웃 완료"); }
- async function loadAdmin(){ if(!session){setMessage("관리자 로그인이 필요합니다.");return;} const {data,error}=await supabase.from("instructors").select(`*,training_courses(*),welfare_experiences(*),lecture_experiences(*)`).order("created_at",{ascending:false}); if(error)setMessage("조회 실패: "+error.message); else setItems(data||[]); }
- async function updateStatus(id,status){ const {error}=await supabase.from("instructors").update({public_status:status}).eq("id",id); if(error)setMessage("상태 변경 실패: "+error.message); else{setMessage(`${status} 처리 완료`); loadAdmin();} }
- async function deleteItem(id){ if(!confirm("정말 삭제하시겠습니까?"))return; const {error}=await supabase.from("instructors").delete().eq("id",id); if(error)setMessage("삭제 실패: "+error.message); else{setMessage("삭제 완료"); loadAdmin();} }
- async function quickEdit(item){ const name=prompt("성명",item.name||""); if(name===null)return; const region=prompt("거주지역",item.region||""); if(region===null)return; const main_topic=prompt("주요 강의주제",item.main_topic||""); if(main_topic===null)return; const {error}=await supabase.from("instructors").update({name,region,main_topic}).eq("id",item.id); if(error)setMessage("수정 실패: "+error.message); else{setMessage("수정 완료"); loadAdmin();} }
- function downloadCSV(){ if(!items.length){alert("먼저 목록을 불러오세요.");return;} const headers=["성명","전화","이메일","지역","활동지역","주요강의주제","교육대상","교육유형","강의분야","그외주제","공개상태"]; const rows=items.map((item)=>[item.name||"",item.phone||"",item.email||"",item.region||"",(item.activity_regions||[]).join(", "),item.main_topic||"",(item.targets||[]).join(", "),(item.types||[]).join(", "),(item.specialties||[]).join(", "),item.other_specialty||"",item.public_status||""]); const csv=[headers,...rows].map((row)=>row.map((v)=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n"); const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="강사목록.csv"; a.click(); URL.revokeObjectURL(url); }
- return <div><section className="hero"><h1>관리자 페이지</h1><p>관리자 로그인 후 강사 승인, 비공개, 수정, 삭제, CSV 다운로드를 수행합니다.</p></section>{message?<div className="notice">{message}</div>:null}<section className="card"><h2>관리자 로그인</h2><p className="muted small">현재 상태: {session?`${session.user.email} 로그인`:"미로그인"}</p><div className="grid grid-3"><Field label="이메일"><input value={email} onChange={(e)=>setEmail(e.target.value)}/></Field><Field label="비밀번호"><input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/></Field><div style={{display:"flex",gap:8,alignItems:"end"}}><button className="btn primary" onClick={login}>로그인</button><button className="btn" onClick={logout}>로그아웃</button></div></div></section><section className="card"><div className="actions"><button className="btn primary" onClick={loadAdmin}>목록 불러오기</button><button className="btn" onClick={downloadCSV}>CSV 다운로드</button></div><div className="table-wrap"><table><thead><tr><th>성명</th><th>지역</th><th>주요 주제</th><th>양성과정</th><th>실무경력</th><th>강의경력</th><th>상태</th><th>연락처</th><th>관리</th></tr></thead><tbody>{items.map((item)=><tr key={item.id}>
-  <td>{item.name || "-"}</td>
-  <td>{item.region || "-"}</td>
-  <td>{item.main_topic || "-"}</td>
+  const [session,setSession]=useState(null);
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [items,setItems]=useState([]);
+  const [message,setMessage]=useState("");
+  const [editingItem,setEditingItem]=useState(null);
 
-  <td>
-    {item.training_courses?.length
-      ? item.training_courses.map((c) => (
-          <div key={c.id}>
-            {c.course_name || "-"} / {c.institution || "-"} / {c.completion_year || "-"}
+  async function refreshSession(){
+    const {data}=await supabase.auth.getSession();
+    setSession(data.session);
+  }
+
+  useEffect(()=>{refreshSession()},[]);
+
+  async function login(){
+    const {error}=await supabase.auth.signInWithPassword({email,password});
+    if(error)setMessage("로그인 실패: "+error.message);
+    else{setMessage("로그인 완료"); refreshSession();}
+  }
+
+  async function logout(){
+    await supabase.auth.signOut();
+    setSession(null);
+    setItems([]);
+    setEditingItem(null);
+    setMessage("로그아웃 완료");
+  }
+
+  async function loadAdmin(){
+    if(!session){setMessage("관리자 로그인이 필요합니다.");return;}
+
+    const {data,error}=await supabase
+      .from("instructors")
+      .select(`
+        *,
+        training_courses(*),
+        welfare_experiences(*),
+        lecture_experiences(*)
+      `)
+      .order("created_at",{ascending:false});
+
+    if(error)setMessage("조회 실패: "+error.message);
+    else setItems(data||[]);
+  }
+
+  async function updateStatus(id,status){
+    const {error}=await supabase
+      .from("instructors")
+      .update({public_status:status})
+      .eq("id",id);
+
+    if(error)setMessage("상태 변경 실패: "+error.message);
+    else{setMessage(`${status} 처리 완료`); loadAdmin();}
+  }
+
+  async function deleteItem(id){
+    if(!confirm("정말 삭제하시겠습니까?"))return;
+
+    const {error}=await supabase
+      .from("instructors")
+      .delete()
+      .eq("id",id);
+
+    if(error)setMessage("삭제 실패: "+error.message);
+    else{setMessage("삭제 완료"); loadAdmin();}
+  }
+
+  function startEdit(item){
+    setEditingItem({
+      ...item,
+      activity_regions:item.activity_regions||[],
+      targets:item.targets||[],
+      types:item.types||[],
+      specialties:item.specialties||[],
+      show_phone:!!item.show_phone,
+      show_email:!!item.show_email,
+      show_profile:!!item.show_profile
+    });
+  }
+
+  function updateEdit(key,value){
+    setEditingItem(current=>({...current,[key]:value}));
+  }
+
+  async function saveEdit(){
+    const {error}=await supabase
+      .from("instructors")
+      .update({
+        name:editingItem.name,
+        phone:editingItem.phone,
+        email:editingItem.email,
+        region:editingItem.region,
+        activity_regions:editingItem.activity_regions,
+        organization:editingItem.organization,
+        position:editingItem.position,
+        main_topic:editingItem.main_topic,
+        specialties:editingItem.specialties,
+        other_specialty:editingItem.other_specialty,
+        targets:editingItem.targets,
+        types:editingItem.types,
+        intro:editingItem.intro,
+        show_phone:editingItem.show_phone,
+        show_email:editingItem.show_email,
+        show_profile:editingItem.show_profile,
+        center_verified:editingItem.center_verified
+      })
+      .eq("id",editingItem.id);
+
+    if(error)setMessage("수정 실패: "+error.message);
+    else{
+      setMessage("수정 완료");
+      setEditingItem(null);
+      loadAdmin();
+    }
+  }
+
+  function downloadCSV(){
+    if(!items.length){alert("먼저 목록을 불러오세요.");return;}
+
+    const headers=["성명","전화","이메일","지역","활동지역","주요강의주제","교육대상","교육유형","강의분야","그외주제","공개상태"];
+    const rows=items.map((item)=>[
+      item.name||"",
+      item.phone||"",
+      item.email||"",
+      item.region||"",
+      (item.activity_regions||[]).join(", "),
+      item.main_topic||"",
+      (item.targets||[]).join(", "),
+      (item.types||[]).join(", "),
+      (item.specialties||[]).join(", "),
+      item.other_specialty||"",
+      item.public_status||""
+    ]);
+
+    const csv=[headers,...rows]
+      .map((row)=>row.map((v)=>`"${String(v).replaceAll('"','""')}"`).join(","))
+      .join("\n");
+
+    const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="강사목록.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div>
+      <section className="hero">
+        <h1>관리자 페이지</h1>
+        <p>강사 승인, 비공개, 수정, 삭제, CSV 다운로드를 수행합니다.</p>
+      </section>
+
+      {message?<div className="notice">{message}</div>:null}
+
+      <section className="card">
+        <h2>관리자 로그인</h2>
+        <p className="muted small">현재 상태: {session?`${session.user.email} 로그인`:"미로그인"}</p>
+        <div className="grid grid-3">
+          <Field label="이메일"><input value={email} onChange={(e)=>setEmail(e.target.value)}/></Field>
+          <Field label="비밀번호"><input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/></Field>
+          <div style={{display:"flex",gap:8,alignItems:"end"}}>
+            <button className="btn primary" onClick={login}>로그인</button>
+            <button className="btn" onClick={logout}>로그아웃</button>
           </div>
-        ))
-      : "-"}
-  </td>
+        </div>
+      </section>
 
-  <td>
-    {item.welfare_experiences?.length
-      ? item.welfare_experiences.map((w) => (
-          <div key={w.id}>
-            {w.organization || "-"} / {w.role || "-"}
+      {editingItem && (
+        <section className="card">
+          <h2>강사 정보 수정</h2>
+
+          <div className="grid grid-2">
+            <Field label="성명"><input value={editingItem.name||""} onChange={(e)=>updateEdit("name",e.target.value)}/></Field>
+            <Field label="연락처"><input value={editingItem.phone||""} onChange={(e)=>updateEdit("phone",e.target.value)}/></Field>
+            <Field label="이메일"><input value={editingItem.email||""} onChange={(e)=>updateEdit("email",e.target.value)}/></Field>
+            <Field label="거주지역">
+              <select value={editingItem.region||""} onChange={(e)=>updateEdit("region",e.target.value)}>
+                <option value="">선택</option>
+                {regionOptions.map(r=><option key={r} value={r}>{r}</option>)}
+              </select>
+            </Field>
+            <Field label="소속기관"><input value={editingItem.organization||""} onChange={(e)=>updateEdit("organization",e.target.value)}/></Field>
+            <Field label="직위/직업군"><input value={editingItem.position||""} onChange={(e)=>updateEdit("position",e.target.value)}/></Field>
           </div>
-        ))
-      : "-"}
-  </td>
 
-  <td>
-    {item.lecture_experiences?.length
-      ? item.lecture_experiences.map((l) => (
-          <div key={l.id}>
-            {l.organization || "-"} / {l.topic || "-"} / {l.count || "-"}
+          <Field label="활동 가능 지역">
+            <CheckboxGroup options={regionOptions} values={editingItem.activity_regions||[]} onChange={(v)=>updateEdit("activity_regions",v)}/>
+          </Field>
+
+          <Field label="교육대상">
+            <CheckboxGroup options={targetOptions} values={editingItem.targets||[]} onChange={(v)=>updateEdit("targets",v)}/>
+          </Field>
+
+          <Field label="교육유형">
+            <CheckboxGroup options={typeOptions} values={editingItem.types||[]} onChange={(v)=>updateEdit("types",v)}/>
+          </Field>
+
+          <Field label="강의 분야">
+            <CheckboxGroup options={specialtyOptions} values={editingItem.specialties||[]} onChange={(v)=>updateEdit("specialties",v)}/>
+          </Field>
+
+          <div className="grid grid-2">
+            <Field label="그 외 주제"><input value={editingItem.other_specialty||""} onChange={(e)=>updateEdit("other_specialty",e.target.value)}/></Field>
+            <Field label="주요 강의주제"><input value={editingItem.main_topic||""} onChange={(e)=>updateEdit("main_topic",e.target.value)}/></Field>
           </div>
-        ))
-      : "-"}
-  </td>
 
-  <td>{item.public_status || "-"}</td>
-  <td>{item.phone || "-"}<br />{item.email || "-"}</td>
+          <Field label="강사 소개">
+            <textarea value={editingItem.intro||""} onChange={(e)=>updateEdit("intro",e.target.value)}/>
+          </Field>
 
-  <td>
-    <button className="btn success" onClick={() => updateStatus(item.id, "공개")}>승인</button>{" "}
-    <button className="btn" onClick={() => updateStatus(item.id, "비공개")}>비공개</button>{" "}
-    <button className="btn" onClick={() => quickEdit(item)}>수정</button>{" "}
-    <button className="btn danger" onClick={() => deleteItem(item.id)}>삭제</button>
-  </td>
-</tr>)}{!items.length?<tr><td colSpan="9" className="muted">목록을 불러오세요.</td></tr>:null}</tbody></table></div></section></div>;
+          <div className="check-grid">
+            <label className="check"><input type="checkbox" checked={editingItem.show_phone} onChange={(e)=>updateEdit("show_phone",e.target.checked)}/> 연락처 공개</label>
+            <label className="check"><input type="checkbox" checked={editingItem.show_email} onChange={(e)=>updateEdit("show_email",e.target.checked)}/> 이메일 공개</label>
+            <label className="check"><input type="checkbox" checked={editingItem.show_profile} onChange={(e)=>updateEdit("show_profile",e.target.checked)}/> 프로필 공개</label>
+            <label className="check"><input type="checkbox" checked={!!editingItem.center_verified} onChange={(e)=>updateEdit("center_verified",e.target.checked)}/> 중앙센터 수료 확인</label>
+          </div>
+
+          <div className="actions">
+            <button className="btn" onClick={()=>setEditingItem(null)}>취소</button>
+            <button className="btn primary" onClick={saveEdit}>저장</button>
+          </div>
+        </section>
+      )}
+
+      <section className="card">
+        <div className="actions">
+          <button className="btn primary" onClick={loadAdmin}>목록 불러오기</button>
+          <button className="btn" onClick={downloadCSV}>CSV 다운로드</button>
+        </div>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>성명</th>
+                <th>지역</th>
+                <th>주요 주제</th>
+                <th>양성과정</th>
+                <th>실무경력</th>
+                <th>강의경력</th>
+                <th>상태</th>
+                <th>연락처</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item)=>(
+                <tr key={item.id}>
+                  <td>{item.name||"-"}</td>
+                  <td>{item.region||"-"}</td>
+                  <td>{item.main_topic||"-"}</td>
+                  <td>{item.training_courses?.length?item.training_courses.map(c=><div key={c.id}>{c.course_name||"-"} / {c.institution||"-"} / {c.completion_year||"-"}</div>):"-"}</td>
+                  <td>{item.welfare_experiences?.length?item.welfare_experiences.map(w=><div key={w.id}>{w.organization||"-"} / {w.role||"-"}</div>):"-"}</td>
+                  <td>{item.lecture_experiences?.length?item.lecture_experiences.map(l=><div key={l.id}>{l.organization||"-"} / {l.topic||"-"} / {l.count||"-"}</div>):"-"}</td>
+                  <td>{item.public_status||"-"}</td>
+                  <td>{item.phone||"-"}<br/>{item.email||"-"}</td>
+                  <td>
+                    <button className="btn success" onClick={()=>updateStatus(item.id,"공개")}>승인</button>{" "}
+                    <button className="btn" onClick={()=>updateStatus(item.id,"비공개")}>비공개</button>{" "}
+                    <button className="btn" onClick={()=>startEdit(item)}>수정</button>{" "}
+                    <button className="btn danger" onClick={()=>deleteItem(item.id)}>삭제</button>
+                  </td>
+                </tr>
+              ))}
+              {!items.length?<tr><td colSpan="9" className="muted">목록을 불러오세요.</td></tr>:null}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  )
 }
 function App(){
   const [page,setPage]=useState(()=>window.location.hash.replace("#","")||"search")
