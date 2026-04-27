@@ -138,25 +138,6 @@ function App(){
     </div>
   )
 }
-const [isAdmin, setIsAdmin] = useState(false)
-const [user, setUser] = useState(null)
-  useEffect(() => {
-  async function checkUser() {
-    const { data: { user } } = await supabase.auth.getUser()
-    setUser(user)
 
-    if (!user) return
-
-    const { data } = await supabase
-      .from('admin_users')
-      .select('*')
-      .eq('user_id', user.id)
-      .single()
-
-    if (data) setIsAdmin(true)
-  }
-
-  checkUser()
-}, [])
 
 createRoot(document.getElementById("root")).render(<App />);
