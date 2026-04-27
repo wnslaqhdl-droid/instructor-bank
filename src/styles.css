@@ -70,3 +70,10 @@ th{background:#f8fafc;color:#334155}
 .detail-box {  margin-top: 12px;  padding: 14px;  border-top: 1px solid #e2e8f0;  background: #f8fafc;  border-radius: 12px;}
 .detail-grid {  display: grid;  grid-template-columns: repeat(2, minmax(0, 1fr));  gap: 12px;  font-size: 14px;}
 @media (max-width: 700px) {  .detail-grid {    grid-template-columns: 1fr;  }}
+
+/* 모바일 상세정보 한 화면 표시 */
+.detail-box {  width: 100%;  max-width: 100%;  overflow-x: hidden;  font-family: inherit;}
+.detail-grid {  width: 100%;  max-width: 100%;  font-family: inherit;}
+.detail-grid div {  min-width: 0;  max-width: 100%;  font-family: inherit;  font-size: 14px;  line-height: 1.6;  word-break: keep-all;  overflow-wrap: anywhere;}
+@media (max-width: 700px) {  .detail-grid {    grid-template-columns: 1fr !important;  }.detail-box {    padding: 12px;  }}
+@media (max-width: 700px) {  .compact-row {    grid-template-columns: 90px minmax(0, 1fr) !important;  }  .compact-row span {    min-width: 0;  }}
