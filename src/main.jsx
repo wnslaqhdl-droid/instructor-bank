@@ -99,8 +99,8 @@ function SearchPage(){
       <div><b>교육유형</b><br/>        {(item.types || []).join(", ") || "-"}      </div>
       <div><b>강의분야</b><br/>        {(item.specialties || []).join(", ") || "-"}      </div>
       <div style={{gridColumn:"1 / -1"}}>        <b>강의 소개</b><br/>        {item.intro || "-"}      </div>
-      {item.show_phone && (        <div><b>연락처</b><br/>{item.phone || "-"}</div>      )}
-      {item.show_email && (        <div><b>이메일</b><br/>{item.email || "-"}</div>      )}
+      {item.show_phone && (        <div><b>연락처</b><br/>{item.phone ? (<a href={`tel:${item.phone}`}>{item.phone}</a>) : "-"}</div>      )}
+      {item.show_email && (        <div><b>이메일</b><br/>{item.email ? (<a href={`mailto:${item.email}`}>{item.email}</a>) : "-"}</div>      )}
     </div>
   </div>
 )}
