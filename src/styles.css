@@ -156,3 +156,32 @@
   gap: 6px !important;
   width: auto !important;
 }
+/* 체크박스 input이 width:100% 되는 문제 해결 */
+.check input[type="checkbox"] {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  max-width: 14px !important;
+  flex: 0 0 14px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 체크박스 라벨 정렬 */
+.check {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  padding: 6px 12px !important;
+}
+
+/* 텍스트가 체크박스 바로 옆에 붙도록 */
+.check span {
+  display: inline !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
