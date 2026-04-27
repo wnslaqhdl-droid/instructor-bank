@@ -149,3 +149,10 @@
     padding: 6px 10px;
   }
 }
+.check {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  width: auto !important;
+}
