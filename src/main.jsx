@@ -259,6 +259,113 @@ function SearchPage(){
 </article>)}</div></div>;
 }
 
+function ModifyPage(){
+  const [email,setEmail]=useState("");
+  const [found,setFound]=useState(null);
+  const [message,setMessage]=useState("");
+  const [error,setError]=useState("");
+
+  async function search(){
+    setError(""); setMessage("");
+
+    const {data,error} = await supabase
+      .from("instructors")
+      .select("*")
+      .eq("email", email)
+      .maybeSingle();
+
+    if(error){
+      setError("조회 실패: " + error.message);
+      return;
+    }
+
+    if(!data){
+      setError("해당 이메일로 등록된 강사를 찾을 수 없습니다.");
+      return;
+    }
+
+    setFound(data);
+  }
+
+  async function submitRequest(){
+    setError(""); setMessage("");
+
+    const {error} = await supabase
+      .from("instructor_update_requests")
+      .insert([{
+        instructor_id: found.id,
+        requested_data: found
+      }]);
+
+    if(error){
+      setError("요청 실패: " + error.message);
+      return;
+    }
+
+    setMessage("수정 요청이 접수되었습니다. 관리자 검토 후 반영됩니다.");
+    setFound(null);
+    setEmail("");
+  }
+
+  function updateField(key,value){
+    setFound(prev => ({...prev, [key]: value}));
+  }
+
+  return (
+    <div>
+      <section className="hero">
+        <h1>강사 정보 수정 요청</h1>
+        <p>등록 시 입력한 이메일로 본인 정보를 조회하고 수정 요청을 제출할 수 있습니다.</p>
+      </section>
+
+      {message && <div className="notice">{message}</div>}
+      {error && <div className="error">{error}</div>}
+
+      <section className="card">
+        <h2>1. 이메일로 조회</h2>
+
+        <div className="grid grid-3">
+          <Field label="이메일">
+            <input value={email} onChange={(e)=>setEmail(e.target.value)} />
+          </Field>
+
+          <div style={{display:"flex",alignItems:"end"}}>
+            <button className="btn primary" onClick={search}>
+              조회
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {found && (
+        <section className="card">
+          <h2>2. 정보 수정</h2>
+
+          <div className="grid grid-2">
+            <Field label="성명">
+              <input value={found.name || ""} onChange={(e)=>updateField("name", e.target.value)} />
+            </Field>
+
+            <Field label="거주지역">
+              <input value={found.region || ""} onChange={(e)=>updateField("region", e.target.value)} />
+            </Field>
+
+            <Field label="주요 강의주제">
+              <input value={found.main_topic || ""} maxLength={80} onChange={(e)=>updateField("main_topic", e.target.value)} />
+            </Field>
+          </div>
+
+          <div style={{marginTop:16}}>
+            <button className="btn primary" onClick={submitRequest}>
+              수정 요청 제출
+            </button>
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
+
 function AdminPage(){
   const [session,setSession]=useState(null);
   const [email,setEmail]=useState("");
@@ -618,6 +725,9 @@ function App(){
       <nav>
         <button onClick={()=>go("search")}>검색</button>
         <button onClick={()=>go("register")}>등록</button>
+        <button  className={page==="modify"?"active":""}  onClick={()=>go("modify")}>
+  정보 수정 요청
+</button>
 
 <button  className={page==="admin"?"active":""}  onClick={()=>go("admin")}>  관리자</button>
       </nav>
@@ -626,6 +736,7 @@ function App(){
         {page==="search" && <SearchPage />}
         {page==="register" && <RegisterPage />}
         {page==="admin" && <AdminPage />}
+        {page==="modify" && <ModifyPage />}
       </main>
     </div>
   )
