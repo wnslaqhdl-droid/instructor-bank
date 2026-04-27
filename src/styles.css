@@ -34,3 +34,52 @@
     display: none;
   }
 }
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, max-content));
+  gap: 8px 12px;
+  align-items: start;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: fit-content;
+  max-width: 260px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+.check input {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 900px) {
+  .check-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, max-content));
+  }
+}
+
+@media (max-width: 560px) {
+  .check-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .check {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .check-grid {
+    grid-template-columns: 1fr;
+  }
+}
