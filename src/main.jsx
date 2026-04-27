@@ -473,14 +473,7 @@ function App(){
       <main>
         {page==="search" && <SearchPage />}
         {page==="register" && <RegisterPage />}
-
-        {page==="admin" ? (
-          isAdmin ? (
-            <AdminPage />
-          ) : (
-            <div>관리자 권한이 필요합니다.</div>
-          )
-        ) : null}
+        {page==="admin" && <AdminPage />}
       </main>
     </div>
   )
