@@ -53,9 +53,9 @@ function RegisterPage() {
 
   async function submitForm() {
     setMessage(""); setError("");
-    if (!form.name || !form.email || !form.phone || !form.region || !form.main_topic) { setError("성명, 연락처, 이메일, 거주지역, 주요 강의주제는 필수입니다."); return; }
+    if (!form.name || !form.email || !form.phone || !form.region || !form.main_topic) { setError("성명, 연락처, 이메일, 거주지역, 주요 강의주제는 필수입니다."); window.scrollTo({top: 0,  behavior: "smooth"}) ; return; }
     const { data: inserted, error: insertError } = await supabase.from("instructors").insert([{ ...form, public_status: "검토중", update_status: "정상" }]).select("id").single();
-    if (insertError) { setError("강사 기본정보 저장 실패: " + insertError.message); return; }
+    if (insertError) { setError("강사 기본정보 저장 실패: " + insertError.message); window.scrollTo({top: 0,  behavior: "smooth"}); return; }
     const instructor_id = inserted.id;
     const validTrainings = trainingCourses.filter((x) => x.course_name || x.institution || x.completion_year).map((x) => ({ instructor_id, ...x }));
     const validWelfare = welfareExperiences.filter((x) => x.organization || x.role || x.start_date || x.end_date || x.description).map((x) => ({ instructor_id, ...x, start_date: x.start_date || null, end_date: x.end_date || null }));
