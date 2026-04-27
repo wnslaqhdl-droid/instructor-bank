@@ -67,3 +67,6 @@ th{background:#f8fafc;color:#334155}
 
 .notice{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:16px;padding:12px 14px;margin-bottom:16px}
 .error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:16px;padding:12px 14px;margin-bottom:16px}
+.detail-box {  margin-top: 12px;  padding: 14px;  border-top: 1px solid #e2e8f0;  background: #f8fafc;  border-radius: 12px;}
+.detail-grid {  display: grid;  grid-template-columns: repeat(2, minmax(0, 1fr));  gap: 12px;  font-size: 14px;}
+@media (max-width: 700px) {  .detail-grid {    grid-template-columns: 1fr;  }}
