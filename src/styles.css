@@ -110,3 +110,42 @@
     max-width: 100% !important;
   }
 }
+/* 체크 영역 - 줄바꿈 구조 */
+.check-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px 10px !important;
+}
+
+/* 체크 하나 */
+.check {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+
+  gap: 6px !important;
+
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+
+  border: 1px solid #e2e8f0 !important;
+  background: #fff !important;
+
+  width: auto !important;
+  min-height: 32px !important;
+
+  font-size: 14px !important;
+}
+
+/* 체크박스 고정 */
+.check input {
+  margin: 0 !important;
+}
+
+/* 모바일 */
+@media (max-width: 600px) {
+  .check {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
