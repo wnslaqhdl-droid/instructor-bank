@@ -77,3 +77,6 @@ th{background:#f8fafc;color:#334155}
 .detail-grid div {  min-width: 0;  max-width: 100%;  font-family: inherit;  font-size: 14px;  line-height: 1.6;  word-break: keep-all;  overflow-wrap: anywhere;}
 @media (max-width: 700px) {  .detail-grid {    grid-template-columns: 1fr !important;  }.detail-box {    padding: 12px;  }}
 @media (max-width: 700px) {  .compact-row {    grid-template-columns: 90px minmax(0, 1fr) !important;  }  .compact-row span {    min-width: 0;  }}
+
+/* 펼침 시 배경 강조, 현재 선택된 카드 표시 */
+.instructor-card.active {  border-color: #2563eb;  background: #f0f7ff;}
