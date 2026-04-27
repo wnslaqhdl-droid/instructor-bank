@@ -159,12 +159,76 @@ async function submitForm() {
 }
 
 function SearchPage(){
- const [items,setItems]=useState([]); const [keyword,setKeyword]=useState(""); const [region,setRegion]=useState(""); const [target,setTarget]=useState(""); const [type,setType]=useState(""); const [specialty,setSpecialty]=useState(""); const [message,setMessage]=useState(""); const [openId, setOpenId] = useState(null);
+ const [items,setItems]=useState([]);
+ const [keyword,setKeyword]=useState("");
+ const [region,setRegion]=useState("");
+ const [target,setTarget]=useState("");
+ const [type,setType]=useState("");
+ const [specialty,setSpecialty]=useState("");
+ const [message,setMessage]=useState("");
+ const [openId,setOpenId]=useState(null);
+ const [sortType,setSortType]=useState("latest");
  async function load(){ const {data,error}=await supabase.from("instructors").select("*").eq("public_status","공개").eq("show_profile",true).order("created_at",{ascending:false}); if(error)setMessage("검색 실패: "+error.message); else setItems(data||[]); }
  useEffect(()=>{load()},[]);
  function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
- const filtered=items.filter((item)=>{ const text=[item.name,item.region,item.main_topic,item.other_specialty,item.intro,(item.targets||[]).join(" "),(item.types||[]).join(" "),(item.specialties||[]).join(" ")].join(" "); return (!keyword||text.includes(keyword))&&(!region||item.region===region||(item.activity_regions||[]).includes(region))&&(!target||(item.targets||[]).includes(target))&&(!type||(item.types||[]).includes(type))&&(!specialty||(item.specialties||[]).includes(specialty)); });
- return <div><section className="hero"><h1>성인권 교육 강사 검색</h1><p>공개 승인된 강사를 지역, 교육대상, 교육유형, 강의 분야로 검색합니다.</p></section>{message?<div className="error">{message}</div>:null}<section className="card"><div className="grid grid-4"><Field label="키워드"><input value={keyword} onChange={(e)=>setKeyword(e.target.value)} placeholder="이름, 주제, 소개 검색"/></Field><Field label="지역"><select value={region} onChange={(e)=>setRegion(e.target.value)}><option value="">전체</option>{regionOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육대상"><select value={target} onChange={(e)=>setTarget(e.target.value)}><option value="">전체</option>{targetOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육유형"><select value={type} onChange={(e)=>setType(e.target.value)}><option value="">전체</option>{typeOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field></div><div className="grid grid-2" style={{marginTop:14}}><Field label="강의 분야"><select value={specialty} onChange={(e)=>setSpecialty(e.target.value)}><option value="">전체</option>{specialtyOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><div style={{display:"flex",alignItems:"end",justifyContent:"flex-end"}}><button className="btn" onClick={()=>{setKeyword("");setRegion("");setTarget("");setType("");setSpecialty("")}}>필터 초기화</button></div></div></section><div className="list">{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
+ const filtered = items
+  .filter((item) => {
+    const text = [
+      item.name,
+      item.region,
+      item.main_topic,
+      item.other_specialty,
+      item.intro,
+      (item.activity_regions || []).join(" "),
+      (item.targets || []).join(" "),
+      (item.types || []).join(" "),
+      (item.specialties || []).join(" ")
+    ].join(" ").toLowerCase();
+
+    return (
+      (!keyword || text.includes(keyword.toLowerCase())) &&
+      (!region || item.region === region || (item.activity_regions || []).includes(region)) &&
+      (!target || (item.targets || []).includes(target)) &&
+      (!type || (item.types || []).includes(type)) &&
+      (!specialty || (item.specialties || []).includes(specialty))
+    );
+  })
+  .sort((a, b) => {
+    if (sortType === "latest") return new Date(b.created_at) - new Date(a.created_at);
+    if (sortType === "name") return (a.name || "").localeCompare(b.name || "");
+    if (sortType === "region") return (a.region || "").localeCompare(b.region || "");
+    return 0;
+  });
+ return <div><section className="hero"><h1>성인권 교육 강사 검색</h1><p>공개 승인된 강사를 지역, 교육대상, 교육유형, 강의 분야로 검색합니다.</p></section>{message?<div className="error">{message}</div>:null}<section className="card"><div className="grid grid-4"><Field label="키워드"><input value={keyword} onChange={(e)=>setKeyword(e.target.value)} placeholder="이름, 주제, 소개 검색"/></Field><Field label="지역"><select value={region} onChange={(e)=>setRegion(e.target.value)}><option value="">전체</option>{regionOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육대상"><select value={target} onChange={(e)=>setTarget(e.target.value)}><option value="">전체</option>{targetOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육유형"><select value={type} onChange={(e)=>setType(e.target.value)}><option value="">전체</option>{typeOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field></div><div className="grid grid-3" style={{marginTop:14}}>
+  <Field label="강의 분야">
+    <select value={specialty} onChange={(e)=>setSpecialty(e.target.value)}>
+      <option value="">전체</option>
+      {specialtyOptions.map((r)=><option key={r} value={r}>{r}</option>)}
+    </select>
+  </Field>
+
+  <Field label="정렬">
+    <select value={sortType} onChange={(e)=>setSortType(e.target.value)}>
+      <option value="latest">최신순</option>
+      <option value="name">이름순</option>
+      <option value="region">지역순</option>
+    </select>
+  </Field>
+
+  <div style={{display:"flex",alignItems:"end",justifyContent:"flex-end"}}>
+    <button className="btn" onClick={()=>{
+      setKeyword("");
+      setRegion("");
+      setTarget("");
+      setType("");
+      setSpecialty("");
+      setSortType("latest");
+    }}>
+      필터 초기화
+    </button>
+  </div>
+</div>
+ </section><div className="list">{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
 >
   <div className="compact-row">
     <span className="compact-name">{item.name || "-"}</span>
