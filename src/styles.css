@@ -84,3 +84,11 @@ th{background:#f8fafc;color:#334155}
 /* 이메일이랑 전화번호가 클릭 가능함을 보여주게 하는 효과_색 변경 및 가져다댈 때 밑줄 */
 .detail-box a {  color: #2563eb;  text-decoration: none;  font-weight: 500;}
 .detail-box a:hover {  text-decoration: underline;}
+
+/* 관리자 승인 상태 시각화: 공개 / 비공개 / 검토중 색상 표시 */
+.badge.public { background:#ecfdf5; color:#047857; }
+.badge.private { background:#fef2f2; color:#b91c1c; }
+.badge.pending { background:#f1f5f9; color:#475569; }
+
+/* 카드 선택 강조: 지금 보고 있는 강사 표시 */
+.instructor-card.active {  border-color: #2563eb;  background: #f0f7ff;}
