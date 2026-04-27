@@ -230,7 +230,7 @@ function SearchPage(){
 </div>
  </section><div className="list">  <div className="compact-row header-row">
     <span className="compact-name">이름</span>
-    <span>한줄소개</span>
+    <span>주요 강의주제</span>
     <span className="col-region">활동지역</span>
     <span className="col-target">교육대상</span>
     <span className="col-type">교육유형</span>
