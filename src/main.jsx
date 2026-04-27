@@ -467,14 +467,7 @@ function App(){
         <button onClick={()=>go("search")}>검색</button>
         <button onClick={()=>go("register")}>등록</button>
 
-        {isAdmin && (
-          <button
-            className={page==="admin"?"active":""}
-            onClick={()=>go("admin")}
-          >
-            관리자
-          </button>
-        )}
+<button  className={page==="admin"?"active":""}  onClick={()=>go("admin")}>  관리자</button>
       </nav>
 
       <main>
