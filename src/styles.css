@@ -185,3 +185,19 @@
   margin: 0 !important;
   white-space: nowrap !important;
 }
+.check input:checked + span {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.check input:checked {
+  accent-color: #2563eb;
+}
+.check:has(input:checked) {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+.check:hover {
+  background: #f1f5f9;
+  cursor: pointer;
+}
