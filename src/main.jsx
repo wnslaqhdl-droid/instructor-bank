@@ -84,22 +84,10 @@ function SearchPage(){
  return <div><section className="hero"><h1>성인권 교육 강사 검색</h1><p>공개 승인된 강사를 지역, 교육대상, 교육유형, 강의 분야로 검색합니다.</p></section>{message?<div className="error">{message}</div>:null}<section className="card"><div className="grid grid-4"><Field label="키워드"><input value={keyword} onChange={(e)=>setKeyword(e.target.value)} placeholder="이름, 주제, 소개 검색"/></Field><Field label="지역"><select value={region} onChange={(e)=>setRegion(e.target.value)}><option value="">전체</option>{regionOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육대상"><select value={target} onChange={(e)=>setTarget(e.target.value)}><option value="">전체</option>{targetOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육유형"><select value={type} onChange={(e)=>setType(e.target.value)}><option value="">전체</option>{typeOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field></div><div className="grid grid-2" style={{marginTop:14}}><Field label="강의 분야"><select value={specialty} onChange={(e)=>setSpecialty(e.target.value)}><option value="">전체</option>{specialtyOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><div style={{display:"flex",alignItems:"end",justifyContent:"flex-end"}}><button className="btn" onClick={()=>{setKeyword("");setRegion("");setTarget("");setType("");setSpecialty("")}}>필터 초기화</button></div></div></section><div className="list">{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card" key={item.id}>
   <div className="compact-row">
     <span className="compact-name">{item.name || "-"}</span>
-
-    <span className="col-topic">
-      {item.main_topic || "-"}
-    </span>
-
-    <span className="col-region">
-      {(item.activity_regions || []).join(", ") || item.region || "-"}
-    </span>
-
-    <span className="col-target">
-      {(item.targets || []).join(", ") || "-"}
-    </span>
-
-    <span className="col-type">
-      {(item.types || []).join(", ") || "-"}
-    </span>
+    <span className="col-topic">{item.main_topic || "-"}</span>
+    <span className="col-region">{(item.activity_regions || []).join(", ") || item.region || "-"}</span>
+    <span className="col-target">{(item.targets || []).join(", ") || "-"}</span>
+    <span className="col-type">{(item.types || []).join(", ") || "-"}</span>
   </div>
 </article>)}</div></div>;
 }
@@ -111,6 +99,8 @@ function AdminPage(){
   const [items,setItems]=useState([]);
   const [message,setMessage]=useState("");
   const [editingItem,setEditingItem]=useState(null);
+  const [adminKeyword,setAdminKeyword]=useState("");
+  const [adminStatus,setAdminStatus]=useState("");
 
   async function refreshSession(){
     const {data}=await supabase.auth.getSession();
@@ -252,6 +242,22 @@ function AdminPage(){
     URL.revokeObjectURL(url);
   }
 
+const filteredItems = items.filter((item) => {
+  const keywordText = [
+    item.name,
+    item.email,
+    item.phone,
+    item.region,
+    item.main_topic,
+    item.organization
+  ].join(" ");
+
+  return (
+    (!adminKeyword || keywordText.includes(adminKeyword)) &&
+    (!adminStatus || item.public_status === adminStatus)
+  );
+});
+  
   return (
     <div>
       <section className="hero">
@@ -340,7 +346,33 @@ function AdminPage(){
           <button className="btn primary" onClick={loadAdmin}>목록 불러오기</button>
           <button className="btn" onClick={downloadCSV}>CSV 다운로드</button>
         </div>
+<div className="grid grid-3" style={{marginTop: "14px", marginBottom: "14px"}}>
+  <Field label="검색어">
+    <input
+      value={adminKeyword}
+      onChange={(e)=>setAdminKeyword(e.target.value)}
+      placeholder="이름, 이메일, 연락처, 지역, 주제 검색"
+    />
+  </Field>
 
+  <Field label="공개상태">
+    <select
+      value={adminStatus}
+      onChange={(e)=>setAdminStatus(e.target.value)}
+    >
+      <option value="">전체</option>
+      <option value="검토중">검토중</option>
+      <option value="공개">공개</option>
+      <option value="비공개">비공개</option>
+    </select>
+  </Field>
+
+  <div style={{display:"flex",alignItems:"end",gap:"8px"}}>
+    <button className="btn" onClick={()=>{setAdminKeyword("");setAdminStatus("");}}>
+      필터 초기화
+    </button>
+  </div>
+</div>
         <div className="table-wrap">
           <table>
             <thead>
@@ -357,7 +389,7 @@ function AdminPage(){
               </tr>
             </thead>
             <tbody>
-              {items.map((item)=>(
+              {filteredItems.map((item)=>(
                 <tr key={item.id}>
                   <td>{item.name||"-"}</td>
                   <td>{item.region||"-"}</td>
@@ -375,7 +407,8 @@ function AdminPage(){
                   </td>
                 </tr>
               ))}
-              {!items.length?<tr><td colSpan="9" className="muted">목록을 불러오세요.</td></tr>:null}
+              {!items.length ? (<tr><td colSpan="9" className="muted">목록을 불러오세요.</td></tr>) : null}
+              {items.length > 0 && filteredItems.length === 0 ? (<tr><td colSpan="9" className="muted">필터 조건에 맞는 강사가 없습니다.</td></tr>) : null}
             </tbody>
           </table>
         </div>
