@@ -92,3 +92,11 @@ th{background:#f8fafc;color:#334155}
 
 /* 카드 선택 강조: 지금 보고 있는 강사 표시 */
 .instructor-card.active {  border-color: #2563eb;  background: #f0f7ff;}
+
+/* 검색페이지에서 이름/지역/대상 줄 꾸미기. 위에서부터 글씨폰트, 배경색, 모서리 둥글게, 위아래-좌우 여백 */
+.header-row {
+  font-weight: 700;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
