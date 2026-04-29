@@ -484,7 +484,46 @@ function AdminPage(){
       loadAdmin();
     }
   }
+async function loadRequests(){
+  const {data,error} = await supabase
+    .from("instructor_update_requests")
+    .select("*")
+    .order("requested_at",{ascending:false});
 
+  if(error){
+    setMessage("요청 조회 실패: " + error.message);
+  }else{
+    setUpdateRequests(data || []);
+  }
+}
+  async function approveRequest(req){
+  const {error:updateError} = await supabase
+    .from("instructors")
+    .update(req.requested_data)
+    .eq("id", req.instructor_id);
+
+  if(updateError){
+    setMessage("반영 실패: " + updateError.message);
+    return;
+  }
+
+  const {error:statusError} = await supabase
+    .from("instructor_update_requests")
+    .update({
+      request_status:"승인",
+      reviewed_at:new Date().toISOString()
+    })
+    .eq("id", req.id);
+
+  if(statusError){
+    setMessage("상태 변경 실패: " + statusError.message);
+    return;
+  }
+
+  setMessage("수정 요청 반영 완료");
+  loadRequests();
+  loadAdmin();
+}
   function downloadCSV(){
     if(!items.length){alert("먼저 목록을 불러오세요.");return;}
 
