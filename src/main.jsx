@@ -527,6 +527,29 @@ function AdminPage(){
 
     if(error)setMessage("수정 실패: "+error.message);
     else{
+            /* 🔥 양성과정 저장 */
+      
+      // 1. 기존 삭제
+      await supabase
+        .from("training_courses")
+        .delete()
+        .eq("instructor_id", editingItem.id);
+      
+      // 2. 새로 insert
+      const validTrainings = editingTrainings
+        .filter(t => t.course_name || t.institution || t.completion_year)
+        .map(t => ({
+          instructor_id: editingItem.id,
+          course_name: t.course_name || "",
+          institution: t.institution || "",
+          completion_year: t.completion_year || ""
+        }));
+      
+      if(validTrainings.length){
+        await supabase
+          .from("training_courses")
+          .insert(validTrainings);
+      }
       setMessage("수정 완료");
       setEditingItem(null);
       loadAdmin();
