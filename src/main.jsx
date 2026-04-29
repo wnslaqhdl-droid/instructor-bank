@@ -375,6 +375,7 @@ function AdminPage(){
   const [editingItem,setEditingItem]=useState(null);
   const [adminKeyword,setAdminKeyword]=useState("");
   const [adminStatus,setAdminStatus]=useState("");
+  const [updateRequests,setUpdateRequests] = useState([]);
 
   async function refreshSession(){
     const {data}=await supabase.auth.getSession();
