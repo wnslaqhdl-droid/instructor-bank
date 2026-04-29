@@ -264,6 +264,9 @@ function ModifyPage(){
   const [found,setFound]=useState(null);
   const [message,setMessage]=useState("");
   const [error,setError]=useState("");
+  const [modifyTrainings,setModifyTrainings]=useState([]);
+  const [modifyWelfares,setModifyWelfares]=useState([]);
+  const [modifyLectures,setModifyLectures]=useState([]);
 
   async function search(){
     setError(""); setMessage("");
