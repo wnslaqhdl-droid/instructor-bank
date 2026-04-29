@@ -484,46 +484,7 @@ function AdminPage(){
       loadAdmin();
     }
   }
-async function loadRequests(){
-  const {data,error} = await supabase
-    .from("instructor_update_requests")
-    .select("*")
-    .order("requested_at",{ascending:false});
 
-  if(error){
-    setMessage("요청 조회 실패: " + error.message);
-  }else{
-    setUpdateRequests(data || []);
-  }
-}
-  async function approveRequest(req){
-  const {error:updateError} = await supabase
-    .from("instructors")
-    .update(req.requested_data)
-    .eq("id", req.instructor_id);
-
-  if(updateError){
-    setMessage("반영 실패: " + updateError.message);
-    return;
-  }
-
-  const {error:statusError} = await supabase
-    .from("instructor_update_requests")
-    .update({
-      request_status:"승인",
-      reviewed_at:new Date().toISOString()
-    })
-    .eq("id", req.id);
-
-  if(statusError){
-    setMessage("상태 변경 실패: " + statusError.message);
-    return;
-  }
-
-  setMessage("수정 요청 반영 완료");
-  loadRequests();
-  loadAdmin();
-}
   function downloadCSV(){
     if(!items.length){alert("먼저 목록을 불러오세요.");return;}
 
@@ -726,54 +687,6 @@ const filteredItems = items.filter((item) => {
           </table>
         </div>
       </section>
-      <section className="card">
-  <h2>수정 요청 관리</h2>
-
-  <div className="actions">
-    <button className="btn primary" onClick={loadRequests}>
-      요청 불러오기
-    </button>
-  </div>
-
-  <div className="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>요청일</th>
-          <th>강사ID</th>
-          <th>요청 상태</th>
-          <th>관리</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {updateRequests.map((req)=>(
-          <tr key={req.id}>
-            <td>{req.requested_at}</td>
-            <td>{req.instructor_id}</td>
-            <td>{req.request_status}</td>
-            <td>
-              <button
-                className="btn success"
-                onClick={()=>approveRequest(req)}
-              >
-                승인
-              </button>
-            </td>
-          </tr>
-        ))}
-
-        {!updateRequests.length && (
-          <tr>
-            <td colSpan="4" className="muted">
-              요청을 불러오세요.
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-  </div>
-</section>
     </div>
   )
 }
