@@ -687,6 +687,54 @@ const filteredItems = items.filter((item) => {
           </table>
         </div>
       </section>
+      <section className="card">
+  <h2>수정 요청 관리</h2>
+
+  <div className="actions">
+    <button className="btn primary" onClick={loadRequests}>
+      요청 불러오기
+    </button>
+  </div>
+
+  <div className="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>요청일</th>
+          <th>강사ID</th>
+          <th>요청 상태</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {updateRequests.map((req)=>(
+          <tr key={req.id}>
+            <td>{req.requested_at}</td>
+            <td>{req.instructor_id}</td>
+            <td>{req.request_status}</td>
+            <td>
+              <button
+                className="btn success"
+                onClick={()=>approveRequest(req)}
+              >
+                승인
+              </button>
+            </td>
+          </tr>
+        ))}
+
+        {!updateRequests.length && (
+          <tr>
+            <td colSpan="4" className="muted">
+              요청을 불러오세요.
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</section>
     </div>
   )
 }
