@@ -445,6 +445,207 @@ function ModifyPage(){
             양성과정 추가
           </button>
 
+          <h3>실무경력</h3>
+
+          {modifyWelfares.map((w, i) => (
+            <div key={i} className="repeat">
+              <div className="grid grid-2">
+                <Field label="기관명">
+                  <input
+                    value={w.organization || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyWelfares];
+                      copy[i] = { ...copy[i], organization: e.target.value };
+                      setModifyWelfares(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="역할">
+                  <input
+                    value={w.role || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyWelfares];
+                      copy[i] = { ...copy[i], role: e.target.value };
+                      setModifyWelfares(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="시작일">
+                  <input
+                    type="date"
+                    value={w.start_date || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyWelfares];
+                      copy[i] = { ...copy[i], start_date: e.target.value };
+                      setModifyWelfares(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="종료일">
+                  <input
+                    type="date"
+                    value={w.end_date || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyWelfares];
+                      copy[i] = { ...copy[i], end_date: e.target.value };
+                      setModifyWelfares(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="주요 업무">
+                  <textarea
+                    value={w.description || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyWelfares];
+                      copy[i] = { ...copy[i], description: e.target.value };
+                      setModifyWelfares(copy);
+                    }}
+                  />
+                </Field>
+              </div>
+          
+              <div className="actions">
+                <button
+                  className="btn danger"
+                  onClick={()=>{
+                    setModifyWelfares(modifyWelfares.filter((_, idx)=>idx !== i));
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+          ))}
+          
+          <button
+            className="btn"
+            onClick={()=>{
+              setModifyWelfares([
+                ...modifyWelfares,
+                {
+                  organization:"",
+                  role:"",
+                  start_date:"",
+                  end_date:"",
+                  description:""
+                }
+              ]);
+            }}
+          >
+            실무경력 추가
+          </button>
+          
+          <h3>강의경력</h3>
+          
+          {modifyLectures.map((l, i) => (
+            <div key={i} className="repeat">
+              <div className="grid grid-2">
+                <Field label="강의기관">
+                  <input
+                    value={l.organization || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyLectures];
+                      copy[i] = { ...copy[i], organization: e.target.value };
+                      setModifyLectures(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="교육대상">
+                  <input
+                    value={l.target || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyLectures];
+                      copy[i] = { ...copy[i], target: e.target.value };
+                      setModifyLectures(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="강의주제">
+                  <input
+                    value={l.topic || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyLectures];
+                      copy[i] = { ...copy[i], topic: e.target.value };
+                      setModifyLectures(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="강의횟수">
+                  <input
+                    value={l.count || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyLectures];
+                      copy[i] = { ...copy[i], count: e.target.value };
+                      setModifyLectures(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="시작일">
+                  <input
+                    type="date"
+                    value={l.start_date || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyLectures];
+                      copy[i] = { ...copy[i], start_date: e.target.value };
+                      setModifyLectures(copy);
+                    }}
+                  />
+                </Field>
+          
+                <Field label="종료일">
+                  <input
+                    type="date"
+                    value={l.end_date || ""}
+                    onChange={(e)=>{
+                      const copy = [...modifyLectures];
+                      copy[i] = { ...copy[i], end_date: e.target.value };
+                      setModifyLectures(copy);
+                    }}
+                  />
+                </Field>
+              </div>
+          
+              <div className="actions">
+                <button
+                  className="btn danger"
+                  onClick={()=>{
+                    setModifyLectures(modifyLectures.filter((_, idx)=>idx !== i));
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+          ))}
+          
+          <button
+            className="btn"
+            onClick={()=>{
+              setModifyLectures([
+                ...modifyLectures,
+                {
+                  organization:"",
+                  target:"",
+                  topic:"",
+                  start_date:"",
+                  end_date:"",
+                  count:""
+                }
+              ]);
+            }}
+          >
+            강의경력 추가
+          </button>
+
+          
           <div style={{marginTop:16}}>
             <button className="btn primary" onClick={submitRequest}>
               수정 요청 제출
