@@ -425,7 +425,7 @@ function AdminPage(){
       }else{
     setUpdateRequests(data || []);
     }
-
+  }
     async function approveRequest(req){
   setMessage("");
 
@@ -459,7 +459,6 @@ function AdminPage(){
   // 새로고침
   loadRequests();
   loadAdmin();
-}
   }
   async function updateStatus(id,status){
     const {error}=await supabase
@@ -689,16 +688,7 @@ const filteredItems = items.filter((item) => {
                     <td>{req.requested_at}</td>
                     <td>{req.instructor_id}</td>
                     <td>{req.request_status}</td>
-                  
-                    {/* 🔥 추가 */}
-                    <td>
-                      <button
-                        className="btn success"
-                        onClick={()=>approveRequest(req)}
-                      >
-                        승인
-                      </button>
-                    </td>
+                    <td><button className="btn success" onClick={()=>approveRequest(req)}>승인</button></td>
                   </tr>
                 ))}
         
