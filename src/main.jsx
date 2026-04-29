@@ -633,6 +633,41 @@ const filteredItems = items.filter((item) => {
           <button className="btn" onClick={loadRequests}>수정 요청 불러오기</button>
           <button className="btn" onClick={downloadCSV}>CSV 다운로드</button>
         </div>
+        
+        <section className="card">
+          <h2>수정 요청 목록</h2>
+        
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>요청일</th>
+                  <th>강사ID</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+        
+              <tbody>
+                {updateRequests.map((req)=>(
+                  <tr key={req.id}>
+                    <td>{req.requested_at}</td>
+                    <td>{req.instructor_id}</td>
+                    <td>{req.request_status}</td>
+                  </tr>
+                ))}
+        
+                {!updateRequests.length && (
+                  <tr>
+                    <td colSpan="3" className="muted">
+                      요청을 불러오세요.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        
 <div className="grid grid-3" style={{marginTop: "14px", marginBottom: "14px"}}>
   <Field label="검색어">
     <input
