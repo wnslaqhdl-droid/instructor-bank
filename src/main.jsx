@@ -414,7 +414,18 @@ function AdminPage(){
     if(error)setMessage("조회 실패: "+error.message);
     else setItems(data||[]);
   }
+  async function loadRequests(){
+    const {data,error} = await supabase
+      .from("instructor_update_requests")
+      .select("*")
+      .order("requested_at",{ascending:false});
 
+    if(error){
+      setMessage("수정 요청 조회 실패: " + error.message);
+      }else{
+    setUpdateRequests(data || []);
+    }
+  }
   async function updateStatus(id,status){
     const {error}=await supabase
       .from("instructors")
