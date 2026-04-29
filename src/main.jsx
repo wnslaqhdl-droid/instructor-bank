@@ -322,7 +322,7 @@ function ModifyPage(){
       .insert([{
         instructor_id: found.id,
         requested_data: {
-          instructor: found,
+          instructor: { ...found },
           training_courses: modifyTrainings,
           welfare_experiences: modifyWelfares,
           lecture_experiences: modifyLectures
