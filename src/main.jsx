@@ -679,6 +679,7 @@ const filteredItems = items.filter((item) => {
                   <th>요청일</th>
                   <th>강사ID</th>
                   <th>상태</th>
+                  <th>관리</th
                 </tr>
               </thead>
         
@@ -688,6 +689,16 @@ const filteredItems = items.filter((item) => {
                     <td>{req.requested_at}</td>
                     <td>{req.instructor_id}</td>
                     <td>{req.request_status}</td>
+                  
+                    {/* 🔥 추가 */}
+                    <td>
+                      <button
+                        className="btn success"
+                        onClick={()=>approveRequest(req)}
+                      >
+                        승인
+                      </button>
+                    </td>
                   </tr>
                 ))}
         
