@@ -648,7 +648,69 @@ const filteredItems = items.filter((item) => {
           <Field label="강사 소개">
             <textarea value={editingItem.intro||""} onChange={(e)=>updateEdit("intro",e.target.value)}/>
           </Field>
-
+    <h3>양성과정 수료 정보</h3>
+    
+    {editingTrainings.map((t, i) => (
+      <div key={i} className="repeat">
+        <div className="grid grid-3">
+          <Field label="양성과정명">
+            <input
+              value={t.course_name || ""}
+              onChange={(e)=>{
+                const copy = [...editingTrainings];
+                copy[i] = { ...copy[i], course_name: e.target.value };
+                setEditingTrainings(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="수료기관">
+            <input
+              value={t.institution || ""}
+              onChange={(e)=>{
+                const copy = [...editingTrainings];
+                copy[i] = { ...copy[i], institution: e.target.value };
+                setEditingTrainings(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="수료연도">
+            <input
+              value={t.completion_year || ""}
+              onChange={(e)=>{
+                const copy = [...editingTrainings];
+                copy[i] = { ...copy[i], completion_year: e.target.value };
+                setEditingTrainings(copy);
+              }}
+            />
+          </Field>
+        </div>
+    
+        <div className="actions">
+          <button
+            className="btn danger"
+            onClick={()=>{
+              setEditingTrainings(editingTrainings.filter((_, idx)=>idx !== i));
+            }}
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+    ))}
+    
+    <button
+      className="btn"
+      onClick={()=>{
+        setEditingTrainings([
+          ...editingTrainings,
+          { course_name:"", institution:"", completion_year:"" }
+        ]);
+      }}
+    >
+      양성과정 추가
+    </button>
           <div className="check-grid">
             <label className="check"><input type="checkbox" checked={editingItem.show_phone} onChange={(e)=>updateEdit("show_phone",e.target.checked)}/> 연락처 공개</label>
             <label className="check"><input type="checkbox" checked={editingItem.show_email} onChange={(e)=>updateEdit("show_email",e.target.checked)}/> 이메일 공개</label>
