@@ -562,16 +562,18 @@ function AdminPage(){
         .from("welfare_experiences")
         .delete()
         .eq("instructor_id", editingItem.id);
-            // 2. 필터
+      
       const validWelfares = editingWelfares
-        .filter(w => w.organization || w.role || w.period)
+        .filter(w => w.organization || w.role || w.start_date || w.end_date || w.description)
         .map(w => ({
           instructor_id: editingItem.id,
           organization: w.organization || "",
           role: w.role || "",
-          period: w.period || ""
+          start_date: w.start_date || null,
+          end_date: w.end_date || null,
+          description: w.description || ""
         }));
-            // 3. insert
+      
       if(validWelfares.length){
         await supabase
           .from("welfare_experiences")
@@ -765,7 +767,7 @@ const filteredItems = items.filter((item) => {
 
     {editingWelfares.map((w, i) => (
       <div key={i} className="repeat">
-        <div className="grid grid-3">
+        <div className="grid grid-2">
     
           <Field label="기관명">
             <input
@@ -778,7 +780,7 @@ const filteredItems = items.filter((item) => {
             />
           </Field>
     
-          <Field label="직무">
+          <Field label="역할">
             <input
               value={w.role || ""}
               onChange={(e)=>{
@@ -789,12 +791,36 @@ const filteredItems = items.filter((item) => {
             />
           </Field>
     
-          <Field label="기간">
+          <Field label="시작일">
             <input
-              value={w.period || ""}
+              type="date"
+              value={w.start_date || ""}
               onChange={(e)=>{
                 const copy = [...editingWelfares];
-                copy[i] = { ...copy[i], period: e.target.value };
+                copy[i] = { ...copy[i], start_date: e.target.value };
+                setEditingWelfares(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="종료일">
+            <input
+              type="date"
+              value={w.end_date || ""}
+              onChange={(e)=>{
+                const copy = [...editingWelfares];
+                copy[i] = { ...copy[i], end_date: e.target.value };
+                setEditingWelfares(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="주요 업무">
+            <textarea
+              value={w.description || ""}
+              onChange={(e)=>{
+                const copy = [...editingWelfares];
+                copy[i] = { ...copy[i], description: e.target.value };
                 setEditingWelfares(copy);
               }}
             />
@@ -820,7 +846,13 @@ const filteredItems = items.filter((item) => {
       onClick={()=>{
         setEditingWelfares([
           ...editingWelfares,
-          { organization:"", role:"", period:"" }
+          {
+            organization:"",
+            role:"",
+            start_date:"",
+            end_date:"",
+            description:""
+          }
         ]);
       }}
     >
