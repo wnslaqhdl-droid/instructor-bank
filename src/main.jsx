@@ -536,14 +536,12 @@ function AdminPage(){
     if(error)setMessage("수정 실패: "+error.message);
     else{
             /* 🔥 양성과정 저장 */
-      
-      // 1. 기존 삭제
+            // 1. 기존 삭제
       await supabase
         .from("training_courses")
         .delete()
         .eq("instructor_id", editingItem.id);
-      
-      // 2. 새로 insert
+            // 2. 새로 insert
       const validTrainings = editingTrainings
         .filter(t => t.course_name || t.institution || t.completion_year)
         .map(t => ({
@@ -557,6 +555,27 @@ function AdminPage(){
         await supabase
           .from("training_courses")
           .insert(validTrainings);
+      }
+            /* 🔥 실무경력 저장 */
+            // 1. 기존 삭제
+      await supabase
+        .from("welfare_experiences")
+        .delete()
+        .eq("instructor_id", editingItem.id);
+            // 2. 필터
+      const validWelfares = editingWelfares
+        .filter(w => w.organization || w.role || w.period)
+        .map(w => ({
+          instructor_id: editingItem.id,
+          organization: w.organization || "",
+          role: w.role || "",
+          period: w.period || ""
+        }));
+            // 3. insert
+      if(validWelfares.length){
+        await supabase
+          .from("welfare_experiences")
+          .insert(validWelfares);
       }
       setMessage("수정 완료");
       setEditingItem(null);
