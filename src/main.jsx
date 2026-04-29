@@ -477,18 +477,25 @@ function AdminPage(){
     else{setMessage("삭제 완료"); loadAdmin();}
   }
 
-  function startEdit(item){
-    setEditingItem({
-      ...item,
-      activity_regions:item.activity_regions||[],
-      targets:item.targets||[],
-      types:item.types||[],
-      specialties:item.specialties||[],
-      show_phone:!!item.show_phone,
-      show_email:!!item.show_email,
-      show_profile:!!item.show_profile
-    });
-  }
+  async function startEdit(item){
+  setEditingItem({
+    ...item,
+    activity_regions:item.activity_regions||[],
+    targets:item.targets||[],
+    types:item.types||[],
+    specialties:item.specialties||[],
+    show_phone:!!item.show_phone,
+    show_email:!!item.show_email,
+    show_profile:!!item.show_profile
+  });
+
+  const { data } = await supabase
+    .from("training_courses")
+    .select("*")
+    .eq("instructor_id", item.id);
+
+  setEditingTrainings(data || []);
+}
 
   function updateEdit(key,value){
     setEditingItem(current=>({...current,[key]:value}));
