@@ -425,6 +425,41 @@ function AdminPage(){
       }else{
     setUpdateRequests(data || []);
     }
+
+    async function approveRequest(req){
+  setMessage("");
+
+  // 1. 실제 instructors 테이블 업데이트
+  const { error: updateError } = await supabase
+    .from("instructors")
+    .update(req.requested_data)
+    .eq("id", req.instructor_id);
+
+  if(updateError){
+    setMessage("반영 실패: " + updateError.message);
+    return;
+  }
+
+  // 2. 요청 상태 변경
+  const { error: statusError } = await supabase
+    .from("instructor_update_requests")
+    .update({
+      request_status: "승인",
+      reviewed_at: new Date().toISOString()
+    })
+    .eq("id", req.id);
+
+  if(statusError){
+    setMessage("상태 변경 실패: " + statusError.message);
+    return;
+  }
+
+  setMessage("수정 요청 반영 완료");
+
+  // 새로고침
+  loadRequests();
+  loadAdmin();
+}
   }
   async function updateStatus(id,status){
     const {error}=await supabase
