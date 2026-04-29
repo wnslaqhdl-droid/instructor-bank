@@ -373,6 +373,7 @@ function AdminPage(){
   const [items,setItems]=useState([]);
   const [message,setMessage]=useState("");
   const [editingItem,setEditingItem]=useState(null);
+  const [editingTrainings, setEditingTrainings] = useState([]);
   const [adminKeyword,setAdminKeyword]=useState("");
   const [adminStatus,setAdminStatus]=useState("");
   const [updateRequests,setUpdateRequests] = useState([]);
