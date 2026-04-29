@@ -321,8 +321,12 @@ function ModifyPage(){
       .from("instructor_update_requests")
       .insert([{
         instructor_id: found.id,
-        requested_data: found
-      }]);
+        requested_data: {
+          instructor: found,
+          training_courses: modifyTrainings,
+          welfare_experiences: modifyWelfares,
+          lecture_experiences: modifyLectures
+        }]);
 
     if(error){
       setError("요청 실패: " + error.message);
