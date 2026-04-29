@@ -374,6 +374,7 @@ function AdminPage(){
   const [message,setMessage]=useState("");
   const [editingItem,setEditingItem]=useState(null);
   const [editingTrainings, setEditingTrainings] = useState([]);
+  const [editingWelfares, setEditingWelfares] = useState([]);
   const [adminKeyword,setAdminKeyword]=useState("");
   const [adminStatus,setAdminStatus]=useState("");
   const [updateRequests,setUpdateRequests] = useState([]);
@@ -495,6 +496,13 @@ function AdminPage(){
     .eq("instructor_id", item.id);
 
   setEditingTrainings(data || []);
+
+  const { data: welfareData } = await supabase
+    .from("welfare_experiences")
+    .select("*")
+    .eq("instructor_id", item.id);
+    
+    setEditingWelfares(welfareData || []);
 }
 
   function updateEdit(key,value){
@@ -733,6 +741,71 @@ const filteredItems = items.filter((item) => {
       }}
     >
       양성과정 추가
+    </button>
+    <h3>실무경력</h3>
+
+    {editingWelfares.map((w, i) => (
+      <div key={i} className="repeat">
+        <div className="grid grid-3">
+    
+          <Field label="기관명">
+            <input
+              value={w.organization || ""}
+              onChange={(e)=>{
+                const copy = [...editingWelfares];
+                copy[i] = { ...copy[i], organization: e.target.value };
+                setEditingWelfares(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="직무">
+            <input
+              value={w.role || ""}
+              onChange={(e)=>{
+                const copy = [...editingWelfares];
+                copy[i] = { ...copy[i], role: e.target.value };
+                setEditingWelfares(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="기간">
+            <input
+              value={w.period || ""}
+              onChange={(e)=>{
+                const copy = [...editingWelfares];
+                copy[i] = { ...copy[i], period: e.target.value };
+                setEditingWelfares(copy);
+              }}
+            />
+          </Field>
+    
+        </div>
+    
+        <div className="actions">
+          <button
+            className="btn danger"
+            onClick={()=>{
+              setEditingWelfares(editingWelfares.filter((_, idx)=>idx !== i));
+            }}
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+    ))}
+    
+    <button
+      className="btn"
+      onClick={()=>{
+        setEditingWelfares([
+          ...editingWelfares,
+          { organization:"", role:"", period:"" }
+        ]);
+      }}
+    >
+      실무경력 추가
     </button>
           <div className="check-grid">
             <label className="check"><input type="checkbox" checked={editingItem.show_phone} onChange={(e)=>updateEdit("show_phone",e.target.checked)}/> 연락처 공개</label>
