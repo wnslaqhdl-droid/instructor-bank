@@ -288,6 +288,30 @@ function ModifyPage(){
     }
 
     setFound(data);
+
+    // 양성과정
+    const { data: trainingData } = await supabase
+      .from("training_courses")
+      .select("*")
+      .eq("instructor_id", data.id);
+    
+    setModifyTrainings(trainingData || []);
+    
+    // 실무경력
+    const { data: welfareData } = await supabase
+      .from("welfare_experiences")
+      .select("*")
+      .eq("instructor_id", data.id);
+    
+    setModifyWelfares(welfareData || []);
+    
+    // 강의경력
+    const { data: lectureData } = await supabase
+      .from("lecture_experiences")
+      .select("*")
+      .eq("instructor_id", data.id);
+    
+    setModifyLectures(lectureData || []);
   }
 
   async function submitRequest(){
