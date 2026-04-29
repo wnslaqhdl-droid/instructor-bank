@@ -688,7 +688,7 @@ const filteredItems = items.filter((item) => {
                     <td>{req.requested_at}</td>
                     <td>{req.instructor_id}</td>
                     <td>{req.request_status}</td>
-                    <td><button className="btn success" onClick={()=>approveRequest(req)}>승인</button></td>
+                    <td><button className="btn primary" onClick={()=>approveRequest(req)}>승인</button></td>
                   </tr>
                 ))}
         
