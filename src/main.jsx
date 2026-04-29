@@ -672,7 +672,7 @@ const filteredItems = items.filter((item) => {
                   <th>요청일</th>
                   <th>강사ID</th>
                   <th>상태</th>
-                  <th>관리</th
+                  <th>관리</th>
                 </tr>
               </thead>
         
