@@ -375,6 +375,7 @@ function AdminPage(){
   const [editingItem,setEditingItem]=useState(null);
   const [editingTrainings, setEditingTrainings] = useState([]);
   const [editingWelfares, setEditingWelfares] = useState([]);
+  const [editingLectures, setEditingLectures] = useState([]);
   const [adminKeyword,setAdminKeyword]=useState("");
   const [adminStatus,setAdminStatus]=useState("");
   const [updateRequests,setUpdateRequests] = useState([]);
@@ -503,6 +504,13 @@ function AdminPage(){
     .eq("instructor_id", item.id);
     
     setEditingWelfares(welfareData || []);
+
+    const { data: lectureData } = await supabase
+  .from("lecture_experiences")
+  .select("*")
+  .eq("instructor_id", item.id);
+
+setEditingLectures(lectureData || []);
 }
 
   function updateEdit(key,value){
@@ -579,6 +587,30 @@ function AdminPage(){
           .from("welfare_experiences")
           .insert(validWelfares);
       }
+
+      await supabase
+        .from("lecture_experiences")
+        .delete()
+        .eq("instructor_id", editingItem.id);
+      
+      const validLectures = editingLectures
+        .filter(l => l.organization || l.target || l.topic || l.start_date || l.end_date || l.count)
+        .map(l => ({
+          instructor_id: editingItem.id,
+          organization: l.organization || "",
+          target: l.target || "",
+          topic: l.topic || "",
+          start_date: l.start_date || null,
+          end_date: l.end_date || null,
+          count: l.count || ""
+        }));
+      
+      if(validLectures.length){
+        await supabase
+          .from("lecture_experiences")
+          .insert(validLectures);
+      }
+      
       setMessage("수정 완료");
       setEditingItem(null);
       loadAdmin();
@@ -858,6 +890,115 @@ const filteredItems = items.filter((item) => {
     >
       실무경력 추가
     </button>
+
+    <h3>강의경력</h3>
+
+    {editingLectures.map((l, i) => (
+      <div key={i} className="repeat">
+        <div className="grid grid-2">
+    
+          <Field label="강의기관">
+            <input
+              value={l.organization || ""}
+              onChange={(e)=>{
+                const copy = [...editingLectures];
+                copy[i] = { ...copy[i], organization: e.target.value };
+                setEditingLectures(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="교육대상">
+            <input
+              value={l.target || ""}
+              onChange={(e)=>{
+                const copy = [...editingLectures];
+                copy[i] = { ...copy[i], target: e.target.value };
+                setEditingLectures(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="강의주제">
+            <input
+              value={l.topic || ""}
+              onChange={(e)=>{
+                const copy = [...editingLectures];
+                copy[i] = { ...copy[i], topic: e.target.value };
+                setEditingLectures(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="강의횟수">
+            <input
+              value={l.count || ""}
+              onChange={(e)=>{
+                const copy = [...editingLectures];
+                copy[i] = { ...copy[i], count: e.target.value };
+                setEditingLectures(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="시작일">
+            <input
+              type="date"
+              value={l.start_date || ""}
+              onChange={(e)=>{
+                const copy = [...editingLectures];
+                copy[i] = { ...copy[i], start_date: e.target.value };
+                setEditingLectures(copy);
+              }}
+            />
+          </Field>
+    
+          <Field label="종료일">
+            <input
+              type="date"
+              value={l.end_date || ""}
+              onChange={(e)=>{
+                const copy = [...editingLectures];
+                copy[i] = { ...copy[i], end_date: e.target.value };
+                setEditingLectures(copy);
+              }}
+            />
+          </Field>
+    
+        </div>
+    
+        <div className="actions">
+          <button
+            className="btn danger"
+            onClick={()=>{
+              setEditingLectures(editingLectures.filter((_, idx)=>idx !== i));
+            }}
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+    ))}
+    
+    <button
+      className="btn"
+      onClick={()=>{
+        setEditingLectures([
+          ...editingLectures,
+          {
+            organization:"",
+            target:"",
+            topic:"",
+            start_date:"",
+            end_date:"",
+            count:""
+          }
+        ]);
+      }}
+    >
+      강의경력 추가
+    </button>
+    
           <div className="check-grid">
             <label className="check"><input type="checkbox" checked={editingItem.show_phone} onChange={(e)=>updateEdit("show_phone",e.target.checked)}/> 연락처 공개</label>
             <label className="check"><input type="checkbox" checked={editingItem.show_email} onChange={(e)=>updateEdit("show_email",e.target.checked)}/> 이메일 공개</label>
