@@ -630,6 +630,7 @@ const filteredItems = items.filter((item) => {
       <section className="card">
         <div className="actions">
           <button className="btn primary" onClick={loadAdmin}>목록 불러오기</button>
+          <button className="btn" onClick={loadRequests}>수정 요청 불러오기</button>
           <button className="btn" onClick={downloadCSV}>CSV 다운로드</button>
         </div>
 <div className="grid grid-3" style={{marginTop: "14px", marginBottom: "14px"}}>
