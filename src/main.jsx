@@ -682,13 +682,13 @@ const filteredItems = items.filter((item) => {
                     <td>{req.requested_at}</td>
                     <td>{req.instructor_id}</td>
                     <td>{req.request_status}</td>
-                    <td><button className="btn success" onClick={()=>approveRequest(req)}>승인</button></td>
+                    <td><button className="btn primary" onClick={()=>approveRequest(req)}>승인</button></td>
                   </tr>
                 ))}
         
                 {!updateRequests.length && (
                   <tr>
-                    <td colSpan="3" className="muted">
+                    <td colSpan="4" className="muted">
                       요청을 불러오세요.
                     </td>
                   </tr>
