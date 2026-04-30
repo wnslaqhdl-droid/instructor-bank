@@ -731,15 +731,84 @@ function AdminPage(){
   }
     async function approveRequest(req){
   setMessage("");
-  // 1. 실제 instructors 테이블 업데이트
+  // 실제 instructors 테이블 업데이트
   const { error: updateError } = await supabase
     .from("instructors")
-    .update(req.requested_data)
+    .update(req.requested_data.instructor)
     .eq("id", req.instructor_id);
   if(updateError){
     setMessage("반영 실패: " + updateError.message);
     return;
   }
+  // 1. 양성과정 반영
+  await supabase
+    .from("training_courses")
+    .delete()
+    .eq("instructor_id", req.instructor_id);
+  
+  const trainings = req.requested_data.training_courses || [];
+  
+  if (trainings.length) {
+    await supabase
+      .from("training_courses")
+      .insert(
+        trainings.map((t) => ({
+          instructor_id: req.instructor_id,
+          course_name: t.course_name || "",
+          institution: t.institution || "",
+          completion_year: t.completion_year || ""
+        }))
+      );
+  }
+  
+  // 2. 실무경력 반영
+  await supabase
+    .from("welfare_experiences")
+    .delete()
+    .eq("instructor_id", req.instructor_id);
+  
+  const welfares = req.requested_data.welfare_experiences || [];
+  
+  if (welfares.length) {
+    await supabase
+      .from("welfare_experiences")
+      .insert(
+        welfares.map((w) => ({
+          instructor_id: req.instructor_id,
+          organization: w.organization || "",
+          role: w.role || "",
+          start_date: w.start_date || null,
+          end_date: w.end_date || null,
+          description: w.description || ""
+        }))
+      );
+  }
+  
+  // 3. 강의경력 반영
+  await supabase
+    .from("lecture_experiences")
+    .delete()
+    .eq("instructor_id", req.instructor_id);
+  
+  const lectures = req.requested_data.lecture_experiences || [];
+  
+  if (lectures.length) {
+    await supabase
+      .from("lecture_experiences")
+      .insert(
+        lectures.map((l) => ({
+          instructor_id: req.instructor_id,
+          organization: l.organization || "",
+          target: l.target || "",
+          topic: l.topic || "",
+          start_date: l.start_date || null,
+          end_date: l.end_date || null,
+          count: l.count || ""
+        }))
+      );
+  }
+      
+      
   // 2. 요청 상태 변경
   const { error: statusError } = await supabase
     .from("instructor_update_requests")
