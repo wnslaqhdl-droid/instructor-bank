@@ -167,6 +167,8 @@ function SearchPage(){
  const [specialty,setSpecialty]=useState("");
  const [message,setMessage]=useState("");
  const [openId,setOpenId]=useState(null);
+ const [openId,setOpenId]=useState(null);
+ const [openBadgeId,setOpenBadgeId]=useState(null);  
  const [sortType,setSortType]=useState("latest");
  async function load(){ const {data,error}=await supabase
    .from("instructors")
@@ -268,7 +270,15 @@ function SearchPage(){
     <span className="compact-name name-cell">
       <span className="name-text">{item.name || "-"}</span>
       {item.center_verified && (
-        <span className="badge verified-badge">수료확인</span>
+        <span
+          className="badge verified-badge"
+          onClick={(e)=>{
+            e.stopPropagation();
+            setOpenBadgeId(openBadgeId === item.id ? null : item.id);
+          }}
+        >
+          개발원 과정 수료자
+        </span>
       )}
   </span>
     <span className="col-topic">{item.main_topic || "-"}</span>
@@ -276,6 +286,12 @@ function SearchPage(){
     <span className="col-target">{(item.targets || []).join(", ") || "-"}</span>
     <span className="col-type">{(item.types || []).join(", ") || "-"}</span>
   </div>
+    {openBadgeId === item.id && (
+      <div className="badge-info-box">
+        한국장애인개발원에서 운영한 관련 교육과정 수료 이력이 확인된 강사입니다.
+        강사의 전체 경력 또는 모든 교육과정 이수를 인증하는 의미는 아닙니다.
+      </div>
+    )}
    {openId === item.id && (
   <div className="detail-box">
     <div className="detail-grid">
