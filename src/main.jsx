@@ -317,16 +317,21 @@ function ModifyPage(){
   async function submitRequest(){
     setError(""); setMessage("");
 
+    const payload = {
+      instructor: { ...found },
+      training_courses: modifyTrainings,
+      welfare_experiences: modifyWelfares,
+      lecture_experiences: modifyLectures
+    };
+    
+    console.log("수정요청 payload", payload);
+    
     const {error} = await supabase
       .from("instructor_update_requests")
       .insert([{
         instructor_id: found.id,
-        requested_data: {
-          instructor: { ...found },
-          training_courses: modifyTrainings,
-          welfare_experiences: modifyWelfares,
-          lecture_experiences: modifyLectures
-        }]);
+        requested_data: payload
+      }]);
 
     if(error){
       setError("요청 실패: " + error.message);
