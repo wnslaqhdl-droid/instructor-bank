@@ -265,14 +265,12 @@ function SearchPage(){
   </div>{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
 >
   <div className="compact-row">
-    <span className="compact-name">
-      {item.name || "-"}
+    <span className="compact-name name-cell">
+      <span className="name-text">{item.name || "-"}</span>
       {item.center_verified && (
-        <span className="badge" style={{marginLeft:8}}>
-          중앙센터 수료 확인
-        </span>
+        <span className="badge verified-badge">수료확인</span>
       )}
-    </span>
+  </span>
     <span className="col-topic">{item.main_topic || "-"}</span>
     <span className="col-region">{(item.activity_regions || []).join(", ") || item.region || "-"}</span>
     <span className="col-target">{(item.targets || []).join(", ") || "-"}</span>
