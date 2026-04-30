@@ -167,3 +167,32 @@ th{background:#f8fafc;color:#334155}
 .name-cell {
   overflow: visible !important;
 }
+
+.name-cell {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.name-text {
+  min-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.verified-badge {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 700px) {
+  .name-cell {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .verified-badge {
+    margin-top: 4px;
+  }
+}
