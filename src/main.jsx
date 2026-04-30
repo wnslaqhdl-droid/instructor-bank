@@ -168,7 +168,12 @@ function SearchPage(){
  const [message,setMessage]=useState("");
  const [openId,setOpenId]=useState(null);
  const [sortType,setSortType]=useState("latest");
- async function load(){ const {data,error}=await supabase.from("instructors").select("*").eq("public_status","공개").eq("show_profile",true).order("created_at",{ascending:false}); if(error)setMessage("검색 실패: "+error.message); else setItems(data||[]); }
+ async function load(){ const {data,error}=await supabase
+   .from("instructors")
+   .select("*, training_courses(*), welfare_experiences(*), lecture_experiences(*)")
+   .eq("public_status","공개")
+   .eq("show_profile",true)
+   .order("created_at",{ascending:false}); if(error)setMessage("검색 실패: "+error.message); else setItems(data||[]); }
  useEffect(()=>{load()},[]);
  function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
  const filtered = items
@@ -199,7 +204,30 @@ function SearchPage(){
     if (sortType === "region") return (a.region || "").localeCompare(b.region || "");
     return 0;
   });
- return <div><section className="hero"><h1>성인권 교육 강사 검색</h1><p>공개 승인된 강사를 지역, 교육대상, 교육유형, 강의 분야로 검색합니다.</p></section>{message?<div className="error">{message}</div>:null}<section className="card"><div className="grid grid-4"><Field label="키워드"><input value={keyword} onChange={(e)=>setKeyword(e.target.value)} placeholder="이름, 주제, 소개 검색"/></Field><Field label="지역"><select value={region} onChange={(e)=>setRegion(e.target.value)}><option value="">전체</option>{regionOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육대상"><select value={target} onChange={(e)=>setTarget(e.target.value)}><option value="">전체</option>{targetOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field><Field label="교육유형"><select value={type} onChange={(e)=>setType(e.target.value)}><option value="">전체</option>{typeOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select></Field></div><div className="grid grid-3" style={{marginTop:14}}>
+ return <div><section className="hero">
+   <h1>성인권 교육 강사 검색</h1>
+   <p>공개 승인된 강사를 지역, 교육대상, 교육유형, 강의 분야로 검색합니다.</p>
+ </section>
+   {message?<div className="error">{message}</div>:null}
+   <section className="card">
+     <div className="grid grid-4">
+       <Field label="키워드">
+       <input value={keyword} onChange={(e)=>setKeyword(e.target.value)} 
+         placeholder="이름, 주제, 소개 검색"/></Field>
+       <Field label="지역">
+           <select value={region} onChange={(e)=>setRegion(e.target.value)}>
+           <option value="">전체</option>{regionOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select>
+       </Field>
+       <Field label="교육대상">
+         <select value={target} onChange={(e)=>setTarget(e.target.value)}>
+           <option value="">전체</option>{targetOptions.map((r)=>
+           <option key={r} value={r}>{r}</option>)}</select>
+       </Field>
+       <Field label="교육유형">
+         <select value={type} onChange={(e)=>setType(e.target.value)}>
+           <option value="">전체</option>{typeOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select>
+       </Field></div>
+     <div className="grid grid-3" style={{marginTop:14}}>
   <Field label="강의 분야">
     <select value={specialty} onChange={(e)=>setSpecialty(e.target.value)}>
       <option value="">전체</option>
@@ -237,7 +265,14 @@ function SearchPage(){
   </div>{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
 >
   <div className="compact-row">
-    <span className="compact-name">{item.name || "-"}</span>
+    <span className="compact-name">
+      {item.name || "-"}
+      {item.center_verified && (
+        <span className="badge" style={{marginLeft:8}}>
+          중앙센터 수료 확인
+        </span>
+      )}
+    </span>
     <span className="col-topic">{item.main_topic || "-"}</span>
     <span className="col-region">{(item.activity_regions || []).join(", ") || item.region || "-"}</span>
     <span className="col-target">{(item.targets || []).join(", ") || "-"}</span>
@@ -251,6 +286,39 @@ function SearchPage(){
       <div><b>교육유형</b><br/>        {(item.types || []).join(", ") || "-"}      </div>
       <div><b>강의분야</b><br/>        {(item.specialties || []).join(", ") || "-"}      </div>
       <div style={{gridColumn:"1 / -1"}}>        <b>강의 소개</b><br/>        {item.intro || "-"}      </div>
+      <div style={{gridColumn:"1 / -1"}}>
+        <b>양성과정 수료 정보</b><br/>
+        {(item.training_courses || []).length ? (
+          item.training_courses.map((t, i)=>(
+            <div key={i}>
+              {t.course_name || "-"} / {t.institution || "-"} / {t.completion_year || "-"}
+            </div>
+          ))
+        ) : "-"}
+      </div>
+    
+      <div style={{gridColumn:"1 / -1"}}>
+        <b>실무경력</b><br/>
+        {(item.welfare_experiences || []).length ? (
+          item.welfare_experiences.map((w, i)=>(
+            <div key={i}>
+              {w.organization || "-"} / {w.role || "-"} / {w.start_date || "-"} ~ {w.end_date || "-"}
+              {w.description ? ` / ${w.description}` : ""}
+            </div>
+          ))
+        ) : "-"}
+      </div>
+    
+      <div style={{gridColumn:"1 / -1"}}>
+        <b>강의경력</b><br/>
+        {(item.lecture_experiences || []).length ? (
+          item.lecture_experiences.map((l, i)=>(
+            <div key={i}>
+              {l.organization || "-"} / {l.target || "-"} / {l.topic || "-"} / {l.count || "-"}회
+            </div>
+          ))
+        ) : "-"}
+      </div>
       {item.show_phone && (        <div><b>연락처</b><br/>{item.phone ? (<a href={`tel:${item.phone}`}>{item.phone}</a>) : "-"}</div>      )}
       {item.show_email && (        <div><b>이메일</b><br/>{item.email ? (<a href={`mailto:${item.email}`}>{item.email}</a>) : "-"}</div>      )}
     </div>
