@@ -270,7 +270,8 @@ function SearchPage(){
     <span className="compact-name name-cell">
       <span className="name-text">{item.name || "-"}</span>
       {item.center_verified && (
-        <span
+        <button
+          type="button"
           className="badge verified-badge"
           onClick={(e)=>{
             e.stopPropagation();
@@ -278,7 +279,7 @@ function SearchPage(){
           }}
         >
           개발원 과정 수료자
-        </span>
+        </button>
       )}
   </span>
     <span className="col-topic">{item.main_topic || "-"}</span>
