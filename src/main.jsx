@@ -732,9 +732,29 @@ function AdminPage(){
     async function approveRequest(req){
   setMessage("");
   // 실제 instructors 테이블 업데이트
+  const requested = req.requested_data;
+  const instructorData = requested.instructor || requested;
   const { error: updateError } = await supabase
     .from("instructors")
-    .update(req.requested_data.instructor)
+    .update({
+      name: instructorData.name,
+      phone: instructorData.phone,
+      email: instructorData.email,
+      region: instructorData.region,
+      activity_regions: instructorData.activity_regions,
+      organization: instructorData.organization,
+      position: instructorData.position,
+      main_topic: instructorData.main_topic,
+      specialties: instructorData.specialties,
+      other_specialty: instructorData.other_specialty,
+      targets: instructorData.targets,
+      types: instructorData.types,
+      intro: instructorData.intro,
+      show_phone: instructorData.show_phone,
+      show_email: instructorData.show_email,
+      show_profile: instructorData.show_profile,
+      center_verified: instructorData.center_verified
+    })
     .eq("id", req.instructor_id);
   if(updateError){
     setMessage("반영 실패: " + updateError.message);
