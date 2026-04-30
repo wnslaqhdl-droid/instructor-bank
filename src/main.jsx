@@ -167,7 +167,6 @@ function SearchPage(){
  const [specialty,setSpecialty]=useState("");
  const [message,setMessage]=useState("");
  const [openId,setOpenId]=useState(null);
- const [openId,setOpenId]=useState(null);
  const [openBadgeId,setOpenBadgeId]=useState(null);  
  const [sortType,setSortType]=useState("latest");
  async function load(){ const {data,error}=await supabase
