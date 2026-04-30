@@ -156,3 +156,14 @@ th{background:#f8fafc;color:#334155}
   font-size: 13px;
   line-height: 1.6;
 }
+
+.verified-badge {
+  border: 1px solid #7dd3fc;
+  background: #e0f2fe;
+  color: #0369a1;
+  cursor: pointer;
+}
+
+.name-cell {
+  overflow: visible !important;
+}
