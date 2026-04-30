@@ -268,6 +268,7 @@ function SearchPage(){
   <div className="compact-row">
     <span className="compact-name name-cell">
       <span className="name-text">{item.name || "-"}</span>
+    
       {item.center_verified && (
         <button
           type="button"
@@ -280,7 +281,7 @@ function SearchPage(){
           개발원 과정 수료자
         </button>
       )}
-  </span>
+    </span>
     <span className="col-topic">{item.main_topic || "-"}</span>
     <span className="col-region">{(item.activity_regions || []).join(", ") || item.region || "-"}</span>
     <span className="col-target">{(item.targets || []).join(", ") || "-"}</span>
