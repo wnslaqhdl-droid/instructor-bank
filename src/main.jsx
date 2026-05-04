@@ -1533,71 +1533,65 @@ const filteredItems = items.filter((item) => {
               </thead>
               <tbody>
                 {updateRequests.map((req)=>(
-                  <tr key={req.id}>
-                    <td>{req.requested_at}</td>
-                    <td>{req.instructor_id}</td>
-                    <td>{req.request_status}</td>
-                  
-                    <td>
-                      {req.admin_memo || "-"}
-                    </td>
-                  
-                    <td>
-                      <button
-                        className="btn primary"
-                        onClick={()=>approveRequest(req)}
-                        disabled={req.request_status !== "검토중"}
-                      >
-                        승인
-                      </button>
-                  
-                      <button
-                        className="btn danger"
-                        onClick={()=>rejectRequest(req)}
-                        disabled={req.request_status !== "검토중"}
-                        style={{marginLeft:6}}
-                      >
-                        반려
-                      </button>
-                      <button
-                        className="btn"
-                        onClick={()=>{
-                          setOpenRequestId(openRequestId === req.id ? null : req.id);
-                        }}
-                        style={{marginLeft:6}}
-                      >
-                        상세
-                      </button>
-                    </td>
-                  </tr>
-                  {openRequestId === req.id && (
-                  <tr>
-                    <td colSpan="5">
-                      <div className="request-detail-box">
+                  <React.Fragment key={req.id}>
+                    <tr>
+                      <td>{req.requested_at}</td>
+                      <td>{req.instructor_id}</td>
+                      <td>{req.request_status}</td>
+                      <td>{req.admin_memo || "-"}</td>
+                      <td>
+                        <button
+                          className="btn primary"
+                          onClick={()=>approveRequest(req)}
+                          disabled={req.request_status !== "검토중"}
+                        >
+                          승인
+                        </button>
                 
-                        {/* 기본정보 비교 */}
-                        <div>
-                          <b>성명</b><br/>
-                          기존: {req.current_data?.name || "-"}<br/>
-                          요청: {req.requested_data?.instructor?.name || "-"}
-                        </div>
+                        <button
+                          className="btn danger"
+                          onClick={()=>rejectRequest(req)}
+                          disabled={req.request_status !== "검토중"}
+                          style={{marginLeft:6}}
+                        >
+                          반려
+                        </button>
                 
-                        <div>
-                          <b>지역</b><br/>
-                          기존: {req.current_data?.region || "-"}<br/>
-                          요청: {req.requested_data?.instructor?.region || "-"}
-                        </div>
+                        <button
+                          className="btn"
+                          onClick={()=>{
+                            setOpenRequestId(openRequestId === req.id ? null : req.id);
+                          }}
+                          style={{marginLeft:6}}
+                        >
+                          상세
+                        </button>
+                      </td>
+                    </tr>
                 
-                        <div>
-                          <b>주요 강의주제</b><br/>
-                          기존: {req.current_data?.main_topic || "-"}<br/>
-                          요청: {req.requested_data?.instructor?.main_topic || "-"}
-                        </div>
+                    {openRequestId === req.id && (
+                      <tr>
+                        <td colSpan="5">
+                          <div className="request-detail-box">
+                            <div>
+                              <b>성명</b><br/>
+                              요청: {req.requested_data?.instructor?.name || "-"}
+                            </div>
                 
-                      </div>
-                    </td>
-                  </tr>
-                )}
+                            <div>
+                              <b>지역</b><br/>
+                              요청: {req.requested_data?.instructor?.region || "-"}
+                            </div>
+                
+                            <div>
+                              <b>주요 강의주제</b><br/>
+                              요청: {req.requested_data?.instructor?.main_topic || "-"}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
         
                 {!updateRequests.length && (
