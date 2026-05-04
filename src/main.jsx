@@ -1526,16 +1526,25 @@ const filteredItems = items.filter((item) => {
                   <th>요청일</th>
                   <th>강사ID</th>
                   <th>상태</th>
+                  <th>반려 사유</th
                   <th>관리</th>
                 </tr>
               </thead>
-        
               <tbody>
                 {updateRequests.map((req)=>(
                   <tr key={req.id}>
                     <td>{req.requested_at}</td>
                     <td>{req.instructor_id}</td>
                     <td>{req.request_status}</td>
+                   <td>{req.request_status}</td>
+                    <td>
+                      {req.request_status === "반려" ? (
+                        <span style={{color:"#dc2626", fontSize:"12px", whiteSpace:"pre-wrap"}}>
+                          {req.admin_memo || "-"}
+                        </span>
+                      ) : "-"}
+                    </td>
+                    
                     <td>
                       <button
                         className="btn primary"
