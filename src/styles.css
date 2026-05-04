@@ -177,3 +177,18 @@ th{background:#f8fafc;color:#334155}
   gap: 10px;
   font-size: 13px;
 }
+
+.change-item {
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.changed-value {
+  color: #dc2626;
+  font-weight: 700;
+  background: #fef2f2;
+  padding: 2px 4px;
+  border-radius: 6px;
+}
