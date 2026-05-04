@@ -178,8 +178,7 @@ function SearchPage(){
    .order("created_at",{ascending:false}); if(error)setMessage("검색 실패: "+error.message); else setItems(data||[]); }
  useEffect(()=>{load()},[]);
  function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
- const filtered = items
-  .filter((item) => {
+ const filtered = items.filter((item) => {
     const text = [
       item.name,
       item.region,
@@ -193,6 +192,7 @@ function SearchPage(){
     ].join(" ").toLowerCase();
 
     return (
+      (!onlyVerified || item.center_verified) &&
       (!keyword || text.includes(keyword.toLowerCase())) &&
       (!region || item.region === region || (item.activity_regions || []).includes(region)) &&
       (!target || (item.targets || []).includes(target)) &&
