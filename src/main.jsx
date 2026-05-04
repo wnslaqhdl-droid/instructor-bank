@@ -930,7 +930,25 @@ function AdminPage(){
   loadRequests();
   loadAdmin();
   }
+  
+function isChanged(oldValue, newValue){
+  return JSON.stringify(oldValue ?? "") !== JSON.stringify(newValue ?? "");
+}
 
+function renderChangedField(label, oldValue, newValue){
+  if(!isChanged(oldValue, newValue)) return null;
+
+  return (
+    <div className="change-item">
+      <b>{label}</b><br/>
+      기존: {Array.isArray(oldValue) ? oldValue.join(", ") : (oldValue || "-")}<br/>
+      요청: <span className="changed-value">
+        {Array.isArray(newValue) ? newValue.join(", ") : (newValue || "-")}
+      </span>
+    </div>
+  );
+}
+  
 async function rejectRequest(req){
   const reason = prompt("반려 사유를 입력하세요.");
 
@@ -1572,25 +1590,47 @@ const filteredItems = items.filter((item) => {
                     {openRequestId === req.id && (
                       <tr>
                         <td colSpan="5">
-                          <div className="request-detail-box">
-                            <div>
-                            <b>성명</b><br/>
-                            기존: {req.instructors?.name || "-"}<br/>
-                            요청: {req.requested_data?.instructor?.name || "-"}
-                          </div>
-                          
-                          <div>
-                            <b>지역</b><br/>
-                            기존: {req.instructors?.region || "-"}<br/>
-                            요청: {req.requested_data?.instructor?.region || "-"}
-                          </div>
-                          
-                          <div>
-                            <b>주요 강의주제</b><br/>
-                            기존: {req.instructors?.main_topic || "-"}<br/>
-                            요청: {req.requested_data?.instructor?.main_topic || "-"}
-                          </div>
-                          </div>
+                         <div className="request-detail-box">
+                          {renderChangedField("성명", req.instructors?.name, req.requested_data?.instructor?.name)}
+                          {renderChangedField("연락처", req.instructors?.phone, req.requested_data?.instructor?.phone)}
+                          {renderChangedField("이메일", req.instructors?.email, req.requested_data?.instructor?.email)}
+                          {renderChangedField("거주지역", req.instructors?.region, req.requested_data?.instructor?.region)}
+                          {renderChangedField("활동 가능 지역", req.instructors?.activity_regions, req.requested_data?.instructor?.activity_regions)}
+                          {renderChangedField("소속기관", req.instructors?.organization, req.requested_data?.instructor?.organization)}
+                          {renderChangedField("직위/직업군", req.instructors?.position, req.requested_data?.instructor?.position)}
+                          {renderChangedField("주요 강의주제", req.instructors?.main_topic, req.requested_data?.instructor?.main_topic)}
+                          {renderChangedField("강의 분야", req.instructors?.specialties, req.requested_data?.instructor?.specialties)}
+                          {renderChangedField("그 외 주제", req.instructors?.other_specialty, req.requested_data?.instructor?.other_specialty)}
+                          {renderChangedField("교육대상", req.instructors?.targets, req.requested_data?.instructor?.targets)}
+                          {renderChangedField("교육유형", req.instructors?.types, req.requested_data?.instructor?.types)}
+                          {renderChangedField("강사 소개", req.instructors?.intro, req.requested_data?.instructor?.intro)}
+                          {renderChangedField("연락처 공개", req.instructors?.show_phone, req.requested_data?.instructor?.show_phone)}
+                          {renderChangedField("이메일 공개", req.instructors?.show_email, req.requested_data?.instructor?.show_email)}
+                          {renderChangedField("프로필 공개", req.instructors?.show_profile, req.requested_data?.instructor?.show_profile)}
+                          {renderChangedField("개발원 과정 수료 확인", req.instructors?.center_verified, req.requested_data?.instructor?.center_verified)}
+                        
+                          {![
+                            isChanged(req.instructors?.name, req.requested_data?.instructor?.name),
+                            isChanged(req.instructors?.phone, req.requested_data?.instructor?.phone),
+                            isChanged(req.instructors?.email, req.requested_data?.instructor?.email),
+                            isChanged(req.instructors?.region, req.requested_data?.instructor?.region),
+                            isChanged(req.instructors?.activity_regions, req.requested_data?.instructor?.activity_regions),
+                            isChanged(req.instructors?.organization, req.requested_data?.instructor?.organization),
+                            isChanged(req.instructors?.position, req.requested_data?.instructor?.position),
+                            isChanged(req.instructors?.main_topic, req.requested_data?.instructor?.main_topic),
+                            isChanged(req.instructors?.specialties, req.requested_data?.instructor?.specialties),
+                            isChanged(req.instructors?.other_specialty, req.requested_data?.instructor?.other_specialty),
+                            isChanged(req.instructors?.targets, req.requested_data?.instructor?.targets),
+                            isChanged(req.instructors?.types, req.requested_data?.instructor?.types),
+                            isChanged(req.instructors?.intro, req.requested_data?.instructor?.intro),
+                            isChanged(req.instructors?.show_phone, req.requested_data?.instructor?.show_phone),
+                            isChanged(req.instructors?.show_email, req.requested_data?.instructor?.show_email),
+                            isChanged(req.instructors?.show_profile, req.requested_data?.instructor?.show_profile),
+                            isChanged(req.instructors?.center_verified, req.requested_data?.instructor?.center_verified)
+                          ].some(Boolean) && (
+                            <div className="muted">변경된 기본정보가 없습니다.</div>
+                          )}
+                        </div>
                         </td>
                       </tr>
                     )}
