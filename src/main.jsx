@@ -169,6 +169,7 @@ function SearchPage(){
  const [openId,setOpenId]=useState(null);
  const [openBadgeId,setOpenBadgeId]=useState(null);  
  const [sortType,setSortType]=useState("latest");
+ const [onlyVerified,setOnlyVerified]=useState(false);
  async function load(){ const {data,error}=await supabase
    .from("instructors")
    .select("*, training_courses(*), welfare_experiences(*), lecture_experiences(*)")
@@ -215,6 +216,7 @@ function SearchPage(){
        <Field label="키워드">
        <input value={keyword} onChange={(e)=>setKeyword(e.target.value)} 
          placeholder="이름, 주제, 소개 검색"/></Field>
+       
        <Field label="지역">
            <select value={region} onChange={(e)=>setRegion(e.target.value)}>
            <option value="">전체</option>{regionOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select>
@@ -243,6 +245,14 @@ function SearchPage(){
       <option value="region">지역순</option>
     </select>
   </Field>
+  <label style={{display:"block", marginTop:8}}>
+    <input
+      type="checkbox"
+      checked={onlyVerified}
+      onChange={(e)=>setOnlyVerified(e.target.checked)}
+    />
+    <span style={{marginLeft:6}}>개발원 과정 수료자만 보기</span>
+  </label>
 
   <div style={{display:"flex",alignItems:"end",justifyContent:"flex-end"}}>
     <button className="btn" onClick={()=>{
