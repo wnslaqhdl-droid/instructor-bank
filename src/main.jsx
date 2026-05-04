@@ -812,7 +812,7 @@ function AdminPage(){
     setUpdateRequests(data || []);
     }
   }
-    async function approveRequest(req){
+  async function approveRequest(req){
   setMessage("");
   // 실제 instructors 테이블 업데이트
   const requested = req.requested_data;
@@ -929,6 +929,30 @@ function AdminPage(){
   loadRequests();
   loadAdmin();
   }
+
+async function rejectRequest(req){
+  const reason = prompt("반려 사유를 입력하세요.");
+
+  if(reason === null) return;
+
+  const { error } = await supabase
+    .from("instructor_update_requests")
+    .update({
+      request_status: "반려",
+      admin_memo: reason,
+      reviewed_at: new Date().toISOString()
+    })
+    .eq("id", req.id);
+
+  if(error){
+    setMessage("반려 처리 실패: " + error.message);
+    return;
+  }
+
+  setMessage("수정 요청을 반려 처리했습니다.");
+  loadRequests();
+}
+  
   async function updateStatus(id,status){
     const {error}=await supabase
       .from("instructors")
@@ -1512,7 +1536,24 @@ const filteredItems = items.filter((item) => {
                     <td>{req.requested_at}</td>
                     <td>{req.instructor_id}</td>
                     <td>{req.request_status}</td>
-                    <td><button className="btn primary" onClick={()=>approveRequest(req)}>승인</button></td>
+                    <td>
+                      <button
+                        className="btn primary"
+                        onClick={()=>approveRequest(req)}
+                        disabled={req.request_status !== "검토중"}
+                      >
+                        승인
+                      </button>
+                    
+                      <button
+                        className="btn danger"
+                        onClick={()=>rejectRequest(req)}
+                        disabled={req.request_status !== "검토중"}
+                        style={{marginLeft:6}}
+                      >
+                        반려
+                      </button>
+                    </td>
                   </tr>
                 ))}
         
