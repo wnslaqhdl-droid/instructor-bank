@@ -1588,7 +1588,7 @@ const filteredItems = items.filter((item) => {
               <tbody>
                 {updateRequests.map((req)=>(
                   <React.Fragment key={req.id}>
-                    <tr>
+                    <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
                       <td>{req.requested_at}</td>
                       <td>{req.instructor_id}</td>
                       <td>{req.request_status}</td>
@@ -1624,7 +1624,7 @@ const filteredItems = items.filter((item) => {
                     </tr>
                 
                     {openRequestId === req.id && (
-                      <tr>
+                      <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
                         <td colSpan="5">
                          <div className="request-detail-box">
                           {renderChangedField("성명", req.instructors?.name, req.requested_data?.instructor?.name)}
