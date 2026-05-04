@@ -1559,6 +1559,15 @@ const filteredItems = items.filter((item) => {
                       >
                         반려
                       </button>
+                      <button
+                        className="btn"
+                        onClick={()=>{
+                          setOpenRequestId(openRequestId === req.id ? null : req.id);
+                        }}
+                        style={{marginLeft:6}}
+                      >
+                        상세
+                      </button>
                     </td>
                   </tr>
                 ))}
