@@ -192,3 +192,7 @@ th{background:#f8fafc;color:#334155}
   padding: 2px 4px;
   border-radius: 6px;
 }
+
+.processed-row {
+  opacity: 0.55;
+}
