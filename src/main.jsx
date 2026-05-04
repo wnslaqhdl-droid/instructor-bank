@@ -1536,15 +1536,11 @@ const filteredItems = items.filter((item) => {
                     <td>{req.requested_at}</td>
                     <td>{req.instructor_id}</td>
                     <td>{req.request_status}</td>
-                   <td>{req.request_status}</td>
+                  
                     <td>
-                      {req.request_status === "반려" ? (
-                        <span style={{color:"#dc2626", fontSize:"12px", whiteSpace:"pre-wrap"}}>
-                          {req.admin_memo || "-"}
-                        </span>
-                      ) : "-"}
+                      {req.admin_memo || "-"}
                     </td>
-                    
+                  
                     <td>
                       <button
                         className="btn primary"
@@ -1553,7 +1549,7 @@ const filteredItems = items.filter((item) => {
                       >
                         승인
                       </button>
-                    
+                  
                       <button
                         className="btn danger"
                         onClick={()=>rejectRequest(req)}
@@ -1568,7 +1564,7 @@ const filteredItems = items.filter((item) => {
         
                 {!updateRequests.length && (
                   <tr>
-                    <td colSpan="4" className="muted">
+                    <td colSpan="5" className="muted">
                       요청을 불러오세요.
                     </td>
                   </tr>
