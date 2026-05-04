@@ -804,7 +804,7 @@ function AdminPage(){
   async function loadRequests(){
     const {data,error} = await supabase
       .from("instructor_update_requests")
-      .select("*")
+      .select("*, instructors(*)")
       .order("requested_at",{ascending:false});
 
     if(error){
@@ -1574,19 +1574,22 @@ const filteredItems = items.filter((item) => {
                         <td colSpan="5">
                           <div className="request-detail-box">
                             <div>
-                              <b>성명</b><br/>
-                              요청: {req.requested_data?.instructor?.name || "-"}
-                            </div>
-                
-                            <div>
-                              <b>지역</b><br/>
-                              요청: {req.requested_data?.instructor?.region || "-"}
-                            </div>
-                
-                            <div>
-                              <b>주요 강의주제</b><br/>
-                              요청: {req.requested_data?.instructor?.main_topic || "-"}
-                            </div>
+                            <b>성명</b><br/>
+                            기존: {req.instructors?.name || "-"}<br/>
+                            요청: {req.requested_data?.instructor?.name || "-"}
+                          </div>
+                          
+                          <div>
+                            <b>지역</b><br/>
+                            기존: {req.instructors?.region || "-"}<br/>
+                            요청: {req.requested_data?.instructor?.region || "-"}
+                          </div>
+                          
+                          <div>
+                            <b>주요 강의주제</b><br/>
+                            기존: {req.instructors?.main_topic || "-"}<br/>
+                            요청: {req.requested_data?.instructor?.main_topic || "-"}
+                          </div>
                           </div>
                         </td>
                       </tr>
