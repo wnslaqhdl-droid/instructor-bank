@@ -1570,6 +1570,34 @@ const filteredItems = items.filter((item) => {
                       </button>
                     </td>
                   </tr>
+                  {openRequestId === req.id && (
+                  <tr>
+                    <td colSpan="5">
+                      <div className="request-detail-box">
+                
+                        {/* 기본정보 비교 */}
+                        <div>
+                          <b>성명</b><br/>
+                          기존: {req.current_data?.name || "-"}<br/>
+                          요청: {req.requested_data?.instructor?.name || "-"}
+                        </div>
+                
+                        <div>
+                          <b>지역</b><br/>
+                          기존: {req.current_data?.region || "-"}<br/>
+                          요청: {req.requested_data?.instructor?.region || "-"}
+                        </div>
+                
+                        <div>
+                          <b>주요 강의주제</b><br/>
+                          기존: {req.current_data?.main_topic || "-"}<br/>
+                          요청: {req.requested_data?.instructor?.main_topic || "-"}
+                        </div>
+                
+                      </div>
+                    </td>
+                  </tr>
+                )}
                 ))}
         
                 {!updateRequests.length && (
