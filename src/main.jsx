@@ -804,7 +804,15 @@ function AdminPage(){
   async function loadRequests(){
     const {data,error} = await supabase
       .from("instructor_update_requests")
-      .select("*, instructors(*)")
+      .select(`
+        *,
+        instructors(
+          *,
+          training_courses(*),
+          welfare_experiences(*),
+          lecture_experiences(*)
+        )
+      `)
       .order("requested_at",{ascending:false});
 
     if(error){
@@ -948,6 +956,31 @@ function renderChangedField(label, oldValue, newValue){
     </div>
   );
 }
+
+function renderChangedList(label, oldList, newList, renderItem){
+  const oldValue = oldList || [];
+  const newValue = newList || [];
+
+  if(!isChanged(oldValue, newValue)) return null;
+
+  return (
+    <div className="change-item">
+      <b>{label}</b><br/>
+
+      <div className="muted small">기존</div>
+      {oldValue.length ? oldValue.map((item, i)=>(
+        <div key={`old-${i}`}>{renderItem(item)}</div>
+      )) : "-"}
+
+      <div className="muted small" style={{marginTop:6}}>요청</div>
+      <div className="changed-value">
+        {newValue.length ? newValue.map((item, i)=>(
+          <div key={`new-${i}`}>{renderItem(item)}</div>
+        )) : "-"}
+      </div>
+    </div>
+  );
+}  
   
 async function rejectRequest(req){
   const reason = prompt("반려 사유를 입력하세요.");
@@ -1608,6 +1641,26 @@ const filteredItems = items.filter((item) => {
                           {renderChangedField("이메일 공개", req.instructors?.show_email, req.requested_data?.instructor?.show_email)}
                           {renderChangedField("프로필 공개", req.instructors?.show_profile, req.requested_data?.instructor?.show_profile)}
                           {renderChangedField("개발원 과정 수료 확인", req.instructors?.center_verified, req.requested_data?.instructor?.center_verified)}
+                          {renderChangedList(
+                            "양성과정 수료 정보",
+                            req.instructors?.training_courses,
+                            req.requested_data?.training_courses,
+                            (t)=>`${t.course_name || "-"} / ${t.institution || "-"} / ${t.completion_year || "-"}`
+                          )}
+                          
+                          {renderChangedList(
+                            "실무경력",
+                            req.instructors?.welfare_experiences,
+                            req.requested_data?.welfare_experiences,
+                            (w)=>`${w.organization || "-"} / ${w.role || "-"} / ${w.start_date || "-"} ~ ${w.end_date || "-"} / ${w.description || "-"}`
+                          )}
+                          
+                          {renderChangedList(
+                            "강의경력",
+                            req.instructors?.lecture_experiences,
+                            req.requested_data?.lecture_experiences,
+                            (l)=>`${l.organization || "-"} / ${l.target || "-"} / ${l.topic || "-"} / ${l.count || "-"}회 / ${l.start_date || "-"} ~ ${l.end_date || "-"}`
+                          )}
                         
                           {![
                             isChanged(req.instructors?.name, req.requested_data?.instructor?.name),
@@ -1626,9 +1679,12 @@ const filteredItems = items.filter((item) => {
                             isChanged(req.instructors?.show_phone, req.requested_data?.instructor?.show_phone),
                             isChanged(req.instructors?.show_email, req.requested_data?.instructor?.show_email),
                             isChanged(req.instructors?.show_profile, req.requested_data?.instructor?.show_profile),
-                            isChanged(req.instructors?.center_verified, req.requested_data?.instructor?.center_verified)
+                            isChanged(req.instructors?.center_verified, req.requested_data?.instructor?.center_verified),
+                            isChanged(req.instructors?.training_courses, req.requested_data?.training_courses),
+                            isChanged(req.instructors?.welfare_experiences, req.requested_data?.welfare_experiences),
+                            isChanged(req.instructors?.lecture_experiences, req.requested_data?.lecture_experiences)
                           ].some(Boolean) && (
-                            <div className="muted">변경된 기본정보가 없습니다.</div>
+                            <div className="muted">변경된 항목이 없습니다.</div>
                           )}
                         </div>
                         </td>
