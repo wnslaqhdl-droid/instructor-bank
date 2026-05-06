@@ -5,7 +5,34 @@ import { regionOptions, targetOptions, typeOptions, specialtyOptions, emptyInstr
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
+function getCurrentMonthKST(){
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 7);
+}
 
+function toMonthValue(value){
+  if(!value) return "";
+  return String(value).slice(0, 7);
+}
+
+function monthToDate(value){
+  if(!value) return null;
+  return `${value}-01`;
+}
+
+function formatMonth(value){
+  if(!value) return "";
+  const [year, month] = String(value).slice(0, 7).split("-");
+  if(!year || !month) return "";
+  return `${year}.${month}`;
+}
+
+function formatPeriod(startDate, endDate){
+  const start = formatMonth(startDate) || "-";
+  const end = endDate ? formatMonth(endDate) : "현재";
+  return `${start} ~ ${end}`;
+}
 function Field({ label, required, help, children }) {
   return <label className="field"><span>{label}{required ? " *" : ""}</span>{children}{help ? <div className="help">{help}</div> : null}</label>;
 }
@@ -150,11 +177,115 @@ async function submitForm() {
 }
 
   return <div><section className="hero"><h1>성인권 교육 강사 등록</h1><p>입력하신 정보는 관리자 검토 후 강사뱅크에 공개됩니다. 실무경력 및 강의경력은 강사 본인의 자기신고 내용을 기준으로 관리되며, 중앙센터는 발달장애인 성인권 부모교육지원사업 내 양성과정 수료 여부만 확인합니다.</p></section>{message ? <div className="notice">{message}</div> : null}{error ? <div className="error">{error}</div> : null}
-    <section className="card"><h2>1. 기본정보</h2><div className="grid grid-2"><Field label="성명" required><input value={form.name} onChange={(e) => update("name", e.target.value)} /></Field><Field label="연락처" required><input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="010-0000-0000" /></Field><Field label="이메일" required><input value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="example@email.com" /></Field><Field label="거주지역" required><select value={form.region} onChange={(e) => update("region", e.target.value)}><option value="">선택</option>{regionOptions.map((r) => <option key={r} value={r}>{r}</option>)}</select></Field><Field label="소속기관"><input value={form.organization} onChange={(e) => update("organization", e.target.value)} /></Field><Field label="직위/직업군"><input value={form.position} onChange={(e) => update("position", e.target.value)} /></Field></div></section>
-    <Repeater title="2. 양성과정 수료 정보" help="수료한 과정명을 이력 단위로 입력합니다." items={trainingCourses} setItems={setTrainingCourses} emptyItem={emptyTraining} render={(item, index, updateItem) => <div className="grid grid-3"><Field label="양성과정명"><input value={item.course_name} onChange={(e) => updateItem(index, "course_name", e.target.value)} /></Field><Field label="수료기관"><input value={item.institution} onChange={(e) => updateItem(index, "institution", e.target.value)} /></Field><Field label="수료연도"><input value={item.completion_year} onChange={(e) => updateItem(index, "completion_year", e.target.value)} /></Field></div>} />
-    <Repeater title="3. 장애인복지 분야 실무경력 자기신고" help="중앙센터가 개별 검증하지 않는 자기신고 영역입니다." items={welfareExperiences} setItems={setWelfareExperiences} emptyItem={emptyWelfare} render={(item, index, updateItem) => <div className="grid grid-2"><Field label="기관명"><input value={item.organization} onChange={(e) => updateItem(index, "organization", e.target.value)} /></Field><Field label="역할"><input value={item.role} onChange={(e) => updateItem(index, "role", e.target.value)} /></Field><Field label="시작일"><input type="date" value={item.start_date} onChange={(e) => updateItem(index, "start_date", e.target.value)} /></Field><Field label="종료일"><input type="date" value={item.end_date} onChange={(e) => updateItem(index, "end_date", e.target.value)} /></Field><Field label="주요 업무"><textarea value={item.description} onChange={(e) => updateItem(index, "description", e.target.value)} /></Field></div>} />
-    <Repeater title="4. 발달장애인 대상 성교육 강의경력 자기신고" items={lectureExperiences} setItems={setLectureExperiences} emptyItem={emptyLecture} render={(item, index, updateItem) => <div className="grid grid-3"><Field label="강의기관"><input value={item.organization} onChange={(e) => updateItem(index, "organization", e.target.value)} /></Field><Field label="교육대상"><input value={item.target} onChange={(e) => updateItem(index, "target", e.target.value)} /></Field><Field label="강의주제"><input value={item.topic} onChange={(e) => updateItem(index, "topic", e.target.value)} /></Field><Field label="시작일"><input type="date" value={item.start_date} onChange={(e) => updateItem(index, "start_date", e.target.value)} /></Field><Field label="종료일"><input type="date" value={item.end_date} onChange={(e) => updateItem(index, "end_date", e.target.value)} /></Field><Field label="강의횟수"><input value={item.count} onChange={(e) => updateItem(index, "count", e.target.value)} /></Field></div>} />
-    <section className="card"><h2>5. 강의 정보 및 공개 설정</h2><p className="muted small">연락처와 이메일은 강사가 공개에 동의한 경우에만 검색 페이지에 표시됩니다. 공개를 원하지 않는 항목은 체크하지 않아도 됩니다.</p><div className="grid"><Field label="활동 가능 지역"><CheckboxGroup options={regionOptions} values={form.activity_regions} onChange={(v) => update("activity_regions", v)} /></Field><Field label="교육대상"><CheckboxGroup options={targetOptions} values={form.targets} onChange={(v) => update("targets", v)} /></Field><Field label="교육유형"><CheckboxGroup options={typeOptions} values={form.types} onChange={(v) => update("types", v)} /></Field><Field label="강의 분야" help="이 항목은 검색 필터에 표시됩니다."><CheckboxGroup options={specialtyOptions} values={form.specialties} onChange={(v) => update("specialties", v)} /></Field><Field label="그 외 주제" help="검색 필터에는 표시하지 않고 키워드 검색에만 활용합니다."><input value={form.other_specialty} onChange={(e) => update("other_specialty", e.target.value)} /></Field><Field label="주요 강의주제 한 줄"  required  help="검색 목록에 표시됩니다. 80자 이내로 핵심 주제만 입력해 주세요.">  <input    value={form.main_topic}    maxLength={80}    onChange={(e) => update("main_topic", e.target.value)}  />  <div className="help">{(form.main_topic || "").length} / 80</div></Field><Field label="강사 소개"><textarea value={form.intro} onChange={(e) => update("intro", e.target.value)} /></Field><div className="check-grid"><label className="check"><input type="checkbox" checked={form.show_phone} onChange={(e) => update("show_phone", e.target.checked)} /> 연락처 공개</label><label className="check"><input type="checkbox" checked={form.show_email} onChange={(e) => update("show_email", e.target.checked)} /> 이메일 공개</label><label className="check"><input type="checkbox" checked={form.show_profile} onChange={(e) => update("show_profile", e.target.checked)} /> 공개 프로필 게시</label></div></div></section>
+    <section className="card">
+      <h2>1. 기본정보</h2>
+      <div className="grid grid-2">
+        <Field label="성명" required>
+          <input value={form.name} onChange={(e) => update("name", e.target.value)} />
+        </Field>
+        <Field label="연락처" required>
+          <input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="010-0000-0000" />
+        </Field>
+        <Field label="이메일" required>
+          <input value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="example@email.com" />
+        </Field>
+        <Field label="거주지역" required>
+          <select value={form.region} onChange={(e) => update("region", e.target.value)}><option value="">선택</option>{regionOptions.map((r) => <option key={r} value={r}>{r}</option>)}
+          </select>
+        </Field>
+        <Field label="소속기관"><input value={form.organization} onChange={(e) => update("organization", e.target.value)} />
+        </Field>
+        <Field label="직위/직업군">
+          <input value={form.position} onChange={(e) => update("position", e.target.value)} />
+        </Field>
+      </div>
+    </section>
+    <Repeater title="2. 양성과정 수료 정보" help="수료한 과정명을 이력 단위로 입력합니다." items={trainingCourses} setItems={setTrainingCourses} emptyItem={emptyTraining} render={(item, index, updateItem) =>
+    <div className="grid grid-3">
+      <Field label="양성과정명">
+        <input value={item.course_name} onChange={(e) => updateItem(index, "course_name", e.target.value)} />
+      </Field>
+      <Field label="수료기관">
+        <input value={item.institution} onChange={(e) => updateItem(index, "institution", e.target.value)} />
+      </Field>
+      <Field label="수료연도">
+        <input value={item.completion_year} onChange={(e) => updateItem(index, "completion_year", e.target.value)} />
+      </Field>
+    </div>} />
+    <Repeater title="3. 장애인복지 분야 실무경력 자기신고" help="중앙센터가 개별 검증하지 않는 자기신고 영역입니다." items={welfareExperiences} setItems={setWelfareExperiences} emptyItem={emptyWelfare} render={(item, index, updateItem) => 
+    <div className="grid grid-2">
+      <Field label="기관명">
+        <input value={item.organization} onChange={(e) => updateItem(index, "organization", e.target.value)} />
+      </Field>
+      <Field label="역할">
+        <input value={item.role} onChange={(e) => updateItem(index, "role", e.target.value)} />
+      </Field>
+      <Field label="시작일">
+        <input type="date" value={item.start_date} onChange={(e) => updateItem(index, "start_date", e.target.value)} />
+      </Field>
+      <Field label="종료일">
+        <input type="date" value={item.end_date} onChange={(e) => updateItem(index, "end_date", e.target.value)} />
+      </Field>
+      <Field label="주요 업무">
+        <textarea value={item.description} onChange={(e) => updateItem(index, "description", e.target.value)} />
+      </Field>
+    </div>
+    } />
+    <Repeater title="4. 발달장애인 대상 성교육 강의경력 자기신고" items={lectureExperiences} setItems={setLectureExperiences} emptyItem={emptyLecture} render={(item, index, updateItem) => 
+    <div className="grid grid-3">
+      <Field label="강의기관">
+        <input value={item.organization} onChange={(e) => updateItem(index, "organization", e.target.value)} />
+      </Field>
+      <Field label="교육대상">
+        <input value={item.target} onChange={(e) => updateItem(index, "target", e.target.value)} />
+      </Field>
+      <Field label="강의주제">
+        <input value={item.topic} onChange={(e) => updateItem(index, "topic", e.target.value)} />
+      </Field>
+      <Field label="시작일">
+        <input type="date" value={item.start_date} onChange={(e) => updateItem(index, "start_date", e.target.value)} />
+      </Field>
+      <Field label="종료일">
+        <input type="date" value={item.end_date} onChange={(e) => updateItem(index, "end_date", e.target.value)} />
+      </Field>
+      <Field label="강의횟수">
+        <input value={item.count} onChange={(e) => updateItem(index, "count", e.target.value)} />
+      </Field>
+    </div>
+    } />
+    <section className="card">
+      <h2>5. 강의 정보 및 공개 설정</h2>
+      <p className="muted small">연락처와 이메일은 강사가 공개에 동의한 경우에만 검색 페이지에 표시됩니다. 공개를 원하지 않는 항목은 체크하지 않아도 됩니다.</p>
+      <div className="grid"><Field label="활동 가능 지역">
+        <CheckboxGroup options={regionOptions} values={form.activity_regions} onChange={(v) => update("activity_regions", v)} />
+      </Field>
+        <Field label="교육대상">
+          <CheckboxGroup options={targetOptions} values={form.targets} onChange={(v) => update("targets", v)} />
+        </Field>
+        <Field label="교육유형">
+          <CheckboxGroup options={typeOptions} values={form.types} onChange={(v) => update("types", v)} />
+        </Field>
+        <Field label="강의 분야" help="이 항목은 검색 필터에 표시됩니다.">
+          <CheckboxGroup options={specialtyOptions} values={form.specialties} onChange={(v) => update("specialties", v)} />
+        </Field>
+        <Field label="그 외 주제" help="검색 필터에는 표시하지 않고 키워드 검색에만 활용합니다.">
+          <input value={form.other_specialty} onChange={(e) => update("other_specialty", e.target.value)} />
+        </Field>
+        <Field label="주요 강의주제 한 줄"  required  help="검색 목록에 표시됩니다. 80자 이내로 핵심 주제만 입력해 주세요.">  
+          <input    value={form.main_topic}    maxLength={80}    onChange={(e) => update("main_topic", e.target.value)}  />  
+          <div className="help">{(form.main_topic || "").length} / 80</div>
+        </Field>
+        <Field label="강사 소개">
+          <textarea value={form.intro} onChange={(e) => update("intro", e.target.value)} />
+        </Field>
+        <div className="check-grid">
+          <label className="check">
+            <input type="checkbox" checked={form.show_phone} onChange={(e) => update("show_phone", e.target.checked)} /> 연락처 공개</label>
+          <label className="check"><input type="checkbox" checked={form.show_email} onChange={(e) => update("show_email", e.target.checked)} /> 이메일 공개</label>
+          <label className="check"><input type="checkbox" checked={form.show_profile} onChange={(e) => update("show_profile", e.target.checked)} /> 공개 프로필 게시</label>
+        </div>
+      </div>
+    </section>
     <div className="actions"><button className="btn primary" onClick={submitForm}>등록 신청</button></div></div>;
 }
 
@@ -761,29 +892,61 @@ function ModifyPage(){
                   />
                 </Field>
           
-                <Field label="시작일">
+                <Field label="시작월">
                   <input
-                    type="date"
-                    value={w.start_date || ""}
+                    type="month"
+                    value={toMonthValue(w.start_date)}
+                    max={getCurrentMonthKST()}
                     onChange={(e)=>{
-                      const copy = [...modifyWelfares];
-                      copy[i] = { ...copy[i], start_date: e.target.value };
+                      const copy = [...editingWelfares];
+                      const nextStart = monthToDate(e.target.value);
+                      const currentEndMonth = toMonthValue(copy[i].end_date);
+                
+                      copy[i] = {
+                        ...copy[i],
+                        start_date: nextStart,
+                        end_date:
+                          currentEndMonth && e.target.value > currentEndMonth
+                            ? null
+                            : copy[i].end_date
+                      };
+                
                       setModifyWelfares(copy);
                     }}
                   />
                 </Field>
-          
-                <Field label="종료일">
+                
+                <Field label="종료월">
                   <input
-                    type="date"
-                    value={w.end_date || ""}
+                    type="month"
+                    value={w.is_current ? "" : toMonthValue(w.end_date)}
+                    min={toMonthValue(w.start_date)}
+                    max={getCurrentMonthKST()}
+                    disabled={!!w.is_current}
                     onChange={(e)=>{
-                      const copy = [...modifyWelfares];
-                      copy[i] = { ...copy[i], end_date: e.target.value };
+                      const copy = [...editingWelfares];
+                      copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
                       setModifyWelfares(copy);
                     }}
                   />
                 </Field>
+                
+                <label className="check">
+                  <input
+                    type="checkbox"
+                    checked={!!w.is_current}
+                    onChange={(e)=>{
+                      const copy = [...editingWelfares];
+                      copy[i] = {
+                        ...copy[i],
+                        is_current: e.target.checked,
+                        end_date: e.target.checked ? null : copy[i].end_date
+                      };
+                      setModifyWelfares(copy);
+                    }}
+                  />
+                  <span>현재 진행 중</span>
+                </label>
           
                 <Field label="주요 업무">
                   <textarea
@@ -821,6 +984,7 @@ function ModifyPage(){
                   start_date:"",
                   end_date:"",
                   description:""
+                  is_current:false
                 }
               ]);
             }}
@@ -877,29 +1041,61 @@ function ModifyPage(){
                   />
                 </Field>
           
-                <Field label="시작일">
+                <Field label="시작월">
                   <input
-                    type="date"
-                    value={l.start_date || ""}
+                    type="month"
+                    value={toMonthValue(l.start_date)}
+                    max={getCurrentMonthKST()}
                     onChange={(e)=>{
-                      const copy = [...modifyLectures];
-                      copy[i] = { ...copy[i], start_date: e.target.value };
+                      const copy = [...editingLectures];
+                      const nextStart = monthToDate(e.target.value);
+                      const currentEndMonth = toMonthValue(copy[i].end_date);
+                
+                      copy[i] = {
+                        ...copy[i],
+                        start_date: nextStart,
+                        end_date:
+                          currentEndMonth && e.target.value > currentEndMonth
+                            ? null
+                            : copy[i].end_date
+                      };
+                
                       setModifyLectures(copy);
                     }}
                   />
                 </Field>
-          
-                <Field label="종료일">
+                
+                <Field label="종료월">
                   <input
-                    type="date"
-                    value={l.end_date || ""}
+                    type="month"
+                    value={l.is_current ? "" : toMonthValue(l.end_date)}
+                    min={toMonthValue(l.start_date)}
+                    max={getCurrentMonthKST()}
+                    disabled={!!l.is_current}
                     onChange={(e)=>{
-                      const copy = [...modifyLectures];
-                      copy[i] = { ...copy[i], end_date: e.target.value };
+                      const copy = [...editingLectures];
+                      copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
                       setModifyLectures(copy);
                     }}
                   />
                 </Field>
+                
+                <label className="check">
+                  <input
+                    type="checkbox"
+                    checked={!!l.is_current}
+                    onChange={(e)=>{
+                      const copy = [...editingLectures];
+                      copy[i] = {
+                        ...copy[i],
+                        is_current: e.target.checked,
+                        end_date: e.target.checked ? null : copy[i].end_date
+                      };
+                      setModifyLectures(copy);
+                    }}
+                  />
+                  <span>현재 진행 중</span>
+                </label>
               </div>
           
               <div className="actions">
@@ -926,7 +1122,8 @@ function ModifyPage(){
                   topic:"",
                   start_date:"",
                   end_date:"",
-                  count:""
+                  count:"",
+                  is_current:false
                 }
               ]);
             }}
@@ -1597,29 +1794,61 @@ const filteredItems = items.filter((item) => {
             />
           </Field>
     
-          <Field label="시작일">
+          <Field label="시작월">
             <input
-              type="date"
-              value={w.start_date || ""}
+              type="month"
+              value={toMonthValue(w.start_date)}
+              max={getCurrentMonthKST()}
               onChange={(e)=>{
                 const copy = [...editingWelfares];
-                copy[i] = { ...copy[i], start_date: e.target.value };
+                const nextStart = monthToDate(e.target.value);
+                const currentEndMonth = toMonthValue(copy[i].end_date);
+          
+                copy[i] = {
+                  ...copy[i],
+                  start_date: nextStart,
+                  end_date:
+                    currentEndMonth && e.target.value > currentEndMonth
+                      ? null
+                      : copy[i].end_date
+                };
+          
                 setEditingWelfares(copy);
               }}
             />
           </Field>
-    
-          <Field label="종료일">
+          
+          <Field label="종료월">
             <input
-              type="date"
-              value={w.end_date || ""}
+              type="month"
+              value={w.is_current ? "" : toMonthValue(w.end_date)}
+              min={toMonthValue(w.start_date)}
+              max={getCurrentMonthKST()}
+              disabled={!!w.is_current}
               onChange={(e)=>{
                 const copy = [...editingWelfares];
-                copy[i] = { ...copy[i], end_date: e.target.value };
+                copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
                 setEditingWelfares(copy);
               }}
             />
           </Field>
+          
+          <label className="check">
+            <input
+              type="checkbox"
+              checked={!!w.is_current}
+              onChange={(e)=>{
+                const copy = [...editingWelfares];
+                copy[i] = {
+                  ...copy[i],
+                  is_current: e.target.checked,
+                  end_date: e.target.checked ? null : copy[i].end_date
+                };
+                setEditingWelfares(copy);
+              }}
+            />
+            <span>현재 진행 중</span>
+          </label>
     
           <Field label="주요 업무">
             <textarea
@@ -1658,6 +1887,7 @@ const filteredItems = items.filter((item) => {
             start_date:"",
             end_date:"",
             description:""
+            is_current:false
           }
         ]);
       }}
@@ -1715,29 +1945,61 @@ const filteredItems = items.filter((item) => {
             />
           </Field>
     
-          <Field label="시작일">
+          <Field label="시작월">
             <input
-              type="date"
-              value={l.start_date || ""}
+              type="month"
+              value={toMonthValue(l.start_date)}
+              max={getCurrentMonthKST()}
               onChange={(e)=>{
                 const copy = [...editingLectures];
-                copy[i] = { ...copy[i], start_date: e.target.value };
+                const nextStart = monthToDate(e.target.value);
+                const currentEndMonth = toMonthValue(copy[i].end_date);
+          
+                copy[i] = {
+                  ...copy[i],
+                  start_date: nextStart,
+                  end_date:
+                    currentEndMonth && e.target.value > currentEndMonth
+                      ? null
+                      : copy[i].end_date
+                };
+          
                 setEditingLectures(copy);
               }}
             />
           </Field>
-    
-          <Field label="종료일">
+          
+          <Field label="종료월">
             <input
-              type="date"
-              value={l.end_date || ""}
+              type="month"
+              value={l.is_current ? "" : toMonthValue(l.end_date)}
+              min={toMonthValue(l.start_date)}
+              max={getCurrentMonthKST()}
+              disabled={!!l.is_current}
               onChange={(e)=>{
                 const copy = [...editingLectures];
-                copy[i] = { ...copy[i], end_date: e.target.value };
+                copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
                 setEditingLectures(copy);
               }}
             />
           </Field>
+          
+          <label className="check">
+            <input
+              type="checkbox"
+              checked={!!l.is_current}
+              onChange={(e)=>{
+                const copy = [...editingLectures];
+                copy[i] = {
+                  ...copy[i],
+                  is_current: e.target.checked,
+                  end_date: e.target.checked ? null : copy[i].end_date
+                };
+                setEditingLectures(copy);
+              }}
+            />
+            <span>현재 진행 중</span>
+          </label>
     
         </div>
     
@@ -1765,7 +2027,8 @@ const filteredItems = items.filter((item) => {
             topic:"",
             start_date:"",
             end_date:"",
-            count:""
+            count:"",
+            is_current:false
           }
         ]);
       }}
@@ -1911,14 +2174,14 @@ const filteredItems = items.filter((item) => {
                             "실무경력",
                             req.instructors?.welfare_experiences,
                             req.requested_data?.welfare_experiences,
-                            (w)=>`${w.organization || "-"} / ${w.role || "-"} / ${w.start_date || "-"} ~ ${w.end_date || "-"} / ${w.description || "-"}`
+                            (w)=>`${w.organization || "-"} / ${w.role || "-"} / ${formatPeriod(w.start_date, w.end_date)} / ${w.description || "-"}`
                           )}
                           
                           {renderChangedList(
                             "강의경력",
                             req.instructors?.lecture_experiences,
                             req.requested_data?.lecture_experiences,
-                            (l)=>`${l.organization || "-"} / ${l.target || "-"} / ${l.topic || "-"} / ${l.count || "-"}회 / ${l.start_date || "-"} ~ ${l.end_date || "-"}`
+                            (l)=>`${l.organization || "-"} / ${l.target || "-"} / ${l.topic || "-"} / ${l.count || "-"}회 / ${formatPeriod(l.start_date, l.end_date)}`
                           )}
                         
                           {![
@@ -2013,8 +2276,26 @@ const filteredItems = items.filter((item) => {
                   <td>{item.region||"-"}</td>
                   <td>{item.main_topic||"-"}</td>
                   <td>{item.training_courses?.length?item.training_courses.map(c=><div key={c.id}>{c.course_name||"-"} / {c.institution||"-"} / {c.completion_year||"-"}</div>):"-"}</td>
-                  <td>{item.welfare_experiences?.length?item.welfare_experiences.map(w=><div key={w.id}>{w.organization||"-"} / {w.role||"-"}</div>):"-"}</td>
-                  <td>{item.lecture_experiences?.length?item.lecture_experiences.map(l=><div key={l.id}>{l.organization||"-"} / {l.topic||"-"} / {l.count||"-"}</div>):"-"}</td>
+                  <td>
+                    {item.welfare_experiences?.length
+                      ? item.welfare_experiences.map((w, i)=>(
+                          <div key={w.id || i}>
+                            {w.organization || "-"} / {w.role || "-"} / {formatPeriod(w.start_date, w.end_date)}
+                          </div>
+                        ))
+                      : "-"
+                    }
+                  </td>
+                  <td>
+                    {item.lecture_experiences?.length
+                      ? item.lecture_experiences.map((l, i)=>(
+                          <div key={l.id || i}>
+                            {l.organization || "-"} / {l.topic || "-"} / {l.count || "-"}회 / {formatPeriod(l.start_date, l.end_date)}
+                          </div>
+                        ))
+                      : "-"
+                    }
+                  </td>
                   <td>{item.public_status||"-"}</td>
                   <td>{item.phone||"-"}<br/>{item.email||"-"}</td>
                   <td>
