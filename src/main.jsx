@@ -402,50 +402,52 @@ function ModifyPage(){
   const [originalLectures,setOriginalLectures]=useState([]);
 
   async function search(){
-    setError(""); setMessage("");
-
+    setError("");
+    setMessage("");
+  
     const {data,error} = await supabase
       .from("instructors")
       .select("*")
       .eq("email", email)
       .maybeSingle();
-
+  
     if(error){
       setError("조회 실패: " + error.message);
       return;
     }
-
+  
     if(!data){
       setError("해당 이메일로 등록된 강사를 찾을 수 없습니다.");
       return;
     }
-
+  
+    // 원본 기본정보 저장
     setOriginalInstructor(data);
-
+  
     // 양성과정
     const { data: trainingData } = await supabase
       .from("training_courses")
       .select("*")
       .eq("instructor_id", data.id);
-    
+  
     setOriginalTrainings(trainingData || []);
-    
+  
     // 실무경력
     const { data: welfareData } = await supabase
       .from("welfare_experiences")
       .select("*")
       .eq("instructor_id", data.id);
-    
+  
     setOriginalWelfares(welfareData || []);
-    
+  
     // 강의경력
     const { data: lectureData } = await supabase
       .from("lecture_experiences")
       .select("*")
       .eq("instructor_id", data.id);
-    
+  
     setOriginalLectures(lectureData || []);
-    
+  
     // 최근 수정요청 조회
     const { data: requestData } = await supabase
       .from("instructor_update_requests")
@@ -454,8 +456,10 @@ function ModifyPage(){
       .order("requested_at", { ascending:false })
       .limit(1)
       .maybeSingle();
-    
+  
     setLatestRequest(requestData || null);
+  
+    // 검토중/반려 요청이 있으면 요청 데이터를 수정폼에 표시
     if(
       requestData &&
       (requestData.request_status === "검토중" || requestData.request_status === "반려") &&
