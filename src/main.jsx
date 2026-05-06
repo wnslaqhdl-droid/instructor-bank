@@ -272,7 +272,10 @@ function SearchPage(){
      <div className="muted small" style={{marginBottom:8}}>
      검색 결과: 총 {filtered.length}명
      </div>
-    <div className="active-filters">
+     <div className="muted small" style={{marginBottom:8}}>
+       정렬 기준: {sortType === "latest" ? "최신순" : sortType === "name" ? "이름순" : "지역순"}
+     </div>
+     <div className="active-filters">
       {region && (
         <span className="filter-chip" onClick={()=>setRegion("")}>
           지역: {region} ✕
