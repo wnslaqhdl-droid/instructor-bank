@@ -1624,7 +1624,7 @@ const filteredItems = items.filter((item) => {
               <thead>
                 <tr>
                   <th>요청일</th>
-                  <th>강사ID</th>
+                  <th>강사명</th>
                   <th>상태</th>
                   <th>반려 사유</th>
                   <th>관리</th>
@@ -1635,7 +1635,7 @@ const filteredItems = items.filter((item) => {
                   <React.Fragment key={req.id}>
                     <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
                       <td>{req.requested_at}</td>
-                      <td>{req.instructor_id}</td>
+                      <td>{req.instructors?.name || "-"}</td>
                       <td>
                         <div>{req.request_status}</div>
                       
