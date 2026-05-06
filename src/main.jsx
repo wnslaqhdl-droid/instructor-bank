@@ -460,6 +460,11 @@ function ModifyPage(){
   }
   
   async function submitRequest(){
+    function scrollToTop(){
+      window.scrollTo({ top: 0 });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
     setError(""); setMessage("");
 
     const payload = {
@@ -497,6 +502,7 @@ function ModifyPage(){
     
     if(!hasAnyChange){
       setError("변경된 항목이 없습니다. 수정 후 다시 제출해 주세요.");
+      scrollToTop();
       return;
     }
     
@@ -511,12 +517,14 @@ function ModifyPage(){
     
     if(error){
       setError("요청 실패: " + error.message);
+      scrollToTop();
       return;
     }
 
     setMessage("수정 요청이 접수되었습니다. 관리자 검토 후 반영됩니다.");
     setFound(null);
     setEmail("");
+    scrollToTop();
   }
 
   function updateField(key,value){
