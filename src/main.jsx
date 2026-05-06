@@ -1636,7 +1636,15 @@ const filteredItems = items.filter((item) => {
                     <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
                       <td>{req.requested_at}</td>
                       <td>{req.instructor_id}</td>
-                      <td>{req.request_status}</td>
+                      <td>
+                        <div>{req.request_status}</div>
+                      
+                        {req.reviewed_at && (
+                          <div className="muted small">
+                            {new Date(req.reviewed_at).toLocaleString()}
+                          </div>
+                        )}
+                      </td>
                       <td>{req.admin_memo || "-"}</td>
                       <td>
                         <button
