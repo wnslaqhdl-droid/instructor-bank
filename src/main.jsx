@@ -847,6 +847,23 @@ function AdminPage(){
     if(error)setMessage("조회 실패: "+error.message);
     else setItems(data||[]);
   }
+   function formatKST(value){
+      if(!value) return "-";
+    
+      const dateValue = String(value).endsWith("Z")
+        ? value
+        : String(value) + "Z";
+    
+      return new Date(dateValue).toLocaleString("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+  
   async function loadRequests(){
     const {data,error} = await supabase
       .from("instructor_update_requests")
@@ -1660,30 +1677,13 @@ const filteredItems = items.filter((item) => {
                 {filteredUpdateRequests.map((req)=>(
                   <React.Fragment key={req.id}>
                     <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
-                      <td>
-                        {new Date(req.requested_at).toLocaleString("ko-KR", {
-                          timeZone: "Asia/Seoul",
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit"
-                        })}
-                      </td>
+                      <td>{formatKST(req.requested_at)}</td>
                       <td>{req.instructors?.name || "-"}</td>
                       <td>
                         <div>{req.request_status}</div>
-                      
                         {req.reviewed_at && (
                           <div className="muted small">
-                            {new Date(req.reviewed_at).toLocaleString("ko-KR", {
-                              timeZone: "Asia/Seoul",
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit"
-                            })}
+                           {formatKST(req.reviewed_at)}
                           </div>
                         )}
                       </td>
