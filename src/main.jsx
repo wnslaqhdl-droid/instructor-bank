@@ -36,6 +36,109 @@ function formatPeriod(startDate, endDate){
 function Field({ label, required, help, children }) {
   return <label className="field"><span>{label}{required ? " *" : ""}</span>{children}{help ? <div className="help">{help}</div> : null}</label>;
 }
+function getCurrentMonthKST(){
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 7);
+}
+
+function toMonthValue(value){
+  if(!value) return "";
+  return String(value).slice(0, 7);
+}
+
+function monthToDate(value){
+  if(!value) return null;
+  return `${value}-01`;
+}
+
+function formatMonth(value){
+  if(!value) return "";
+  const [year, month] = String(value).slice(0, 7).split("-");
+  if(!year || !month) return "";
+  return `${year}.${month}`;
+}
+
+function formatPeriod(startDate, endDate){
+  const start = formatMonth(startDate) || "-";
+  const end = endDate ? formatMonth(endDate) : "현재";
+  return `${start} ~ ${end}`;
+}
+
+function MonthSelect({ label, value, min, max, disabled, onChange }){
+  const currentYear = Number(getCurrentMonthKST().slice(0, 4));
+  const years = Array.from({ length: currentYear - 1950 + 1 }, (_, i) => String(currentYear - i));
+  const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
+
+  const monthValue = toMonthValue(value);
+  const selectedYear = monthValue ? monthValue.slice(0, 4) : "";
+  const selectedMonth = monthValue ? monthValue.slice(5, 7) : "";
+
+  function isDisabledMonth(year, month){
+    if(!year || !month) return false;
+    const ym = `${year}-${month}`;
+    if(min && ym < min) return true;
+    if(max && ym > max) return true;
+    return false;
+  }
+
+  function apply(nextYear, nextMonth){
+    if(!nextYear || !nextMonth){
+      onChange(null);
+      return;
+    }
+
+    const ym = `${nextYear}-${nextMonth}`;
+
+    if(min && ym < min) return;
+    if(max && ym > max) return;
+
+    onChange(monthToDate(ym));
+  }
+
+  return (
+    <Field label={label}>
+      <div className="month-row">
+        <select
+          value={selectedYear}
+          disabled={disabled}
+          onChange={(e)=>apply(e.target.value, selectedMonth)}
+        >
+          <option value="">연도</option>
+          {years.map((y)=>(
+            <option
+              key={y}
+              value={y}
+              disabled={
+                (min && `${y}-12` < min) ||
+                (max && `${y}-01` > max)
+              }
+            >
+              {y}년
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedMonth}
+          disabled={disabled || !selectedYear}
+          onChange={(e)=>apply(selectedYear, e.target.value)}
+        >
+          <option value="">월</option>
+          {months.map((m)=>(
+            <option
+              key={m}
+              value={m}
+              disabled={isDisabledMonth(selectedYear, m)}
+            >
+              {Number(m)}월
+            </option>
+          ))}
+        </select>
+      </div>
+    </Field>
+  );
+}
 
 function CheckboxGroup({ options, values, onChange }) {
   function toggle(option) {
@@ -220,34 +323,30 @@ async function submitForm() {
       <Field label="역할">
         <input value={item.role} onChange={(e) => updateItem(index, "role", e.target.value)} />
       </Field>
-     <Field label="시작월">
-        <input
-          type="month"
-          value={toMonthValue(item.start_date)}
-          max={getCurrentMonthKST()}
-          onChange={(e)=>{
-            const nextStart = monthToDate(e.target.value);
-            const currentEndMonth = toMonthValue(item.end_date);
+     <MonthSelect
+        label="시작월"
+        value={item.start_date}
+        max={getCurrentMonthKST()}
+        onChange={(date)=>{
+          const nextStartMonth = toMonthValue(date);
+          const currentEndMonth = toMonthValue(item.end_date);
       
-            updateItem(i, "start_date", nextStart);
+          updateItem(i, "start_date", date);
       
-            if(currentEndMonth && e.target.value > currentEndMonth){
-              updateItem(i, "end_date", null);
-            }
-          }}
-        />
-      </Field>
+          if(currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth){
+            updateItem(i, "end_date", null);
+          }
+        }}
+      />
       
-      <Field label="종료월">
-        <input
-          type="month"
-          value={item.is_current ? "" : toMonthValue(item.end_date)}
-          min={toMonthValue(item.start_date)}
-          max={getCurrentMonthKST()}
-          disabled={!!item.is_current}
-          onChange={(e)=>updateItem(i, "end_date", monthToDate(e.target.value))}
-        />
-      </Field>
+      <MonthSelect
+        label="종료월"
+        value={item.end_date}
+        min={toMonthValue(item.start_date)}
+        max={getCurrentMonthKST()}
+        disabled={!!item.is_current}
+        onChange={(date)=>updateItem(i, "end_date", date)}
+      />
       
       <label className="check">
         <input
@@ -670,13 +769,27 @@ function ModifyPage(){
     ){
       setFound(requestData.requested_data.instructor);
       setModifyTrainings(requestData.requested_data.training_courses || []);
-      setModifyWelfares(requestData.requested_data.welfare_experiences || []);
-      setModifyLectures(requestData.requested_data.lecture_experiences || []);
+    
+      setModifyWelfares((requestData.requested_data.welfare_experiences || []).map((w)=>({
+        ...w,
+        is_current: !w.end_date
+      })));
+    
+      setModifyLectures((requestData.requested_data.lecture_experiences || []).map((l)=>({
+        ...l,
+        is_current: !l.end_date
+      })));
     }else{
       setFound(data);
       setModifyTrainings(trainingData || []);
-      setModifyWelfares(welfareData || []);
-      setModifyLectures(lectureData || []);
+      setModifyWelfares((requestData.requested_data.welfare_experiences || []).map((w)=>({
+        ...w,
+        is_current: !w.end_date
+      })));
+      setModifyLectures((requestData.requested_data.lecture_experiences || []).map((l)=>({
+        ...l,
+        is_current: !l.end_date
+      })));
     }
   }
 
@@ -1538,14 +1651,21 @@ async function rejectRequest(req){
     .select("*")
     .eq("instructor_id", item.id);
     
-    setEditingWelfares(welfareData || []);
+  setEditingWelfares((welfareData || []).map((w)=>({
+    ...w,
+    is_current: !w.end_date
+  })));
+    
 
     const { data: lectureData } = await supabase
   .from("lecture_experiences")
   .select("*")
   .eq("instructor_id", item.id);
 
-setEditingLectures(lectureData || []);
+    setEditingLectures((lectureData || []).map((l)=>({
+      ...l,
+      is_current: !l.end_date
+    })));
 }
 
   function updateEdit(key,value){
