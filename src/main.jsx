@@ -392,6 +392,7 @@ function ModifyPage(){
   const [found,setFound]=useState(null);
   const [message,setMessage]=useState("");
   const [error,setError]=useState("");
+  const [latestRequest,setLatestRequest]=useState(null);
   const [modifyTrainings,setModifyTrainings]=useState([]);
   const [modifyWelfares,setModifyWelfares]=useState([]);
   const [modifyLectures,setModifyLectures]=useState([]);
@@ -419,7 +420,6 @@ function ModifyPage(){
       return;
     }
 
-    setFound(data);
     setOriginalInstructor(data);
 
     // 양성과정
@@ -428,7 +428,6 @@ function ModifyPage(){
       .select("*")
       .eq("instructor_id", data.id);
     
-    setModifyTrainings(trainingData || []);
     setOriginalTrainings(trainingData || []);
     
     // 실무경력
@@ -437,7 +436,6 @@ function ModifyPage(){
       .select("*")
       .eq("instructor_id", data.id);
     
-    setModifyWelfares(welfareData || []);
     setOriginalWelfares(welfareData || []);
     
     // 강의경력
@@ -446,8 +444,33 @@ function ModifyPage(){
       .select("*")
       .eq("instructor_id", data.id);
     
-    setModifyLectures(lectureData || []);
     setOriginalLectures(lectureData || []);
+    
+    // 최근 수정요청 조회
+    const { data: requestData } = await supabase
+      .from("instructor_update_requests")
+      .select("*")
+      .eq("instructor_id", data.id)
+      .order("requested_at", { ascending:false })
+      .limit(1)
+      .maybeSingle();
+    
+    setLatestRequest(requestData || null);
+    if(
+      requestData &&
+      (requestData.request_status === "검토중" || requestData.request_status === "반려") &&
+      requestData.requested_data?.instructor
+    ){
+      setFound(requestData.requested_data.instructor);
+      setModifyTrainings(requestData.requested_data.training_courses || []);
+      setModifyWelfares(requestData.requested_data.welfare_experiences || []);
+      setModifyLectures(requestData.requested_data.lecture_experiences || []);
+    }else{
+      setFound(data);
+      setModifyTrainings(trainingData || []);
+      setModifyWelfares(welfareData || []);
+      setModifyLectures(lectureData || []);
+    }
   }
 
   function normalizeValue(value){
