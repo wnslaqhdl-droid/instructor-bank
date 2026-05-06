@@ -272,6 +272,33 @@ function SearchPage(){
      <div className="muted small" style={{marginBottom:8}}>
      검색 결과: 총 {filtered.length}명
      </div>
+    <div className="active-filters">
+      {region && (
+        <span className="filter-chip" onClick={()=>setRegion("")}>
+          지역: {region} ✕
+        </span>
+      )}
+      {target && (
+        <span className="filter-chip" onClick={()=>setTarget("")}>
+          대상: {target} ✕
+        </span>
+      )}
+      {type && (
+        <span className="filter-chip" onClick={()=>setType("")}>
+          유형: {type} ✕
+        </span>
+      )}
+      {specialty && (
+        <span className="filter-chip" onClick={()=>setSpecialty("")}>
+          분야: {specialty} ✕
+        </span>
+      )}
+      {onlyVerified && (
+        <span className="filter-chip" onClick={()=>setOnlyVerified(false)}>
+          개발원 과정 수료자 ✕
+        </span>
+      )}
+    </div>
     <div className="compact-row header-row">
     <span className="compact-name">이름</span>
     <span>주요 강의주제</span>
