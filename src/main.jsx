@@ -1660,14 +1660,20 @@ const filteredItems = items.filter((item) => {
                 {filteredUpdateRequests.map((req)=>(
                   <React.Fragment key={req.id}>
                     <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
-                      <td>{new Date(req.requested_at).toLocaleString()}</td>
+                      <td>
+                        {new Date(req.requested_at).toLocaleString("ko-KR", {
+                          timeZone: "Asia/Seoul"
+                        })}
+                      </td>
                       <td>{req.instructors?.name || "-"}</td>
                       <td>
                         <div>{req.request_status}</div>
                       
                         {req.reviewed_at && (
                           <div className="muted small">
-                            {new Date(req.reviewed_at).toLocaleString()}
+                            {new Date(req.reviewed_at).toLocaleString("ko-KR", {
+                              timeZone: "Asia/Seoul"
+                            })}
                           </div>
                         )}
                       </td>
