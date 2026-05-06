@@ -1638,6 +1638,10 @@ const filteredItems = items.filter((item) => {
                       <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
                         <td colSpan="5">
                          <div className="request-detail-box">
+                          <div className="change-summary">
+                            <b>변경 요청 상세</b>
+                            <p>변경된 항목만 표시됩니다.</p>
+                          </div>
                           {renderChangedField("성명", req.instructors?.name, req.requested_data?.instructor?.name)}
                           {renderChangedField("연락처", req.instructors?.phone, req.requested_data?.instructor?.phone)}
                           {renderChangedField("이메일", req.instructors?.email, req.requested_data?.instructor?.email)}
