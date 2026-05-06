@@ -377,34 +377,30 @@ async function submitForm() {
       <Field label="강의주제">
         <input value={item.topic} onChange={(e) => updateItem(index, "topic", e.target.value)} />
       </Field>
-      <Field label="시작월">
-        <input
-          type="month"
-          value={toMonthValue(item.start_date)}
-          max={getCurrentMonthKST()}
-          onChange={(e)=>{
-            const nextStart = monthToDate(e.target.value);
-            const currentEndMonth = toMonthValue(item.end_date);
+      <MonthSelect
+        label="시작월"
+        value={item.start_date}
+        max={getCurrentMonthKST()}
+        onChange={(date)=>{
+          const nextStartMonth = toMonthValue(date);
+          const currentEndMonth = toMonthValue(item.end_date);
       
-            updateItem(i, "start_date", nextStart);
+          updateItem(i, "start_date", date);
       
-            if(currentEndMonth && e.target.value > currentEndMonth){
-              updateItem(i, "end_date", null);
-            }
-          }}
-        />
-      </Field>
+          if(currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth){
+            updateItem(i, "end_date", null);
+          }
+        }}
+      />
       
-      <Field label="종료월">
-        <input
-          type="month"
-          value={item.is_current ? "" : toMonthValue(item.end_date)}
-          min={toMonthValue(item.start_date)}
-          max={getCurrentMonthKST()}
-          disabled={!!item.is_current}
-          onChange={(e)=>updateItem(i, "end_date", monthToDate(e.target.value))}
-        />
-      </Field>
+      <MonthSelect
+        label="종료월"
+        value={item.end_date}
+        min={toMonthValue(item.start_date)}
+        max={getCurrentMonthKST()}
+        disabled={!!item.is_current}
+        onChange={(date)=>updateItem(i, "end_date", date)}
+      />
       
       <label className="check">
         <input
@@ -664,7 +660,7 @@ function SearchPage(){
         {(item.welfare_experiences || []).length ? (
           item.welfare_experiences.map((w, i)=>(
             <div key={i}>
-              {w.organization || "-"} / {w.role || "-"} / {w.start_date || "-"} ~ {w.end_date || "-"}
+              {w.organization || "-"} / {w.role || "-"} / {formatPeriod(w.start_date, w.end_date)}
               {w.description ? ` / ${w.description}` : ""}
             </div>
           ))
