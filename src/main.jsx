@@ -395,6 +395,10 @@ function ModifyPage(){
   const [modifyTrainings,setModifyTrainings]=useState([]);
   const [modifyWelfares,setModifyWelfares]=useState([]);
   const [modifyLectures,setModifyLectures]=useState([]);
+  const [originalInstructor,setOriginalInstructor]=useState(null);
+  const [originalTrainings,setOriginalTrainings]=useState([]);
+  const [originalWelfares,setOriginalWelfares]=useState([]);
+  const [originalLectures,setOriginalLectures]=useState([]);
 
   async function search(){
     setError(""); setMessage("");
@@ -416,6 +420,7 @@ function ModifyPage(){
     }
 
     setFound(data);
+    setOriginalInstructor(data);
 
     // 양성과정
     const { data: trainingData } = await supabase
@@ -424,6 +429,7 @@ function ModifyPage(){
       .eq("instructor_id", data.id);
     
     setModifyTrainings(trainingData || []);
+    setOriginalTrainings(trainingData || []);
     
     // 실무경력
     const { data: welfareData } = await supabase
@@ -432,6 +438,7 @@ function ModifyPage(){
       .eq("instructor_id", data.id);
     
     setModifyWelfares(welfareData || []);
+    setOriginalWelfares(welfareData || []);
     
     // 강의경력
     const { data: lectureData } = await supabase
@@ -440,8 +447,18 @@ function ModifyPage(){
       .eq("instructor_id", data.id);
     
     setModifyLectures(lectureData || []);
+    setOriginalLectures(lectureData || []);
   }
 
+  function normalizeValue(value){
+    if(value === null || value === undefined) return "";
+    return value;
+  }
+  
+  function isChangedValue(oldValue, newValue){
+    return JSON.stringify(normalizeValue(oldValue)) !== JSON.stringify(normalizeValue(newValue));
+  }
+  
   async function submitRequest(){
     setError(""); setMessage("");
 
@@ -452,6 +469,37 @@ function ModifyPage(){
       lecture_experiences: modifyLectures
     };
     
+    const hasInstructorChange = [
+      isChangedValue(originalInstructor?.name, found.name),
+      isChangedValue(originalInstructor?.phone, found.phone),
+      isChangedValue(originalInstructor?.email, found.email),
+      isChangedValue(originalInstructor?.region, found.region),
+      isChangedValue(originalInstructor?.activity_regions, found.activity_regions),
+      isChangedValue(originalInstructor?.organization, found.organization),
+      isChangedValue(originalInstructor?.position, found.position),
+      isChangedValue(originalInstructor?.main_topic, found.main_topic),
+      isChangedValue(originalInstructor?.specialties, found.specialties),
+      isChangedValue(originalInstructor?.other_specialty, found.other_specialty),
+      isChangedValue(originalInstructor?.targets, found.targets),
+      isChangedValue(originalInstructor?.types, found.types),
+      isChangedValue(originalInstructor?.intro, found.intro),
+      isChangedValue(originalInstructor?.show_phone, found.show_phone),
+      isChangedValue(originalInstructor?.show_email, found.show_email),
+      isChangedValue(originalInstructor?.show_profile, found.show_profile),
+      isChangedValue(originalInstructor?.center_verified, found.center_verified)
+    ].some(Boolean);
+    
+    const hasAnyChange =
+      hasInstructorChange ||
+      isChangedValue(originalTrainings, modifyTrainings) ||
+      isChangedValue(originalWelfares, modifyWelfares) ||
+      isChangedValue(originalLectures, modifyLectures);
+    
+    if(!hasAnyChange){
+      setError("변경된 항목이 없습니다. 수정 후 다시 제출해 주세요.");
+      return;
+    }
+    
     console.log("수정요청 payload", payload);
     
     const {error} = await supabase
@@ -460,7 +508,7 @@ function ModifyPage(){
         instructor_id: found.id,
         requested_data: payload
       }]);
-
+    
     if(error){
       setError("요청 실패: " + error.message);
       return;
