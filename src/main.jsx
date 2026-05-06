@@ -35,6 +35,16 @@ function formatPeriod(startDate, endDate){
   return `${start} ~ ${end}`;
 }
 
+function Field({ label, required, help, children }) {
+  return (
+    <label className="field">
+      <span>{label}{required ? " *" : ""}</span>
+      {children}
+      {help ? <div className="help">{help}</div> : null}
+    </label>
+  );
+}
+
 function MonthSelect({ label, value, min, max, disabled, onChange }){
   const currentYear = Number(getCurrentMonthKST().slice(0, 4));
   const years = Array.from({ length: currentYear - 1950 + 1 }, (_, i) => String(currentYear - i));
