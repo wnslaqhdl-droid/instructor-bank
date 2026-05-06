@@ -808,6 +808,7 @@ function AdminPage(){
   const [adminStatus,setAdminStatus]=useState("");
   const [updateRequests,setUpdateRequests] = useState([]);
   const [openRequestId,setOpenRequestId]=useState(null);
+  const [requestStatusFilter,setRequestStatusFilter]=useState("");
 
   async function refreshSession(){
     const {data}=await supabase.auth.getSession();
@@ -1259,6 +1260,10 @@ const filteredItems = items.filter((item) => {
     (!adminStatus || item.public_status === adminStatus)
   );
 });
+
+  const filteredUpdateRequests = updateRequests.filter((req)=>{
+    return !requestStatusFilter || req.request_status === requestStatusFilter;
+  });
   
   return (
     <div>
@@ -1618,7 +1623,28 @@ const filteredItems = items.filter((item) => {
         
         <section className="card">
           <h2>수정 요청 목록</h2>
-        
+          <div className="grid grid-3" style={{marginBottom:12}}>
+            <Field label="요청 상태">
+              <select
+                value={requestStatusFilter}
+                onChange={(e)=>setRequestStatusFilter(e.target.value)}
+              >
+                <option value="">전체</option>
+                <option value="검토중">검토중</option>
+                <option value="승인">승인</option>
+                <option value="반려">반려</option>
+              </select>
+            </Field>
+          
+            <div style={{display:"flex", alignItems:"end"}}>
+              <button
+                className="btn"
+                onClick={()=>setRequestStatusFilter("")}
+              >
+                상태 필터 초기화
+              </button>
+            </div>
+          </div>
           <div className="table-wrap">
             <table>
               <thead>
@@ -1631,7 +1657,7 @@ const filteredItems = items.filter((item) => {
                 </tr>
               </thead>
               <tbody>
-                {updateRequests.map((req)=>(
+                {filteredUpdateRequests.map((req)=>(
                   <React.Fragment key={req.id}>
                     <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
                       <td>{req.requested_at}</td>
@@ -1753,10 +1779,10 @@ const filteredItems = items.filter((item) => {
                   </React.Fragment>
                 ))}
         
-                {!updateRequests.length && (
+                {updateRequests.length > 0 && !filteredUpdateRequests.length && (
                   <tr>
                     <td colSpan="5" className="muted">
-                      요청을 불러오세요.
+                      선택한 상태의 수정 요청이 없습니다.
                     </td>
                   </tr>
                 )}
