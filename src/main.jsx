@@ -567,7 +567,24 @@ function ModifyPage(){
   function updateField(key,value){
     setFound(prev => ({...prev, [key]: value}));
   }
-
+  
+  function formatKST(value){
+    if(!value) return "-";
+  
+    const dateValue = String(value).endsWith("Z")
+      ? value
+      : String(value) + "Z";
+  
+    return new Date(dateValue).toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+  
   return (
     <div>
       <section className="hero">
