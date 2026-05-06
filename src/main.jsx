@@ -220,12 +220,48 @@ async function submitForm() {
       <Field label="역할">
         <input value={item.role} onChange={(e) => updateItem(index, "role", e.target.value)} />
       </Field>
-      <Field label="시작일">
-        <input type="date" value={item.start_date} onChange={(e) => updateItem(index, "start_date", e.target.value)} />
+     <Field label="시작월">
+        <input
+          type="month"
+          value={toMonthValue(item.start_date)}
+          max={getCurrentMonthKST()}
+          onChange={(e)=>{
+            const nextStart = monthToDate(e.target.value);
+            const currentEndMonth = toMonthValue(item.end_date);
+      
+            updateItem(i, "start_date", nextStart);
+      
+            if(currentEndMonth && e.target.value > currentEndMonth){
+              updateItem(i, "end_date", null);
+            }
+          }}
+        />
       </Field>
-      <Field label="종료일">
-        <input type="date" value={item.end_date} onChange={(e) => updateItem(index, "end_date", e.target.value)} />
+      
+      <Field label="종료월">
+        <input
+          type="month"
+          value={item.is_current ? "" : toMonthValue(item.end_date)}
+          min={toMonthValue(item.start_date)}
+          max={getCurrentMonthKST()}
+          disabled={!!item.is_current}
+          onChange={(e)=>updateItem(i, "end_date", monthToDate(e.target.value))}
+        />
       </Field>
+      
+      <label className="check">
+        <input
+          type="checkbox"
+          checked={!!item.is_current}
+          onChange={(e)=>{
+            updateItem(i, "is_current", e.target.checked);
+            if(e.target.checked){
+              updateItem(i, "end_date", null);
+            }
+          }}
+        />
+        <span>현재 진행 중</span>
+      </label>
       <Field label="주요 업무">
         <textarea value={item.description} onChange={(e) => updateItem(index, "description", e.target.value)} />
       </Field>
@@ -242,12 +278,48 @@ async function submitForm() {
       <Field label="강의주제">
         <input value={item.topic} onChange={(e) => updateItem(index, "topic", e.target.value)} />
       </Field>
-      <Field label="시작일">
-        <input type="date" value={item.start_date} onChange={(e) => updateItem(index, "start_date", e.target.value)} />
+      <Field label="시작월">
+        <input
+          type="month"
+          value={toMonthValue(item.start_date)}
+          max={getCurrentMonthKST()}
+          onChange={(e)=>{
+            const nextStart = monthToDate(e.target.value);
+            const currentEndMonth = toMonthValue(item.end_date);
+      
+            updateItem(i, "start_date", nextStart);
+      
+            if(currentEndMonth && e.target.value > currentEndMonth){
+              updateItem(i, "end_date", null);
+            }
+          }}
+        />
       </Field>
-      <Field label="종료일">
-        <input type="date" value={item.end_date} onChange={(e) => updateItem(index, "end_date", e.target.value)} />
+      
+      <Field label="종료월">
+        <input
+          type="month"
+          value={item.is_current ? "" : toMonthValue(item.end_date)}
+          min={toMonthValue(item.start_date)}
+          max={getCurrentMonthKST()}
+          disabled={!!item.is_current}
+          onChange={(e)=>updateItem(i, "end_date", monthToDate(e.target.value))}
+        />
       </Field>
+      
+      <label className="check">
+        <input
+          type="checkbox"
+          checked={!!item.is_current}
+          onChange={(e)=>{
+            updateItem(i, "is_current", e.target.checked);
+            if(e.target.checked){
+              updateItem(i, "end_date", null);
+            }
+          }}
+        />
+        <span>현재 진행 중</span>
+      </label>
       <Field label="강의횟수">
         <input value={item.count} onChange={(e) => updateItem(index, "count", e.target.value)} />
       </Field>
@@ -983,7 +1055,7 @@ function ModifyPage(){
                   role:"",
                   start_date:"",
                   end_date:"",
-                  description:""
+                  description:"",
                   is_current:false
                 }
               ]);
@@ -1886,7 +1958,7 @@ const filteredItems = items.filter((item) => {
             role:"",
             start_date:"",
             end_date:"",
-            description:""
+            description:"",
             is_current:false
           }
         ]);
