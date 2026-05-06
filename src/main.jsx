@@ -5,6 +5,7 @@ import { regionOptions, targetOptions, typeOptions, specialtyOptions, emptyInstr
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
+
 function getCurrentMonthKST(){
   const now = new Date();
   const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
@@ -42,29 +43,6 @@ function getCurrentMonthKST(){
   return kst.toISOString().slice(0, 7);
 }
 
-function toMonthValue(value){
-  if(!value) return "";
-  return String(value).slice(0, 7);
-}
-
-function monthToDate(value){
-  if(!value) return null;
-  return `${value}-01`;
-}
-
-function formatMonth(value){
-  if(!value) return "";
-  const [year, month] = String(value).slice(0, 7).split("-");
-  if(!year || !month) return "";
-  return `${year}.${month}`;
-}
-
-function formatPeriod(startDate, endDate){
-  const start = formatMonth(startDate) || "-";
-  const end = endDate ? formatMonth(endDate) : "현재";
-  return `${start} ~ ${end}`;
-}
-
 function MonthSelect({ label, value, min, max, disabled, onChange }){
   const currentYear = Number(getCurrentMonthKST().slice(0, 4));
   const years = Array.from({ length: currentYear - 1950 + 1 }, (_, i) => String(currentYear - i));
@@ -74,27 +52,27 @@ function MonthSelect({ label, value, min, max, disabled, onChange }){
   const selectedYear = monthValue ? monthValue.slice(0, 4) : "";
   const selectedMonth = monthValue ? monthValue.slice(5, 7) : "";
 
-  function isDisabledMonth(year, month){
-    if(!year || !month) return false;
-    const ym = `${year}-${month}`;
-    if(min && ym < min) return true;
-    if(max && ym > max) return true;
-    return false;
-  }
+function isDisabledMonth(year, month){
+  if(!year || !month) return false;
+  const ym = `${year}-${month}`;
+  if(min && ym < min) return true;
+  if(max && ym > max) return true;
+  return false;
+}
 
-  function apply(nextYear, nextMonth){
-    if(!nextYear || !nextMonth){
-      onChange(null);
-      return;
-    }
+function apply(nextYear, nextMonth){
+  if(!nextYear || !nextMonth){
+  onChange(null);
+  return;
+}
 
-    const ym = `${nextYear}-${nextMonth}`;
+const ym = `${nextYear}-${nextMonth}`;
 
-    if(min && ym < min) return;
-    if(max && ym > max) return;
+if(min && ym < min) return;
+if(max && ym > max) return;
 
-    onChange(monthToDate(ym));
-  }
+onChange(monthToDate(ym));
+}
 
   return (
     <Field label={label}>
