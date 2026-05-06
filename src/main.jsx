@@ -268,7 +268,11 @@ function SearchPage(){
     </button>
   </div>
 </div>
- </section><div className="list">  <div className="compact-row header-row">
+ </section><div className="list">
+     <div className="muted small" style={{marginBottom:8}}>
+     검색 결과: 총 {filtered.length}명
+     </div>
+    <div className="compact-row header-row">
     <span className="compact-name">이름</span>
     <span>주요 강의주제</span>
     <span className="col-region">활동지역</span>
