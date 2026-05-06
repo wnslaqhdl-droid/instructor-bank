@@ -589,7 +589,10 @@ function ModifyPage(){
     <div>
       <section className="hero">
         <h1>강사 정보 수정 요청</h1>
-        <p>등록 시 입력한 이메일로 본인 정보를 조회하고 수정 요청을 제출할 수 있습니다.</p>
+        <p>
+          등록 시 입력한 이메일로 본인 정보를 조회하고 수정 요청을 제출할 수 있습니다.
+          이미 검토 중인 수정 요청이 있는 경우, 다시 제출하면 이전 요청은 최신 요청으로 대체됩니다.
+        </p>
       </section>
 
       {message && <div className="notice">{message}</div>}
@@ -1025,7 +1028,6 @@ function AdminPage(){
           lecture_experiences(*)
         )
       `)
-      .neq("request_status","대체됨")
       .order("requested_at",{ascending:false});
 
     if(error){
@@ -1429,7 +1431,11 @@ const filteredItems = items.filter((item) => {
 });
 
   const filteredUpdateRequests = updateRequests.filter((req)=>{
-    return !requestStatusFilter || req.request_status === requestStatusFilter;
+    if(requestStatusFilter){
+      return req.request_status === requestStatusFilter;
+    }
+  
+    return req.request_status !== "대체됨";
   });
   
   return (
@@ -1800,6 +1806,7 @@ const filteredItems = items.filter((item) => {
                 <option value="검토중">검토중</option>
                 <option value="승인">승인</option>
                 <option value="반려">반려</option>
+                <option value="대체됨">대체됨</option>
               </select>
             </Field>
           
