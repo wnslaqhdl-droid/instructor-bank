@@ -261,6 +261,7 @@ function SearchPage(){
       setTarget("");
       setType("");
       setSpecialty("");
+      setOnlyVerified(false);
       setSortType("latest");
     }}>
       필터 초기화
