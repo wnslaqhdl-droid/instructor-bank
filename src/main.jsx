@@ -1281,7 +1281,7 @@ function ModifyPage(){
                     checked={!!l.is_current}
                     onChange={(e)=>{
                       const checked = e.target.checked;
-                      const copy = [...editingLectures];
+                      const copy = [...ModifyLectures];
                 
                       copy[i] = {
                         ...copy[i],
