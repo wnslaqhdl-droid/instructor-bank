@@ -414,10 +414,10 @@ async function submitForm() {
       <label className="check">
         <input
           type="checkbox"
-          checked={!!l.is_current}
+          checked={!!item.is_current}
           onChange={(e)=>{
             const checked = e.target.checked;
-            const copy = [...modifyLectures];
+            const copy = [...lectureExperiences];
       
             copy[i] = {
               ...copy[i],
@@ -427,7 +427,7 @@ async function submitForm() {
                 : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
             };
       
-            setModifyLectures(copy);
+            setLectureExperiences(copy);
           }}
         />
         <span>현재 진행 중</span>
