@@ -340,14 +340,17 @@ async function submitForm() {
           checked={!!item.is_current}
           onChange={(e)=>{
             const checked = e.target.checked;
+            const copy = [...welfareExperiences];
       
-            updateItem(index, "is_current", checked);
+            copy[index] = {
+              ...copy[index],
+              is_current: checked,
+              end_date: checked
+                ? null
+                : (copy[index].end_date || monthToDate(getCurrentMonthKST()))
+            };
       
-            if(checked){
-              updateItem(index, "end_date", null);
-            }else if(!item.end_date){
-              updateItem(index, "end_date", monthToDate(getCurrentMonthKST()));
-            }
+            setWelfareExperiences(copy);
           }}
         />
         <span>현재 진행 중</span>
