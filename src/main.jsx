@@ -312,20 +312,14 @@ async function submitForm() {
         value={item.start_date}
         max={getCurrentMonthKST()}
         onChange={(date)=>{
-          const copy = [...welfareExperiences];
           const nextStartMonth = toMonthValue(date);
-          const currentEndMonth = toMonthValue(copy[i].end_date);
+          const currentEndMonth = toMonthValue(item.end_date);
       
-          copy[i] = {
-            ...copy[i],
-            start_date: date,
-            end_date:
-              currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
-                ? null
-                : copy[i].end_date
-          };
+          updateItem(index, "start_date", date);
       
-          setWelfareExperiences(copy);
+          if(currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth){
+            updateItem(index, "end_date", null);
+          }
         }}
       />
       
@@ -336,9 +330,7 @@ async function submitForm() {
         max={getCurrentMonthKST()}
         disabled={!!item.is_current}
         onChange={(date)=>{
-          const copy = [...welfareExperiences];
-          copy[i] = { ...copy[i], end_date: date };
-          setWelfareExperiences(copy);
+          updateItem(index, "end_date", date);
         }}
       />
       
@@ -348,17 +340,14 @@ async function submitForm() {
           checked={!!item.is_current}
           onChange={(e)=>{
             const checked = e.target.checked;
-            const copy = [...welfareExperiences];
       
-            copy[i] = {
-              ...copy[i],
-              is_current: checked,
-              end_date: checked
-                ? null
-                : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
-            };
+            updateItem(index, "is_current", checked);
       
-            setWelfareExperiences(copy);
+            if(checked){
+              updateItem(index, "end_date", null);
+            }else if(!item.end_date){
+              updateItem(index, "end_date", monthToDate(getCurrentMonthKST()));
+            }
           }}
         />
         <span>현재 진행 중</span>
