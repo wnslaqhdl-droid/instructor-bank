@@ -63,12 +63,13 @@ function MonthSelect({ label, value, min, max, disabled, onChange }){
   }
 
   function apply(nextYear, nextMonth){
-    if(!nextYear || !nextMonth){
+    if(!nextYear){
       onChange(null);
       return;
     }
 
-    const ym = `${nextYear}-${nextMonth}`;
+    const safeMonth = nextMonth || "01";
+    const ym = `${nextYear}-${safeMonth}`;
 
     if(min && ym < min) return;
     if(max && ym > max) return;
@@ -82,7 +83,7 @@ function MonthSelect({ label, value, min, max, disabled, onChange }){
         <select
           value={selectedYear}
           disabled={disabled}
-          onChange={(e)=>apply(e.target.value, selectedMonth)}
+          onChange={(e)=>apply(e.target.value, selectedMonth || "01")}
         >
           <option value="">연도</option>
           {years.map((y)=>(
@@ -1053,56 +1054,57 @@ function ModifyPage(){
                   />
                 </Field>
           
-                <Field label="시작월">
-                  <input
-                    type="month"
-                    value={toMonthValue(w.start_date)}
-                    max={getCurrentMonthKST()}
-                    onChange={(e)=>{
-                      const copy = [...editingWelfares];
-                      const nextStart = monthToDate(e.target.value);
-                      const currentEndMonth = toMonthValue(copy[i].end_date);
+                <MonthSelect
+                  label="시작월"
+                  value={w.start_date}
+                  max={getCurrentMonthKST()}
+                  onChange={(date)=>{
+                    const copy = [...modifyWelfares];
+                    const nextStartMonth = toMonthValue(date);
+                    const currentEndMonth = toMonthValue(copy[i].end_date);
                 
-                      copy[i] = {
-                        ...copy[i],
-                        start_date: nextStart,
-                        end_date:
-                          currentEndMonth && e.target.value > currentEndMonth
-                            ? null
-                            : copy[i].end_date
-                      };
+                    copy[i] = {
+                      ...copy[i],
+                      start_date: date,
+                      end_date:
+                        currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
+                          ? null
+                          : copy[i].end_date
+                    };
                 
-                      setModifyWelfares(copy);
-                    }}
-                  />
-                </Field>
+                    setModifyWelfares(copy);
+                  }}
+                />
                 
-                <Field label="종료월">
-                  <input
-                    type="month"
-                    value={w.is_current ? "" : toMonthValue(w.end_date)}
-                    min={toMonthValue(w.start_date)}
-                    max={getCurrentMonthKST()}
-                    disabled={!!w.is_current}
-                    onChange={(e)=>{
-                      const copy = [...editingWelfares];
-                      copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
-                      setModifyWelfares(copy);
-                    }}
-                  />
-                </Field>
+                <MonthSelect
+                  label="종료월"
+                  value={w.end_date}
+                  min={toMonthValue(w.start_date)}
+                  max={getCurrentMonthKST()}
+                  disabled={!!w.is_current}
+                  onChange={(date)=>{
+                    const copy = [...modifyWelfares];
+                    copy[i] = { ...copy[i], end_date: date };
+                    setModifyWelfares(copy);
+                  }}
+                />
                 
                 <label className="check">
                   <input
                     type="checkbox"
                     checked={!!w.is_current}
                     onChange={(e)=>{
-                      const copy = [...editingWelfares];
+                      const checked = e.target.checked;
+                      const copy = [...modifyWelfares];
+                
                       copy[i] = {
                         ...copy[i],
-                        is_current: e.target.checked,
-                        end_date: e.target.checked ? null : copy[i].end_date
+                        is_current: checked,
+                        end_date: checked
+                          ? null
+                          : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
                       };
+                
                       setModifyWelfares(copy);
                     }}
                   />
@@ -1202,57 +1204,58 @@ function ModifyPage(){
                   />
                 </Field>
           
-                <Field label="시작월">
-                  <input
-                    type="month"
-                    value={toMonthValue(l.start_date)}
-                    max={getCurrentMonthKST()}
-                    onChange={(e)=>{
-                      const copy = [...editingLectures];
-                      const nextStart = monthToDate(e.target.value);
-                      const currentEndMonth = toMonthValue(copy[i].end_date);
+                <MonthSelect
+                  label="시작월"
+                  value={l.start_date}
+                  max={getCurrentMonthKST()}
+                  onChange={(date)=>{
+                    const copy = [...modifyLectures];
+                    const nextStartMonth = toMonthValue(date);
+                    const currentEndMonth = toMonthValue(copy[i].end_date);
                 
-                      copy[i] = {
-                        ...copy[i],
-                        start_date: nextStart,
-                        end_date:
-                          currentEndMonth && e.target.value > currentEndMonth
-                            ? null
-                            : copy[i].end_date
-                      };
+                    copy[i] = {
+                      ...copy[i],
+                      start_date: date,
+                      end_date:
+                        currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
+                          ? null
+                          : copy[i].end_date
+                    };
                 
-                      setModifyLectures(copy);
-                    }}
-                  />
-                </Field>
+                    setModifyLectures(copy);
+                  }}
+                />
                 
-                <Field label="종료월">
-                  <input
-                    type="month"
-                    value={l.is_current ? "" : toMonthValue(l.end_date)}
-                    min={toMonthValue(l.start_date)}
-                    max={getCurrentMonthKST()}
-                    disabled={!!l.is_current}
-                    onChange={(e)=>{
-                      const copy = [...editingLectures];
-                      copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
-                      setModifyLectures(copy);
-                    }}
-                  />
-                </Field>
+                <MonthSelect
+                  label="종료월"
+                  value={l.end_date}
+                  min={toMonthValue(l.start_date)}
+                  max={getCurrentMonthKST()}
+                  disabled={!!l.is_current}
+                  onChange={(date)=>{
+                    const copy = [...modifyLectures];
+                    copy[i] = { ...copy[i], end_date: date };
+                    setModifyLectures(copy);
+                  }}
+                />
                 
                 <label className="check">
                   <input
                     type="checkbox"
                     checked={!!l.is_current}
                     onChange={(e)=>{
+                      const checked = e.target.checked;
                       const copy = [...editingLectures];
+                
                       copy[i] = {
                         ...copy[i],
-                        is_current: e.target.checked,
-                        end_date: e.target.checked ? null : copy[i].end_date
+                        is_current: checked,
+                        end_date: checked
+                          ? null
+                          : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
                       };
-                      setModifyLectures(copy);
+                
+                      setEditingLectures(copy);
                     }}
                   />
                   <span>현재 진행 중</span>
@@ -1962,56 +1965,57 @@ const filteredItems = items.filter((item) => {
             />
           </Field>
     
-          <Field label="시작월">
-            <input
-              type="month"
-              value={toMonthValue(w.start_date)}
-              max={getCurrentMonthKST()}
-              onChange={(e)=>{
-                const copy = [...editingWelfares];
-                const nextStart = monthToDate(e.target.value);
-                const currentEndMonth = toMonthValue(copy[i].end_date);
+          <MonthSelect
+            label="시작월"
+            value={w.start_date}
+            max={getCurrentMonthKST()}
+            onChange={(date)=>{
+              const copy = [...modifyWelfares];
+              const nextStartMonth = toMonthValue(date);
+              const currentEndMonth = toMonthValue(copy[i].end_date);
           
-                copy[i] = {
-                  ...copy[i],
-                  start_date: nextStart,
-                  end_date:
-                    currentEndMonth && e.target.value > currentEndMonth
-                      ? null
-                      : copy[i].end_date
-                };
+              copy[i] = {
+                ...copy[i],
+                start_date: date,
+                end_date:
+                  currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
+                    ? null
+                    : copy[i].end_date
+              };
           
-                setEditingWelfares(copy);
-              }}
-            />
-          </Field>
+              setModifyWelfares(copy);
+            }}
+          />
           
-          <Field label="종료월">
-            <input
-              type="month"
-              value={w.is_current ? "" : toMonthValue(w.end_date)}
-              min={toMonthValue(w.start_date)}
-              max={getCurrentMonthKST()}
-              disabled={!!w.is_current}
-              onChange={(e)=>{
-                const copy = [...editingWelfares];
-                copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
-                setEditingWelfares(copy);
-              }}
-            />
-          </Field>
+          <MonthSelect
+            label="종료월"
+            value={w.end_date}
+            min={toMonthValue(w.start_date)}
+            max={getCurrentMonthKST()}
+            disabled={!!w.is_current}
+            onChange={(date)=>{
+              const copy = [...modifyWelfares];
+              copy[i] = { ...copy[i], end_date: date };
+              setModifyWelfares(copy);
+            }}
+          />
           
           <label className="check">
             <input
               type="checkbox"
               checked={!!w.is_current}
               onChange={(e)=>{
+                const checked = e.target.checked;
                 const copy = [...editingWelfares];
+          
                 copy[i] = {
                   ...copy[i],
-                  is_current: e.target.checked,
-                  end_date: e.target.checked ? null : copy[i].end_date
+                  is_current: checked,
+                  end_date: checked
+                    ? null
+                    : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
                 };
+          
                 setEditingWelfares(copy);
               }}
             />
@@ -2113,56 +2117,57 @@ const filteredItems = items.filter((item) => {
             />
           </Field>
     
-          <Field label="시작월">
-            <input
-              type="month"
-              value={toMonthValue(l.start_date)}
-              max={getCurrentMonthKST()}
-              onChange={(e)=>{
-                const copy = [...editingLectures];
-                const nextStart = monthToDate(e.target.value);
-                const currentEndMonth = toMonthValue(copy[i].end_date);
+          <MonthSelect
+            label="시작월"
+            value={l.start_date}
+            max={getCurrentMonthKST()}
+            onChange={(date)=>{
+              const copy = [...modifyLectures];
+              const nextStartMonth = toMonthValue(date);
+              const currentEndMonth = toMonthValue(copy[i].end_date);
           
-                copy[i] = {
-                  ...copy[i],
-                  start_date: nextStart,
-                  end_date:
-                    currentEndMonth && e.target.value > currentEndMonth
-                      ? null
-                      : copy[i].end_date
-                };
+              copy[i] = {
+                ...copy[i],
+                start_date: date,
+                end_date:
+                  currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
+                    ? null
+                    : copy[i].end_date
+              };
           
-                setEditingLectures(copy);
-              }}
-            />
-          </Field>
+              setModifyLectures(copy);
+            }}
+          />
           
-          <Field label="종료월">
-            <input
-              type="month"
-              value={l.is_current ? "" : toMonthValue(l.end_date)}
-              min={toMonthValue(l.start_date)}
-              max={getCurrentMonthKST()}
-              disabled={!!l.is_current}
-              onChange={(e)=>{
-                const copy = [...editingLectures];
-                copy[i] = { ...copy[i], end_date: monthToDate(e.target.value) };
-                setEditingLectures(copy);
-              }}
-            />
-          </Field>
+          <MonthSelect
+            label="종료월"
+            value={l.end_date}
+            min={toMonthValue(l.start_date)}
+            max={getCurrentMonthKST()}
+            disabled={!!l.is_current}
+            onChange={(date)=>{
+              const copy = [...modifyLectures];
+              copy[i] = { ...copy[i], end_date: date };
+              setModifyLectures(copy);
+            }}
+          />
           
           <label className="check">
             <input
               type="checkbox"
               checked={!!l.is_current}
               onChange={(e)=>{
+                const checked = e.target.checked;
                 const copy = [...editingLectures];
+          
                 copy[i] = {
                   ...copy[i],
-                  is_current: e.target.checked,
-                  end_date: e.target.checked ? null : copy[i].end_date
+                  is_current: checked,
+                  end_date: checked
+                    ? null
+                    : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
                 };
+          
                 setEditingLectures(copy);
               }}
             />
