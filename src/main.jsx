@@ -1281,7 +1281,7 @@ function ModifyPage(){
                     checked={!!l.is_current}
                     onChange={(e)=>{
                       const checked = e.target.checked;
-                      const copy = [...ModifyLectures];
+                      const copy = [...modifyLectures];
                 
                       copy[i] = {
                         ...copy[i],
@@ -2019,7 +2019,7 @@ const filteredItems = items.filter((item) => {
                     : copy[i].end_date
               };
           
-              seteditingWelfares(copy);
+              setEditingWelfares(copy);
             }}
           />
           
@@ -2032,7 +2032,7 @@ const filteredItems = items.filter((item) => {
             onChange={(date)=>{
               const copy = [...editingWelfares];
               copy[i] = { ...copy[i], end_date: date };
-              seteditingWelfares(copy);
+              setEditingWelfares(copy);
             }}
           />
           
