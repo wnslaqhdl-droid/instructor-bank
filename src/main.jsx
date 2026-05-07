@@ -309,14 +309,20 @@ async function submitForm() {
         value={item.start_date}
         max={getCurrentMonthKST()}
         onChange={(date)=>{
+          const copy = [...welfareExperiences];
           const nextStartMonth = toMonthValue(date);
-          const currentEndMonth = toMonthValue(item.end_date);
+          const currentEndMonth = toMonthValue(copy[i].end_date);
       
-          updateItem(i, "start_date", date);
+          copy[i] = {
+            ...copy[i],
+            start_date: date,
+            end_date:
+              currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
+                ? null
+                : copy[i].end_date
+          };
       
-          if(currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth){
-            updateItem(i, "end_date", null);
-          }
+          setWelfareExperiences(copy);
         }}
       />
       
@@ -326,7 +332,11 @@ async function submitForm() {
         min={toMonthValue(item.start_date)}
         max={getCurrentMonthKST()}
         disabled={!!item.is_current}
-        onChange={(date)=>updateItem(i, "end_date", date)}
+        onChange={(date)=>{
+          const copy = [...welfareExperiences];
+          copy[i] = { ...copy[i], end_date: date };
+          setWelfareExperiences(copy);
+        }}
       />
       
       <label className="check">
@@ -334,10 +344,18 @@ async function submitForm() {
           type="checkbox"
           checked={!!item.is_current}
           onChange={(e)=>{
-            updateItem(i, "is_current", e.target.checked);
-            if(e.target.checked){
-              updateItem(i, "end_date", null);
-            }
+            const checked = e.target.checked;
+            const copy = [...welfareExperiences];
+      
+            copy[i] = {
+              ...copy[i],
+              is_current: checked,
+              end_date: checked
+                ? null
+                : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
+            };
+      
+            setWelfareExperiences(copy);
           }}
         />
         <span>현재 진행 중</span>
@@ -363,14 +381,20 @@ async function submitForm() {
         value={item.start_date}
         max={getCurrentMonthKST()}
         onChange={(date)=>{
+          const copy = [...lectureExperiences];
           const nextStartMonth = toMonthValue(date);
-          const currentEndMonth = toMonthValue(item.end_date);
+          const currentEndMonth = toMonthValue(copy[i].end_date);
       
-          updateItem(i, "start_date", date);
+          copy[i] = {
+            ...copy[i],
+            start_date: date,
+            end_date:
+              currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
+                ? null
+                : copy[i].end_date
+          };
       
-          if(currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth){
-            updateItem(i, "end_date", null);
-          }
+          setLectureExperiences(copy);
         }}
       />
       
@@ -380,18 +404,30 @@ async function submitForm() {
         min={toMonthValue(item.start_date)}
         max={getCurrentMonthKST()}
         disabled={!!item.is_current}
-        onChange={(date)=>updateItem(i, "end_date", date)}
+        onChange={(date)=>{
+          const copy = [...lectureExperiences];
+          copy[i] = { ...copy[i], end_date: date };
+          setLectureExperiences(copy);
+        }}
       />
       
       <label className="check">
         <input
           type="checkbox"
-          checked={!!item.is_current}
+          checked={!!l.is_current}
           onChange={(e)=>{
-            updateItem(i, "is_current", e.target.checked);
-            if(e.target.checked){
-              updateItem(i, "end_date", null);
-            }
+            const checked = e.target.checked;
+            const copy = [...modifyLectures];
+      
+            copy[i] = {
+              ...copy[i],
+              is_current: checked,
+              end_date: checked
+                ? null
+                : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
+            };
+      
+            setModifyLectures(copy);
           }}
         />
         <span>현재 진행 중</span>
@@ -1255,7 +1291,7 @@ function ModifyPage(){
                           : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
                       };
                 
-                      setEditingLectures(copy);
+                      setModifyLectures(copy);
                     }}
                   />
                   <span>현재 진행 중</span>
@@ -1970,7 +2006,7 @@ const filteredItems = items.filter((item) => {
             value={w.start_date}
             max={getCurrentMonthKST()}
             onChange={(date)=>{
-              const copy = [...modifyWelfares];
+              const copy = [...editingWelfares];
               const nextStartMonth = toMonthValue(date);
               const currentEndMonth = toMonthValue(copy[i].end_date);
           
@@ -1983,7 +2019,7 @@ const filteredItems = items.filter((item) => {
                     : copy[i].end_date
               };
           
-              setModifyWelfares(copy);
+              seteditingWelfares(copy);
             }}
           />
           
@@ -1994,9 +2030,9 @@ const filteredItems = items.filter((item) => {
             max={getCurrentMonthKST()}
             disabled={!!w.is_current}
             onChange={(date)=>{
-              const copy = [...modifyWelfares];
+              const copy = [...editingWelfares];
               copy[i] = { ...copy[i], end_date: date };
-              setModifyWelfares(copy);
+              seteditingWelfares(copy);
             }}
           />
           
@@ -2122,7 +2158,7 @@ const filteredItems = items.filter((item) => {
             value={l.start_date}
             max={getCurrentMonthKST()}
             onChange={(date)=>{
-              const copy = [...modifyLectures];
+              const copy = [...editingLectures];
               const nextStartMonth = toMonthValue(date);
               const currentEndMonth = toMonthValue(copy[i].end_date);
           
@@ -2135,7 +2171,7 @@ const filteredItems = items.filter((item) => {
                     : copy[i].end_date
               };
           
-              setModifyLectures(copy);
+              setEditingLectures(copy);
             }}
           />
           
@@ -2146,9 +2182,9 @@ const filteredItems = items.filter((item) => {
             max={getCurrentMonthKST()}
             disabled={!!l.is_current}
             onChange={(date)=>{
-              const copy = [...modifyLectures];
+              const copy = [...editingLectures];
               copy[i] = { ...copy[i], end_date: date };
-              setModifyLectures(copy);
+              setEditingLectures(copy);
             }}
           />
           
