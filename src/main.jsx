@@ -222,7 +222,7 @@ async function submitForm() {
     return;
   }
 
-  if(!confirm("입력한 내용으로 강사 등록을 신청하시겠습니까?")){
+  if(!window.confirm("입력한 내용으로 강사 등록을 신청하시겠습니까?")){
     return;
   }
 
