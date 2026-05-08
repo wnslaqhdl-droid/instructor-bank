@@ -1636,17 +1636,17 @@ function AdminPage(){
     setUpdateRequests(data || []);
     }
   }
-
-  if(openRequestId !== req.id){
-    setMessage("먼저 상세 내용을 확인한 후 승인해 주세요.");
-    setOpenRequestId(req.id);
-    return;
-  }
-  
+ 
   async function approveRequest(req){
-  if(!window.confirm("이 수정 요청을 승인하고 실제 강사 정보에 반영하시겠습니까?")){
-    return;
-  }
+    if(openRequestId !== req.id){
+      setMessage("먼저 상세 내용을 확인한 후 승인해 주세요.");
+      setOpenRequestId(req.id);
+      return;
+    }
+    
+    if(!window.confirm("이 수정 요청을 승인하고 실제 강사 정보에 반영하시겠습니까?")){
+      return;
+    }
     
   setMessage("");
   // 실제 instructors 테이블 업데이트
