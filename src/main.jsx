@@ -773,25 +773,42 @@ function ModifyPage(){
       requestData.requested_data?.instructor
     ){
       setFound(requestData.requested_data.instructor);
-      setModifyTrainings(requestData.requested_data.training_courses || []);
     
-      setModifyWelfares((requestData.requested_data.welfare_experiences || []).map((w)=>({
-        ...w,
-        is_current: !w.end_date
-      })));
+      setModifyTrainings(
+        requestData.requested_data.training_courses?.length
+          ? requestData.requested_data.training_courses
+          : (trainingData || [])
+      );
     
-      setModifyLectures((requestData.requested_data.lecture_experiences || []).map((l)=>({
-        ...l,
-        is_current: !l.end_date
-      })));
+      setModifyWelfares(
+        (requestData.requested_data.welfare_experiences?.length
+          ? requestData.requested_data.welfare_experiences
+          : (welfareData || [])
+        ).map((w)=>({
+          ...w,
+          is_current: !w.end_date
+        }))
+      );
+    
+      setModifyLectures(
+        (requestData.requested_data.lecture_experiences?.length
+          ? requestData.requested_data.lecture_experiences
+          : (lectureData || [])
+        ).map((l)=>({
+          ...l,
+          is_current: !l.end_date
+        }))
+      );
     }else{
       setFound(data);
       setModifyTrainings(trainingData || []);
-      setModifyWelfares((requestData.requested_data.welfare_experiences || []).map((w)=>({
+    
+      setModifyWelfares((welfareData || []).map((w)=>({
         ...w,
         is_current: !w.end_date
       })));
-      setModifyLectures((requestData.requested_data.lecture_experiences || []).map((l)=>({
+    
+      setModifyLectures((lectureData || []).map((l)=>({
         ...l,
         is_current: !l.end_date
       })));
