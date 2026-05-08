@@ -934,7 +934,7 @@ function ModifyPage(){
       return;
     }
 
-    if(!confirm("수정 요청을 제출하시겠습니까?")){
+    if(!window.confirm("수정 요청을 제출하시겠습니까?")){
       return;
     }
     
@@ -1636,10 +1636,18 @@ function AdminPage(){
     setUpdateRequests(data || []);
     }
   }
-  async function approveRequest(req){
-  if(!confirm("이 수정 요청을 승인하고 실제 강사 정보에 반영하시겠습니까?")){
+
+  if(openRequestId !== req.id){
+    setMessage("먼저 상세 내용을 확인한 후 승인해 주세요.");
+    setOpenRequestId(req.id);
     return;
   }
+  
+  async function approveRequest(req){
+  if(!window.confirm("이 수정 요청을 승인하고 실제 강사 정보에 반영하시겠습니까?")){
+    return;
+  }
+    
   setMessage("");
   // 실제 instructors 테이블 업데이트
   const requested = req.requested_data;
@@ -1801,7 +1809,7 @@ function renderChangedList(label, oldList, newList, renderItem){
 }  
   
 async function rejectRequest(req){
-  const reason = prompt("반려 사유를 입력하세요.");
+  const reason = window.prompt("반려 사유를 입력하세요.");
 
   if(reason === null) return;
 
