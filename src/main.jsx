@@ -197,23 +197,28 @@ async function submitForm() {
   const validTrainings = trainingCourses
     .filter((x) => x.course_name || x.institution || x.completion_year)
     .map((x) => ({ instructor_id, ...x }));
-
+  
   const validWelfare = welfareExperiences
     .filter((x) => x.organization || x.role || x.start_date || x.end_date || x.description)
     .map((x) => ({
       instructor_id,
-      ...x,
+      organization: x.organization || "",
+      role: x.role || "",
       start_date: x.start_date || null,
-      end_date: x.end_date || null
+      end_date: x.end_date || null,
+      description: x.description || ""
     }));
-
+  
   const validLectures = lectureExperiences
     .filter((x) => x.organization || x.target || x.topic || x.start_date || x.end_date || x.count)
     .map((x) => ({
       instructor_id,
-      ...x,
+      organization: x.organization || "",
+      target: x.target || "",
+      topic: x.topic || "",
       start_date: x.start_date || null,
-      end_date: x.end_date || null
+      end_date: x.end_date || null,
+      count: x.count || ""
     }));
 
   if (validTrainings.length) {
