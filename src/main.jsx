@@ -202,9 +202,34 @@ async function submitForm() {
     return;
   }
 
+  const normalizedEmail = form.email.trim().toLowerCase();
+
+  const { data: existingInstructor, error: duplicateCheckError } = await supabase
+    .from("instructors")
+    .select("id")
+    .eq("email", normalizedEmail)
+    .maybeSingle();
+  
+  if(duplicateCheckError){
+    setError("이메일 중복 확인 중 오류가 발생했습니다: " + duplicateCheckError.message);
+    scrollToTop();
+    return;
+  }
+  
+  if(existingInstructor){
+    setError("이미 등록된 이메일입니다. 정보 수정이 필요한 경우 ‘정보 수정 요청’ 메뉴를 이용해 주세요.");
+    scrollToTop();
+    return;
+  }
+
   const { data: inserted, error: insertError } = await supabase
     .from("instructors")
-    .insert([{ ...form, public_status: "검토중", update_status: "정상" }])
+    .insert([{
+      ...form,
+      email: normalizedEmail,
+      public_status: "검토중",
+      update_status: "정상"
+    }])
     .select("id")
     .single();
 
