@@ -222,6 +222,10 @@ async function submitForm() {
     return;
   }
 
+  if(!confirm("입력한 내용으로 강사 등록을 신청하시겠습니까?")){
+    return;
+  }
+
   const { data: inserted, error: insertError } = await supabase
     .from("instructors")
     .insert([{
@@ -927,6 +931,10 @@ function ModifyPage(){
     if(!hasAnyChange){
       setError("변경된 항목이 없습니다. 수정 후 다시 제출해 주세요.");
       scrollToTop();
+      return;
+    }
+
+    if(!confirm("수정 요청을 제출하시겠습니까?")){
       return;
     }
     
