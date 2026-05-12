@@ -9,6 +9,7 @@ import { getUpdateRequests } from "./services/requestService";
 import { getAdminInstructors, } from "./services/adminService";
 import { searchInstructors,} from "./services/instructorService";
 import { submitInstructorUpdateRequest} from "./services/instructorService";
+import { checkAdmin} from "./services/instructorService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -1474,6 +1475,8 @@ function ModifyPage(){
 
 function AdminPage(){
   const [session,setSession]=useState(null);
+  const [isAdmin,setIsAdmin]=useState(false);
+  const [loadingAdmin,setLoadingAdmin]=useState(true);
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const [items,setItems]=useState([]);
@@ -1488,12 +1491,41 @@ function AdminPage(){
   const [openRequestId,setOpenRequestId]=useState(null);
   const [requestStatusFilter,setRequestStatusFilter]=useState("");
 
-  async function refreshSession(){
-    const {data}=await supabase.auth.getSession();
+  async function refreshSession() {
+    const { data } = await supabase.auth.getSession();
+  
     setSession(data.session);
+  
+    if (data.session) {
+      try {
+        const admin = await checkAdmin();
+  
+        setIsAdmin(admin);
+      } catch (err) {
+        setMessage(err.message);
+      }
+    } else {
+      setIsAdmin(false);
+    }
+  
+    setLoadingAdmin(false);
   }
-
-  useEffect(()=>{refreshSession()},[]);
+  
+  useEffect(()=>{
+    refreshSession()
+  },[]);
+  
+  if (loadingAdmin) {
+    return <div className="card">확인 중...</div>;
+  }
+  
+  if (session && !isAdmin) {
+    return (
+      <div className="card">
+        관리자 권한이 없습니다.
+      </div>
+    );
+  }
 
   async function login(){
     const {error}=await supabase.auth.signInWithPassword({email,password});
