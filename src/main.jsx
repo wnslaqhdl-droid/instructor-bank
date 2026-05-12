@@ -166,6 +166,7 @@ function Repeater({ title, help, items, setItems, emptyItem, render }) {
 }
 
 function RegisterPage() {
+  import { registerInstructor } from "../services/instructorService";
   const [form, setForm] = useState(clone(emptyInstructor));
   const [trainingCourses, setTrainingCourses] = useState([clone(emptyTraining)]);
   const [welfareExperiences, setWelfareExperiences] = useState([clone(emptyWelfare)]);
@@ -184,138 +185,62 @@ async function submitForm() {
   setMessage("");
   setError("");
 
-  if (!form.name || !form.email || !form.phone || !form.region || !form.main_topic) {
+  if (
+    !form.name ||
+    !form.email ||
+    !form.phone ||
+    !form.region ||
+    !form.main_topic
+  ) {
     setError("성명, 연락처, 이메일, 거주지역, 주요 강의주제는 필수입니다.");
     scrollToTop();
     return;
   }
 
-  if(!isValidEmail(form.email)){
+  if (!isValidEmail(form.email)) {
     setError("이메일은 이메일@도메인.com 형식으로 입력해 주세요.");
     scrollToTop();
     return;
   }
-  
-  if(!isValidPhone(form.phone)){
-    setError("전화번호는 00-0000-0000, 000-0000-0000 또는 010-0000-0000 형식으로 입력해 주세요.");
+
+  if (!isValidPhone(form.phone)) {
+    setError(
+      "전화번호는 00-0000-0000, 000-0000-0000 또는 010-0000-0000 형식으로 입력해 주세요."
+    );
     scrollToTop();
     return;
   }
 
-  const normalizedEmail = form.email.trim().toLowerCase();
+  if (
+    !window.confirm(
+      "입력한 내용으로 강사 등록을 신청하시겠습니까?"
+    )
+  ) {
+    return;
+  }
 
-  const { data: existingInstructor, error: duplicateCheckError } = await supabase
-    .from("instructors")
-    .select("id")
-    .eq("email", normalizedEmail)
-    .maybeSingle();
-  
-  if(duplicateCheckError){
-    setError("이메일 중복 확인 중 오류가 발생했습니다: " + duplicateCheckError.message);
+  try {
+    await registerInstructor({
+      form,
+      trainingCourses,
+      welfareExperiences,
+      lectureExperiences,
+    });
+
+    setMessage(
+      "등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다."
+    );
+
+    setForm(clone(emptyInstructor));
+    setTrainingCourses([clone(emptyTraining)]);
+    setWelfareExperiences([clone(emptyWelfare)]);
+    setLectureExperiences([clone(emptyLecture)]);
+
     scrollToTop();
-    return;
-  }
-  
-  if(existingInstructor){
-    setError("이미 등록된 이메일입니다. 정보 수정이 필요한 경우 ‘정보 수정 요청’ 메뉴를 이용해 주세요.");
+  } catch (err) {
+    setError(err.message);
     scrollToTop();
-    return;
   }
-
-  if(!window.confirm("입력한 내용으로 강사 등록을 신청하시겠습니까?")){
-    return;
-  }
-
-  const { data: inserted, error: insertError } = await supabase
-    .from("instructors")
-    .insert([{
-      ...form,
-      email: normalizedEmail,
-      public_status: "검토중",
-      update_status: "정상"
-    }])
-    .select("id")
-    .single();
-
-  if (insertError) {
-    setError("강사 기본정보 저장 실패: " + insertError.message);
-    scrollToTop();
-    return;
-  }
-
-  const instructor_id = inserted.id;
-
-  const validTrainings = trainingCourses
-    .filter((x) => x.course_name || x.institution || x.completion_year)
-    .map((x) => ({ instructor_id, ...x }));
-  
-  const validWelfare = welfareExperiences
-    .filter((x) => x.organization || x.role || x.start_date || x.end_date || x.description)
-    .map((x) => ({
-      instructor_id,
-      organization: x.organization || "",
-      role: x.role || "",
-      start_date: x.start_date || null,
-      end_date: x.end_date || null,
-      description: x.description || ""
-    }));
-  
-  const validLectures = lectureExperiences
-    .filter((x) => x.organization || x.target || x.topic || x.start_date || x.end_date || x.count)
-    .map((x) => ({
-      instructor_id,
-      organization: x.organization || "",
-      target: x.target || "",
-      topic: x.topic || "",
-      start_date: x.start_date || null,
-      end_date: x.end_date || null,
-      count: x.count || ""
-    }));
-
-  if (validTrainings.length) {
-    const { error } = await supabase
-      .from("training_courses")
-      .insert(validTrainings);
-
-    if (error) {
-      setError("양성과정 저장 오류: " + error.message);
-      scrollToTop();
-      return;
-    }
-  }
-
-  if (validWelfare.length) {
-    const { error } = await supabase
-      .from("welfare_experiences")
-      .insert(validWelfare);
-
-    if (error) {
-      setError("실무경력 저장 오류: " + error.message);
-      scrollToTop();
-      return;
-    }
-  }
-
-  if (validLectures.length) {
-    const { error } = await supabase
-      .from("lecture_experiences")
-      .insert(validLectures);
-
-    if (error) {
-      setError("강의경력 저장 오류: " + error.message);
-      scrollToTop();
-      return;
-    }
-  }
-
-  setMessage("등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다.");
-
-  setForm(clone(emptyInstructor));
-  setTrainingCourses([clone(emptyTraining)]);
-  setWelfareExperiences([clone(emptyWelfare)]);
-  setLectureExperiences([clone(emptyLecture)]);
-
-  scrollToTop();
 }
 
   return <div><section className="hero"><h1>성인권 교육 강사 등록</h1><p>입력하신 정보는 관리자 검토 후 강사뱅크에 공개됩니다. 실무경력 및 강의경력은 강사 본인의 자기신고 내용을 기준으로 관리되며, 중앙센터는 발달장애인 성인권 부모교육지원사업 내 양성과정 수료 여부만 확인합니다.</p>
