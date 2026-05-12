@@ -148,3 +148,27 @@ export async function registerInstructor({
     instructor_id,
   };
 }
+
+export async function searchInstructors() {
+  const { data, error } = await supabase
+    .from("instructors")
+    .select(`
+      *,
+      training_courses(*),
+      welfare_experiences(*),
+      lecture_experiences(*)
+    `)
+    .eq("public_status", "공개")
+    .eq("show_profile", true)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  if (error) {
+    throw new Error(
+      "검색 실패: " + error.message
+    );
+  }
+
+  return data || [];
+}
