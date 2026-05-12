@@ -1471,6 +1471,7 @@ function ModifyPage(){
     </div>
   );
 }
+}
 
 function AdminPage(){
   const [session,setSession]=useState(null);
