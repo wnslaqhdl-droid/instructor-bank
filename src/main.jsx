@@ -4,6 +4,7 @@ import { supabase } from "./supabase";
 import { regionOptions, targetOptions, typeOptions, specialtyOptions, emptyInstructor, emptyTraining, emptyWelfare, emptyLecture } from "./constants";
 import { registerInstructor } from "./services/instructorService";
 import { updateInstructorStatus, deleteInstructor,} from "./services/adminService";
+import { applyUpdateRequest, rejectUpdateRequest, } from "./services/adminService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
