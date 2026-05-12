@@ -1512,22 +1512,16 @@ function AdminPage(){
     setMessage("로그아웃 완료");
   }
 
-  async function loadAdmin(){
-    if(!session){setMessage("관리자 로그인이 필요합니다.");return;}
-
-    const {data,error}=await supabase
-      .from("instructors")
-      .select(`
-        *,
-        training_courses(*),
-        welfare_experiences(*),
-        lecture_experiences(*)
-      `)
-      .order("created_at",{ascending:false});
-
-    if(error)setMessage("조회 실패: "+error.message);
-    else setItems(data||[]);
+  async function loadAdmin() {
+    try {
+      const data = await getAdminInstructors();
+  
+      setAdminList(data);
+    } catch (err) {
+      setMessage(err.message);
+    }
   }
+
    function formatKST(value){
       if(!value) return "-";
     
