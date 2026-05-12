@@ -172,3 +172,45 @@ export async function searchInstructors() {
 
   return data || [];
 }
+
+export async function submitInstructorUpdateRequest(
+  instructorId,
+  payload
+) {
+  // 기존 검토중 요청 대체 처리
+  const { error: replaceError } = await supabase
+    .from("instructor_update_requests")
+    .update({
+      request_status: "대체됨",
+      admin_memo:
+        "강사가 수정 요청을 다시 제출하여 최신 요청으로 대체됨",
+      reviewed_at: new Date().toISOString(),
+    })
+    .eq("instructor_id", instructorId)
+    .eq("request_status", "검토중");
+
+  if (replaceError) {
+    throw new Error(
+      "기존 요청 정리 실패: " +
+        replaceError.message
+    );
+  }
+
+  // 새 요청 생성
+  const { error: insertError } = await supabase
+    .from("instructor_update_requests")
+    .insert([
+      {
+        instructor_id: instructorId,
+        requested_data: payload,
+      },
+    ]);
+
+  if (insertError) {
+    throw new Error(
+      "요청 실패: " + insertError.message
+    );
+  }
+
+  return true;
+}
