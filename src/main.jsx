@@ -8,6 +8,7 @@ import { applyUpdateRequest, rejectUpdateRequest, } from "./services/adminServic
 import { getUpdateRequests } from "./services/requestService";
 import { getAdminInstructors, } from "./services/adminService";
 import { searchInstructors,} from "./services/instructorService";
+import { submitInstructorUpdateRequest} from "./services/instructorService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -871,36 +872,28 @@ function ModifyPage(){
       return;
     }
     
-    await supabase
-      .from("instructor_update_requests")
-      .update({
-        request_status: "대체됨",
-        admin_memo: "강사가 수정 요청을 다시 제출하여 최신 요청으로 대체됨",
-        reviewed_at: new Date().toISOString()
-      })
-      .eq("instructor_id", found.id)
-      .eq("request_status", "검토중");
-    
-    console.log("수정요청 payload", payload);
-    
-    const {error} = await supabase
-      .from("instructor_update_requests")
-      .insert([{
-        instructor_id: found.id,
-        requested_data: payload
-      }]);
-    
-    if(error){
-      setError("요청 실패: " + error.message);
-      scrollToTop();
-      return;
-    }
-
-    setMessage("수정 요청이 접수되었습니다. 관리자 검토 후 반영됩니다.");
+  console.log("수정요청 payload", payload);
+  
+  try {
+    await submitInstructorUpdateRequest(
+      found.id,
+      payload
+    );
+  
+    setMessage(
+      "수정 요청이 접수되었습니다. 관리자 검토 후 반영됩니다."
+    );
+  
     setFound(null);
     setEmail("");
+  
+    scrollToTop();
+  } catch (err) {
+    setError(err.message);
+  
     scrollToTop();
   }
+ 
 
   function updateField(key,value){
     setFound(prev => ({...prev, [key]: value}));
