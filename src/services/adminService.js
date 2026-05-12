@@ -164,3 +164,25 @@ export async function rejectUpdateRequest(req, reason) {
 
   return true;
 }
+
+export async function getAdminInstructors() {
+  const { data, error } = await supabase
+    .from("instructors")
+    .select(`
+      *,
+      training_courses(*),
+      welfare_experiences(*),
+      lecture_experiences(*)
+    `)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  if (error) {
+    throw new Error(
+      "강사 목록 조회 실패: " + error.message
+    );
+  }
+
+  return data || [];
+}
