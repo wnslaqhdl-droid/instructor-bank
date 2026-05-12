@@ -1564,133 +1564,35 @@ function AdminPage(){
     }
   }
  
-  async function approveRequest(req){
-    if(openRequestId !== req.id){
-      setMessage("먼저 상세 내용을 확인한 후 승인해 주세요.");
-      setOpenRequestId(req.id);
-      return;
-    }
-    
-    if(!window.confirm("이 수정 요청을 승인하고 실제 강사 정보에 반영하시겠습니까?")){
-      return;
-    }
-    
+async function approveRequest(req) {
+  if (openRequestId !== req.id) {
+    setMessage("먼저 상세 내용을 확인한 후 승인해 주세요.");
+    setOpenRequestId(req.id);
+    return;
+  }
+
+  if (
+    !window.confirm(
+      "이 수정 요청을 승인하고 실제 강사 정보에 반영하시겠습니까?"
+    )
+  ) 
+  {return;} 
+
   setMessage("");
-  // 실제 instructors 테이블 업데이트
-  const requested = req.requested_data;
-  const instructorData = requested.instructor || requested;
-  const { error: updateError } = await supabase
-    .from("instructors")
-    .update({
-      name: instructorData.name,
-      phone: instructorData.phone,
-      email: instructorData.email,
-      region: instructorData.region,
-      activity_regions: instructorData.activity_regions,
-      organization: instructorData.organization,
-      position: instructorData.position,
-      main_topic: instructorData.main_topic,
-      specialties: instructorData.specialties,
-      other_specialty: instructorData.other_specialty,
-      targets: instructorData.targets,
-      types: instructorData.types,
-      intro: instructorData.intro,
-      show_phone: instructorData.show_phone,
-      show_email: instructorData.show_email,
-      show_profile: instructorData.show_profile,
-      center_verified: instructorData.center_verified
-    })
-    .eq("id", req.instructor_id);
-  if(updateError){
-    setMessage("반영 실패: " + updateError.message);
-    return;
+
+  try {
+    await applyUpdateRequest(req);
+
+    setMessage("수정 요청 반영 완료");
+
+    loadRequests();
+    loadAdmin();
+  } 
+  catch (err) {
+    setMessage(err.message);
   }
-  // 1. 양성과정 반영
-  await supabase
-    .from("training_courses")
-    .delete()
-    .eq("instructor_id", req.instructor_id);
-  
-  const trainings = req.requested_data.training_courses || [];
-  
-  if (trainings.length) {
-    await supabase
-      .from("training_courses")
-      .insert(
-        trainings.map((t) => ({
-          instructor_id: req.instructor_id,
-          course_name: t.course_name || "",
-          institution: t.institution || "",
-          completion_year: t.completion_year || ""
-        }))
-      );
-  }
-  
-  // 2. 실무경력 반영
-  await supabase
-    .from("welfare_experiences")
-    .delete()
-    .eq("instructor_id", req.instructor_id);
-  
-  const welfares = req.requested_data.welfare_experiences || [];
-  
-  if (welfares.length) {
-    await supabase
-      .from("welfare_experiences")
-      .insert(
-        welfares.map((w) => ({
-          instructor_id: req.instructor_id,
-          organization: w.organization || "",
-          role: w.role || "",
-          start_date: w.start_date || null,
-          end_date: w.end_date || null,
-          description: w.description || ""
-        }))
-      );
-  }
-  
-  // 3. 강의경력 반영
-  await supabase
-    .from("lecture_experiences")
-    .delete()
-    .eq("instructor_id", req.instructor_id);
-  
-  const lectures = req.requested_data.lecture_experiences || [];
-  
-  if (lectures.length) {
-    await supabase
-      .from("lecture_experiences")
-      .insert(
-        lectures.map((l) => ({
-          instructor_id: req.instructor_id,
-          organization: l.organization || "",
-          target: l.target || "",
-          topic: l.topic || "",
-          start_date: l.start_date || null,
-          end_date: l.end_date || null,
-          count: l.count || ""
-        }))
-      );
-  }
-      
-      
-  // 2. 요청 상태 변경
-  const { error: statusError } = await supabase
-    .from("instructor_update_requests")
-    .update({
-      request_status: "승인",
-      reviewed_at: new Date().toISOString()
-    })
-    .eq("id", req.id);
-  if(statusError){
-    setMessage("상태 변경 실패: " + statusError.message);
-    return;
-  }
-  setMessage("수정 요청 반영 완료");
-  // 새로고침
-  loadRequests();
-  loadAdmin();
-  }
+}
+
   
 function isChanged(oldValue, newValue){
   return JSON.stringify(oldValue ?? "") !== JSON.stringify(newValue ?? "");
