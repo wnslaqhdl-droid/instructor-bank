@@ -7,6 +7,7 @@ import { updateInstructorStatus, deleteInstructor,} from "./services/adminServic
 import { applyUpdateRequest, rejectUpdateRequest, } from "./services/adminService";
 import { getUpdateRequests } from "./services/requestService";
 import { getAdminInstructors, } from "./services/adminService";
+import { searchInstructors,} from "./services/instructorService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -457,12 +458,15 @@ function SearchPage(){
  const [openBadgeId,setOpenBadgeId]=useState(null);  
  const [sortType,setSortType]=useState("latest");
  const [onlyVerified,setOnlyVerified]=useState(false);
- async function load(){ const {data,error}=await supabase
-   .from("instructors")
-   .select("*, training_courses(*), welfare_experiences(*), lecture_experiences(*)")
-   .eq("public_status","공개")
-   .eq("show_profile",true)
-   .order("created_at",{ascending:false}); if(error)setMessage("검색 실패: "+error.message); else setItems(data||[]); }
+ async function load() {
+    try {
+      const data = await searchInstructors();
+  
+      setItems(data);
+    } catch (err) {
+      setMessage(err.message);
+    }
+  }
  useEffect(()=>{load()},[]);
  function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
  const filtered = items.filter((item) => {
