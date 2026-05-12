@@ -893,7 +893,7 @@ function ModifyPage(){
   
     scrollToTop();
   }
- 
+ }
 
   function updateField(key,value){
     setFound(prev => ({...prev, [key]: value}));
@@ -1470,7 +1470,6 @@ function ModifyPage(){
       )}
     </div>
   );
-}
 }
 
 function AdminPage(){
