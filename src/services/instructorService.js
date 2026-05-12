@@ -148,4 +148,3 @@ export async function registerInstructor({
     instructor_id,
   };
 }
-```
