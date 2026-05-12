@@ -6,6 +6,7 @@ import { registerInstructor } from "./services/instructorService";
 import { updateInstructorStatus, deleteInstructor,} from "./services/adminService";
 import { applyUpdateRequest, rejectUpdateRequest, } from "./services/adminService";
 import { getUpdateRequests } from "./services/requestService";
+import { getAdminInstructors, } from "./services/adminService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
