@@ -1490,7 +1490,25 @@ function AdminPage(){
   const [updateRequests,setUpdateRequests] = useState([]);
   const [openRequestId,setOpenRequestId]=useState(null);
   const [requestStatusFilter,setRequestStatusFilter]=useState("");
-
+  
+  async function checkAdmin() {
+    const { data: { session } } = await supabase.auth.getSession();
+  
+    if (!session) return false;
+  
+    const { data, error } = await supabase
+      .from("admin_users")
+      .select("email")
+      .eq("email", session.user.email)
+      .maybeSingle();
+  
+    if (error) {
+      throw new Error("관리자 권한 확인 실패");
+    }
+  
+    return !!data;
+  }
+  
   async function refreshSession() {
     const { data } = await supabase.auth.getSession();
   
