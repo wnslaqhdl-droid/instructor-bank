@@ -5,6 +5,7 @@ import { regionOptions, targetOptions, typeOptions, specialtyOptions, emptyInstr
 import { registerInstructor } from "./services/instructorService";
 import { updateInstructorStatus, deleteInstructor,} from "./services/adminService";
 import { applyUpdateRequest, rejectUpdateRequest, } from "./services/adminService";
+import { getUpdateRequests } from "./services/requestService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -1543,26 +1544,15 @@ function AdminPage(){
       });
     }
   
-  async function loadRequests(){
-    const {data,error} = await supabase
-      .from("instructor_update_requests")
-      .select(`
-        *,
-        instructors(
-          *,
-          training_courses(*),
-          welfare_experiences(*),
-          lecture_experiences(*)
-        )
-      `)
-      .order("requested_at",{ascending:false});
+async function loadRequests() {
+  try {
+    const data = await getUpdateRequests();
 
-    if(error){
-      setMessage("수정 요청 조회 실패: " + error.message);
-      }else{
-    setUpdateRequests(data || []);
-    }
+    setUpdateRequests(data);
+  } catch (err) {
+    setMessage(err.message);
   }
+}
  
 async function approveRequest(req) {
   if (openRequestId !== req.id) {
