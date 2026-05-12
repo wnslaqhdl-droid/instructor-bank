@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { supabase } from "./supabase";
 import { regionOptions, targetOptions, typeOptions, specialtyOptions, emptyInstructor, emptyTraining, emptyWelfare, emptyLecture } from "./constants";
 import { registerInstructor } from "./services/instructorService";
+import { updateInstructorStatus, deleteInstructor,} from "./services/adminService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -1756,27 +1757,29 @@ async function rejectRequest(req){
   loadRequests();
 }
   
-  async function updateStatus(id,status){
-    const {error}=await supabase
-      .from("instructors")
-      .update({public_status:status})
-      .eq("id",id);
+async function updateStatus(id, status) {
+  try {
+    await updateInstructorStatus(id, status);
 
-    if(error)setMessage("상태 변경 실패: "+error.message);
-    else{setMessage(`${status} 처리 완료`); loadAdmin();}
+    setMessage(`${status} 처리 완료`);
+    loadAdmin();
+  } catch (err) {
+    setMessage(err.message);
   }
+}
 
-  async function deleteItem(id){
-    if(!confirm("정말 삭제하시겠습니까?"))return;
+async function deleteItem(id) {
+  if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    const {error}=await supabase
-      .from("instructors")
-      .delete()
-      .eq("id",id);
+  try {
+    await deleteInstructor(id);
 
-    if(error)setMessage("삭제 실패: "+error.message);
-    else{setMessage("삭제 완료"); loadAdmin();}
+    setMessage("삭제 완료");
+    loadAdmin();
+  } catch (err) {
+    setMessage(err.message);
   }
+}
 
   async function startEdit(item){
   setEditingItem({
