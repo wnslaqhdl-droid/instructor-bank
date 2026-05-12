@@ -1,4 +1,31 @@
+```javascript
 import { supabase } from "../supabase";
+
+export async function registerInstructor({
+  form,
+  trainingCourses,
+  welfareExperiences,
+  lectureExperiences,
+}) {
+  const normalizedEmail = form.email.trim().toLowerCase();
+
+  // 이메일 중복 검사
+  const { data: existingInstructor, error: duplicateCheckError } =
+    await supabase
+      .from("instructors")
+      .select("id")
+      .eq("email", normalizedEmail)
+      .maybeSingle();
+
+  if (duplicateCheckError) {
+    throw new Error(
+      "이메일 중복 확인 중 오류가 발생했습니다: " +
+        duplicateCheckError.message
+    );
+  }
+
+  if (existingInstructor) {
+    throw new Error(
       "이미 등록된 이메일입니다. 정보 수정이 필요한 경우 ‘정보 수정 요청’ 메뉴를 이용해 주세요."
     );
   }
@@ -18,14 +45,21 @@ import { supabase } from "../supabase";
     .single();
 
   if (insertError) {
-    throw new Error("강사 기본정보 저장 실패: " + insertError.message);
+    throw new Error(
+      "강사 기본정보 저장 실패: " + insertError.message
+    );
   }
 
   const instructor_id = inserted.id;
 
   // 양성과정 정리
   const validTrainings = trainingCourses
-    .filter((x) => x.course_name || x.institution || x.completion_year)
+    .filter(
+      (x) =>
+        x.course_name ||
+        x.institution ||
+        x.completion_year
+    )
     .map((x) => ({
       instructor_id,
       ...x,
@@ -78,7 +112,9 @@ import { supabase } from "../supabase";
       .insert(validTrainings);
 
     if (error) {
-      throw new Error("양성과정 저장 오류: " + error.message);
+      throw new Error(
+        "양성과정 저장 오류: " + error.message
+      );
     }
   }
 
@@ -89,7 +125,9 @@ import { supabase } from "../supabase";
       .insert(validWelfare);
 
     if (error) {
-      throw new Error("실무경력 저장 오류: " + error.message);
+      throw new Error(
+        "실무경력 저장 오류: " + error.message
+      );
     }
   }
 
@@ -100,7 +138,9 @@ import { supabase } from "../supabase";
       .insert(validLectures);
 
     if (error) {
-      throw new Error("강의경력 저장 오류: " + error.message);
+      throw new Error(
+        "강의경력 저장 오류: " + error.message
+      );
     }
   }
 
@@ -109,3 +149,4 @@ import { supabase } from "../supabase";
     instructor_id,
   };
 }
+```
