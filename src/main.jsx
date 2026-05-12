@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { supabase } from "./supabase";
 import { regionOptions, targetOptions, typeOptions, specialtyOptions, emptyInstructor, emptyTraining, emptyWelfare, emptyLecture } from "./constants";
+import { registerInstructor } from "../services/instructorService";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -166,7 +167,6 @@ function Repeater({ title, help, items, setItems, emptyItem, render }) {
 }
 
 function RegisterPage() {
-  import { registerInstructor } from "../services/instructorService";
   const [form, setForm] = useState(clone(emptyInstructor));
   const [trainingCourses, setTrainingCourses] = useState([clone(emptyTraining)]);
   const [welfareExperiences, setWelfareExperiences] = useState([clone(emptyWelfare)]);
