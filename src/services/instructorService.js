@@ -214,3 +214,24 @@ export async function submitInstructorUpdateRequest(
 
   return true;
 }
+
+export async function checkAdmin() {
+  const { data: sessionData } =
+    await supabase.auth.getSession();
+
+  const user = sessionData?.session?.user;
+
+  if (!user) return false;
+
+  const { data, error } = await supabase
+    .from("admin_users")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return !!data;
+}
