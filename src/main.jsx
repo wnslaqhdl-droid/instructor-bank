@@ -1520,7 +1520,7 @@ function AdminPage(){
     try {
       const data = await getAdminInstructors();
   
-      setAdminList(data);
+      setItems(data);
     } catch (err) {
       setMessage(err.message);
     }
