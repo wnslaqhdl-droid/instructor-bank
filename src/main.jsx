@@ -1520,6 +1520,56 @@ function ModifyPage(){
   );
 }
 
+function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  async function login() {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      setMessage("로그인 실패: " + error.message);
+    } else {
+      setMessage("로그인 완료");
+    }
+  }
+
+  return (
+    <section className="card">
+      <h1>강사 로그인</h1>
+
+      <Field label="이메일">
+        <input
+          value={email}
+          onChange={(e)=>setEmail(e.target.value)}
+        />
+      </Field>
+
+      <Field label="비밀번호">
+        <input
+          type="password"
+          value={password}
+          onChange={(e)=>setPassword(e.target.value)}
+        />
+      </Field>
+
+      <button className="btn primary" onClick={login}>
+        로그인
+      </button>
+
+      {message && (
+        <div className="notice">
+          {message}
+        </div>
+      )}
+    </section>
+  );
+}
+
 function AdminPage(){
   const [session,setSession]=useState(null);
   const [isAdmin,setIsAdmin]=useState(false);
@@ -2712,11 +2762,9 @@ function App(){
       <nav>
         <button onClick={()=>go("search")}>검색</button>
         <button onClick={()=>go("register")}>등록</button>
-        <button  className={page==="modify"?"active":""}  onClick={()=>go("modify")}>
-  정보 수정 요청
-</button>
-
-<button  className={page==="admin"?"active":""}  onClick={()=>go("admin")}>  관리자</button>
+        <button  className={page==="modify"?"active":""}  onClick={()=>go("modify")}>정보 수정 요청</button>
+        <button onClick={()=>setPage("login")}>강사 로그인</button>
+        <button  className={page==="admin"?"active":""}  onClick={()=>go("admin")}>  관리자</button>
       </nav>
 
       <main>
@@ -2724,6 +2772,7 @@ function App(){
         {page==="register" && <RegisterPage />}
         {page==="admin" && <AdminPage />}
         {page==="modify" && <ModifyPage />}
+        {page==="login" && <LoginPage />}
       </main>
     </div>
   )
