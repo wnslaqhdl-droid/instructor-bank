@@ -1553,13 +1553,24 @@ function AdminPage(){
 
   async function logout(){
     await supabase.auth.signOut();
+  
     setSession(null);
+    setIsAdmin(false);
+  
     setItems([]);
+    setUpdateRequests([]);
+  
     setEditingItem(null);
+  
     setMessage("로그아웃 완료");
   }
 
   async function loadAdmin() {
+    if (!session || !isAdmin) {
+      setMessage("관리자만 접근 가능합니다.");
+      return;
+    }
+  
     try {
       const data = await getAdminInstructors();
   
@@ -1587,6 +1598,11 @@ function AdminPage(){
     }
   
 async function loadRequests() {
+  if (!session || !isAdmin) {
+    setMessage("관리자만 접근 가능합니다.");
+    return;
+  }
+
   try {
     const data = await getUpdateRequests();
 
