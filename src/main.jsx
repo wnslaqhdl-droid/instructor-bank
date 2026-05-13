@@ -180,6 +180,7 @@ function RegisterPage() {
   const [lectureExperiences, setLectureExperiences] = useState([clone(emptyLecture)]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
 
 async function submitForm() {
@@ -217,6 +218,12 @@ async function submitForm() {
     scrollToTop();
     return;
   }
+  
+  if(password.length < 8){
+    setError("비밀번호는 8자 이상 입력해 주세요.");
+    scrollToTop();
+    return;
+  }
 
   if (
     !window.confirm(
@@ -227,12 +234,27 @@ async function submitForm() {
   }
 
   try {
-    await registerInstructor({
-      form,
-      trainingCourses,
-      welfareExperiences,
-      lectureExperiences,
-    });
+    // 1. Auth 회원가입
+      const { data: authData, error: authError } =
+        await supabase.auth.signUp({
+          email: form.email,
+          password
+        });
+      
+      if(authError){
+        throw new Error(authError.message);
+      }
+      
+      // 2. 강사 등록
+      await registerInstructor({
+        form: {
+          ...form,
+          auth_user_id: authData.user.id
+        },
+        trainingCourses,
+        welfareExperiences,
+        lectureExperiences,
+      });
 
     setMessage(
       "등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다."
@@ -250,8 +272,10 @@ async function submitForm() {
   }
 }
 
-  return <div><section className="hero"><h1>성인권 교육 강사 등록</h1><p>입력하신 정보는 관리자 검토 후 강사뱅크에 공개됩니다. 실무경력 및 강의경력은 강사 본인의 자기신고 내용을 기준으로 관리되며, 중앙센터는 발달장애인 성인권 부모교육지원사업 내 양성과정 수료 여부만 확인합니다.</p>
-  </section>{message ? <div className="notice">{message}</div> : null}{error ? <div className="error">{error}</div> : null}
+  return <div><section className="hero">
+    <h1>성인권 교육 강사 등록</h1><p>입력하신 정보는 관리자 검토 후 강사뱅크에 공개됩니다. 실무경력 및 강의경력은 강사 본인의 자기신고 내용을 기준으로 관리되며, 중앙센터는 발달장애인 성인권 부모교육지원사업 내 양성과정 수료 여부만 확인합니다.</p>
+              </section>
+    {message ? <div className="notice">{message}</div> : null}{error ? <div className="error">{error}</div> : null}
     <section className="card">
       <h2>1. 기본정보</h2>
       <div className="grid grid-2">
@@ -263,6 +287,14 @@ async function submitForm() {
         </Field>
         <Field label="이메일" required>
           <input value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="example@email.com" />
+        </Field>
+        <Field label="비밀번호" required>
+          <input
+            type="password"
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
+            placeholder="8자 이상 입력"
+          />
         </Field>
         <Field label="거주지역" required>
           <select value={form.region} onChange={(e) => update("region", e.target.value)}><option value="">선택</option>{regionOptions.map((r) => <option key={r} value={r}>{r}</option>)}
