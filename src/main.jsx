@@ -714,6 +714,8 @@ function SearchPage(){
 
 function ModifyPage(){
   const [email,setEmail]=useState("");
+  const [session,setSession]=useState(null);
+  const [loading,setLoading]=useState(true);
   const [found,setFound]=useState(null);
   const [message,setMessage]=useState("");
   const [error,setError]=useState("");
@@ -726,14 +728,30 @@ function ModifyPage(){
   const [originalWelfares,setOriginalWelfares]=useState([]);
   const [originalLectures,setOriginalLectures]=useState([]);
 
-  async function search(){
+  useEffect(()=>{
+    refreshSession();
+  },[]);
+  
+  async function refreshSession(){
+    const { data } = await supabase.auth.getSession();
+  
+    setSession(data.session);
+  
+    if(data.session){
+      await search(data.session.user.id);
+    }
+  
+    setLoading(false);
+  }
+  
+  async function search(userId){
     setError("");
     setMessage("");
   
     const {data,error} = await supabase
       .from("instructors")
       .select("*")
-      .eq("email", email)
+      .eq("auth_user_id", userId)
       .maybeSingle();
   
     if(error){
@@ -948,6 +966,19 @@ function ModifyPage(){
       minute: "2-digit"
     });
   }
+
+  if(loading){
+    return <div className="card">불러오는 중...</div>;
+  }
+  
+  if(!session){
+    return (
+      <section className="card">
+        <h2>강사 로그인 필요</h2>
+        <p>정보 수정 요청은 로그인 후 이용 가능합니다.</p>
+      </section>
+    );
+  }
   
   return (
     <div>
@@ -962,22 +993,6 @@ function ModifyPage(){
       {message && <div className="notice">{message}</div>}
       {error && <div className="error">{error}</div>}
 
-      <section className="card">
-        <h2>1. 이메일로 조회</h2>
-
-        <div className="grid grid-3">
-          <Field label="이메일">
-            <input value={email} onChange={(e)=>setEmail(e.target.value)} />
-          </Field>
-
-          <div style={{display:"flex",alignItems:"end"}}>
-            <button className="btn primary" onClick={search}>
-              조회
-            </button>
-          </div>
-        </div>
-      </section>
-      
       {latestRequest && (
         <section className="card">
           <h2>최근 수정 요청 상태</h2>
