@@ -33,13 +33,14 @@ export async function registerInstructor({
   const { data: inserted, error: insertError } = await supabase
     .from("instructors")
     .insert([
-      {
-        ...form,
-        email: normalizedEmail,
-        public_status: "검토중",
-        update_status: "정상",
-      },
-    ])
+    {
+      ...form,
+      auth_user_id: authData.user.id,
+      email: normalizedEmail,
+      public_status: "검토중",
+      update_status: "정상",
+    },
+  ])
     .select("id")
     .single();
 
