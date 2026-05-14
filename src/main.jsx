@@ -1592,9 +1592,9 @@ function LoginPage() {
     });
 
     if (error) {
-      setMessage("로그인 실패: " + error.message);
+      showToast("로그인 실패: " + error.message);
     } else {
-      setMessage("로그인 완료");
+      showToast("로그인 완료");
     }
   }
 
@@ -1704,8 +1704,8 @@ function AdminPage(){
 
   async function login(){
     const {error}=await supabase.auth.signInWithPassword({email,password});
-    if(error)setMessage("로그인 실패: "+error.message);
-    else{setMessage("로그인 완료"); refreshSession();}
+    if(error)showToast("로그인 실패: "+error.message);
+    else{showToast("로그인 완료"); refreshSession();}
   }
 
   async function logout(){
@@ -1719,7 +1719,7 @@ function AdminPage(){
   
     setEditingItem(null);
   
-    setMessage("로그아웃 완료");
+    showToast("로그아웃 완료");
   }
 
   async function loadAdmin() {
@@ -2038,7 +2038,7 @@ async function deleteItem(id) {
           .insert(validLectures);
       }
       
-      setMessage("수정 완료");
+      showToast("수정 완료");
       setEditingItem(null);
       loadAdmin();
     }
