@@ -104,6 +104,45 @@ return (
       );
 }
 
+let toastSetter = null;
+
+export function showToast(text, type = "success") {
+  if (toastSetter) {
+    toastSetter({
+      text,
+      type,
+      visible: true,
+    });
+
+    setTimeout(() => {
+      toastSetter((prev) => ({
+        ...prev,
+        visible: false,
+      }));
+    }, 2500);
+  }
+}
+
+function Toast() {
+  const [toast, setToast] = useState({
+    text: "",
+    type: "success",
+    visible: false,
+  });
+
+  useEffect(() => {
+    toastSetter = setToast;
+  }, []);
+
+  if (!toast.visible) return null;
+
+  return (
+    <div className={`toast ${toast.type}`}>
+      {toast.text}
+    </div>
+  );
+}
+
 function CheckboxGroup({ options, values, onChange }) {
   function toggle(option) {
     if (values.includes(option)) {
@@ -213,7 +252,7 @@ async function submitForm() {
         lectureExperiences,
       });
 
-    setMessage(
+    showToast(
       "등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다."
     );
 
@@ -952,7 +991,7 @@ function ModifyPage(){
       payload
     );
   
-    setMessage(
+    showToast(
       "수정 요청이 접수되었습니다. 관리자 검토 후 반영됩니다."
     );
   
@@ -1749,13 +1788,13 @@ async function approveRequest(req) {
   try {
     await applyUpdateRequest(req);
 
-    setMessage("수정 요청 반영 완료");
+    showToast("수정 요청 반영 완료");
 
     loadRequests();
     loadAdmin();
   } 
   catch (err) {
-    setMessage(err.message);
+    showToast(err.message);
   }
 }
 
@@ -1818,11 +1857,11 @@ async function rejectRequest(req){
     .eq("id", req.id);
 
   if(error){
-    setMessage("반려 처리 실패: " + error.message);
+    showToast("반려 처리 실패: " + error.message);
     return;
   }
 
-  setMessage("수정 요청을 반려 처리했습니다.");
+  showToast("수정 요청을 반려 처리했습니다.");
   loadRequests();
 }
   
@@ -1830,10 +1869,10 @@ async function updateStatus(id, status) {
   try {
     await updateInstructorStatus(id, status);
 
-    setMessage(`${status} 처리 완료`);
+    showToast(`${status} 처리 완료`);
     loadAdmin();
   } catch (err) {
-    setMessage(err.message);
+    showToast(err.message);
   }
 }
 
@@ -1843,10 +1882,10 @@ async function deleteItem(id) {
   try {
     await deleteInstructor(id);
 
-    setMessage("삭제 완료");
+    showToast("삭제 완료");
     loadAdmin();
   } catch (err) {
-    setMessage(err.message);
+    showToast(err.message);
   }
 }
 
@@ -2748,6 +2787,9 @@ const filteredItems = items.filter((item) => {
     </div>
   )
 }
+
+
+
 function App(){
   const [page,setPage]=useState(()=>window.location.hash.replace("#","")||"search")
 
@@ -2780,11 +2822,12 @@ function App(){
 
   return (
     <div>
+      <Toast />
       <nav>
         <button onClick={()=>go("search")}>검색</button>
         <button onClick={()=>go("register")}>등록</button>
         <button  className={page==="modify"?"active":""}  onClick={()=>go("modify")}>정보 수정 요청</button>
-        <button onClick={()=>setPage("login")}>강사 로그인</button>
+        <button onClick={()=>go("login")}>강사 로그인</button>
         <button  className={page==="admin"?"active":""}  onClick={()=>go("admin")}>  관리자</button>
       </nav>
 
