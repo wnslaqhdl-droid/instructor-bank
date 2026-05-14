@@ -511,8 +511,6 @@ function SearchPage(){
   return () => clearTimeout(timer);
 }, [keyword]);
  function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
- const normalizedKeyword =
-  debouncedKeyword.trim().toLowerCase();
 
   const normalizedKeyword =
     debouncedKeyword.trim().toLowerCase();
