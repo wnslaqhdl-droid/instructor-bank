@@ -1542,56 +1542,6 @@ function ModifyPage(){
   );
 }
 
-function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-
-  async function login() {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      window.alert("로그인 실패: " + error.message);
-    } else {
-      window.alert("로그인 완료");
-    }
-  }
-
-  return (
-    <section className="card">
-      <h1>강사 로그인</h1>
-
-      <Field label="이메일">
-        <input
-          value={email}
-          onChange={(e)=>setEmail(e.target.value)}
-        />
-      </Field>
-
-      <Field label="비밀번호">
-        <input
-          type="password"
-          value={password}
-          onChange={(e)=>setPassword(e.target.value)}
-        />
-      </Field>
-
-      <button className="btn primary" onClick={login}>
-        로그인
-      </button>
-
-      {message && (
-        <div className="notice">
-          {message}
-        </div>
-      )}
-    </section>
-  );
-}
-
 function AdminPage(){
   const [session,setSession]=useState(null);
   const [isAdmin,setIsAdmin]=useState(false);
@@ -2754,28 +2704,59 @@ const filteredItems = items.filter((item) => {
 
 function App(){
   const [page,setPage]=useState(()=>window.location.hash.replace("#","")||"search")
-
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [userName, setUserName] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
     async function checkUser() {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-
-      if (!user) return
-
-      const { data } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('user_id', user.id)
-        .single()
-
-      if (data) setIsAdmin(true)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+  
+      setUser(user);
+  
+      if (!user) {
+        setIsAdmin(false);
+        setUserName("");
+        return;
+      }
+  
+      // 관리자 확인
+      const { data: adminData } = await supabase
+        .from("admin_users")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+  
+      setIsAdmin(!!adminData);
+  
+      // 강사 이름 조회
+      const { data: instructorData } = await supabase
+        .from("instructors")
+        .select("name")
+        .eq("auth_user_id", user.id)
+        .maybeSingle();
+  
+      if (instructorData?.name) {
+        setUserName(instructorData.name);
+      } else {
+        setUserName("");
+      }
     }
-
-    checkUser()
-  }, [])
+  
+    checkUser();
+  
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+  
+    return () => subscription.unsubscribe();
+  }, []);
 
   function go(next){
     window.location.hash = next
@@ -2784,12 +2765,90 @@ function App(){
 
   return (
     <div>
-      <nav>
-        <button onClick={()=>go("search")}>검색</button>
-        <button onClick={()=>go("register")}>등록</button>
-        <button  className={page==="modify"?"active":""}  onClick={()=>go("modify")}>정보 수정 요청</button>
-        <button onClick={()=>go("login")}>강사 로그인</button>
-        <button  className={page==="admin"?"active":""}  onClick={()=>go("admin")}>  관리자</button>
+      <nav className="top-nav">
+
+        <div className="nav-left">
+      
+          <button onClick={()=>go("search")}>
+            검색
+          </button>
+      
+          {!user && (
+            <button onClick={()=>go("register")}>
+              등록
+            </button>
+          )}
+      
+          {user && !isAdmin && (
+            <button
+              className={page==="modify"?"active":""}
+              onClick={()=>go("modify")}
+            >
+              정보 수정 요청
+            </button>
+          )}
+      
+          {isAdmin && (
+            <>
+              <button onClick={()=>go("register")}>
+                등록
+              </button>
+      
+              <button
+                className={page==="modify"?"active":""}
+                onClick={()=>go("modify")}
+              >
+                정보 수정 요청
+              </button>
+      
+              <button
+                className={page==="admin"?"active":""}
+                onClick={()=>go("admin")}
+              >
+                관리자
+              </button>
+            </>
+          )}
+      
+        </div>
+      
+        <div className="nav-right">
+      
+          {!user ? (
+            <>
+              <input
+                placeholder="이메일"
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
+              />
+      
+              <input
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
+              />
+      
+              <button onClick={login}>
+                로그인
+              </button>
+            </>
+          ) : (
+            <>
+              <span className="welcome">
+                {isAdmin
+                  ? "관리자님 반갑습니다."
+                  : `${userName || "강사"}님 반갑습니다.`}
+              </span>
+      
+              <button onClick={logout}>
+                로그아웃
+              </button>
+            </>
+          )}
+      
+        </div>
+      
       </nav>
 
       <main>
@@ -2797,10 +2856,38 @@ function App(){
         {page==="register" && <RegisterPage />}
         {page==="admin" && <AdminPage />}
         {page==="modify" && <ModifyPage />}
-        {page==="login" && <LoginPage />}
       </main>
     </div>
   )
+  
+  async function login() {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+  
+    if (error) {
+      window.alert("로그인 실패: " + error.message);
+      return;
+    }
+  
+    setEmail("");
+    setPassword("");
+  
+    window.alert("로그인되었습니다.");
+  }
+  
+  async function logout() {
+    await supabase.auth.signOut();
+  
+    setUser(null);
+    setIsAdmin(false);
+    setUserName("");
+  
+    window.alert("로그아웃되었습니다.");
+  
+    go("search");
+  }
 }
 
 
