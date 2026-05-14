@@ -1714,6 +1714,10 @@ function AdminPage(){
   const [updateRequests,setUpdateRequests] = useState([]);
   const [openRequestId,setOpenRequestId]=useState(null);
   const [requestStatusFilter,setRequestStatusFilter]=useState("");
+  const [adminPage, setAdminPage] = useState(1);
+  const [requestPage, setRequestPage] = useState(1);
+  const adminItemsPerPage = 10;
+  const requestItemsPerPage = 10;
   
   async function checkAdmin() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -2157,6 +2161,24 @@ const filteredItems = items.filter((item) => {
     (!adminStatus || item.public_status === adminStatus)
   );
 });
+  
+  const adminTotalPages = Math.ceil(
+    filteredItems.length / adminItemsPerPage
+  );
+  
+  const paginatedAdminItems = filteredItems.slice(
+    (adminPage - 1) * adminItemsPerPage,
+    adminPage * adminItemsPerPage
+  );
+  
+  const requestTotalPages = Math.ceil(
+    filteredUpdateRequests.length / requestItemsPerPage
+  );
+  
+  const paginatedRequests = filteredUpdateRequests.slice(
+    (requestPage - 1) * requestItemsPerPage,
+    requestPage * requestItemsPerPage
+  );
 
   const filteredUpdateRequests = updateRequests.filter((req)=>{
     if(requestStatusFilter){
@@ -2622,7 +2644,7 @@ const filteredItems = items.filter((item) => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUpdateRequests.map((req)=>(
+                {paginatedRequests.map((req)=>(
                   <React.Fragment key={req.id}>
                     <tr className={req.request_status !== "검토중" ? "processed-row" : ""}>
                       <td>{formatKST(req.requested_at)}</td>
@@ -2753,6 +2775,11 @@ const filteredItems = items.filter((item) => {
               </tbody>
             </table>
           </div>
+          <Pagination
+            currentPage={requestPage}
+            totalPages={requestTotalPages}
+            onPageChange={setRequestPage}
+          />
         </section>
         
 <div className="grid grid-3" style={{marginTop: "14px", marginBottom: "14px"}}>
@@ -2798,7 +2825,7 @@ const filteredItems = items.filter((item) => {
               </tr>
             </thead>
             <tbody>
-              {filteredItems.map((item)=>(
+              {paginatedAdminItems.map((item)=>(
                 <tr key={item.id}>
                   <td>{item.name||"-"}</td>
                   <td>{item.region||"-"}</td>
@@ -2839,6 +2866,11 @@ const filteredItems = items.filter((item) => {
             </tbody>
           </table>
         </div>
+        <Pagination
+          currentPage={adminPage}
+          totalPages={adminTotalPages}
+          onPageChange={setAdminPage}
+        />
       </section>
     </div>
   )
