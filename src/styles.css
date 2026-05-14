@@ -229,3 +229,34 @@ th{background:#f8fafc;color:#334155}
 .filter-chip:hover {
   background: #e2e8f0;
 }
+.skeleton-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.skeleton-card{
+  height:72px;
+  border-radius:12px;
+  background:
+    linear-gradient(
+      90deg,
+      #f1f1f1 25%,
+      #e5e5e5 37%,
+      #f1f1f1 63%
+    );
+
+  background-size:400% 100%;
+
+  animation:skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes skeleton-loading{
+  0%{
+    background-position:100% 50%;
+  }
+
+  100%{
+    background-position:0 50%;
+  }
+}
