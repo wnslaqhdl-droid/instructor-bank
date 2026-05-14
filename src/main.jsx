@@ -451,6 +451,8 @@ function SearchPage(){
  const [openBadgeId,setOpenBadgeId]=useState(null);  
  const [sortType,setSortType]=useState("latest");
  const [onlyVerified,setOnlyVerified]=useState(false);
+ const [currentPage, setCurrentPage] = useState(1);
+ const itemsPerPage = 20;
  const [loading, setLoading] = useState(true);
  async function load() {
     setLoading(true);
@@ -473,6 +475,20 @@ function SearchPage(){
 
   return () => clearTimeout(timer);
 }, [keyword]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    debouncedKeyword,
+    region,
+    target,
+    type,
+    specialty,
+    onlyVerified,
+    sortType
+  ]);
+
+  
  function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
 
   const normalizedKeyword =
@@ -532,6 +548,7 @@ function SearchPage(){
   
         return 0;
       });
+  
   }, [
     items,
     normalizedKeyword,
@@ -542,6 +559,16 @@ function SearchPage(){
     sortType,
     onlyVerified
   ]);
+
+  const totalPages = Math.ceil(
+    filtered.length / itemsPerPage
+  );
+  
+  const paginatedItems = filtered.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  
  return <div><section className="hero">
    <h1>성인권 교육 강사 검색</h1>
    <p>공개 승인된 강사를 지역, 교육대상, 교육유형, 강의 분야로 검색합니다.</p>
@@ -655,8 +682,21 @@ function SearchPage(){
     ))}
   </div>
 )}
-  </div>{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{!loading && filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
->
+  </div>
+   {filtered.length===0 ? (
+      <div className="card muted">
+        검색 결과가 없습니다.
+      </div>
+    ) : null}
+    
+    {!loading &&
+      paginatedItems.map((item)=>
+        <article
+          className="instructor-card compact-card"
+          key={item.id}
+          onClick={() => toggleDetail(item.id)}
+          style={{ cursor: "pointer" }}
+        >
   <div className="compact-row">
     <span className="compact-name name-cell">
       <span className="name-text">{item.name || "-"}</span>
@@ -731,7 +771,38 @@ function SearchPage(){
     </div>
   </div>
 )}
-</article>)}</div></div>;
+</article>)}
+   
+   {totalPages > 1 && (
+    <div className="pagination">
+  
+      <button
+        disabled={currentPage === 1}
+        onClick={() =>
+          setCurrentPage((p) => p - 1)
+        }
+      >
+        이전
+      </button>
+  
+      <span>
+        {currentPage} / {totalPages}
+      </span>
+  
+      <button
+        disabled={currentPage === totalPages}
+        onClick={() =>
+          setCurrentPage((p) => p + 1)
+        }
+      >
+        다음
+      </button>
+  
+    </div>
+  )}
+
+   
+ </div></div>;
 }
 
 function ModifyPage(){
