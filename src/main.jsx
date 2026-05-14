@@ -2020,18 +2020,7 @@ const filteredItems = items.filter((item) => {
 
       {message?<div className="notice">{message}</div>:null}
 
-      <section className="card">
-        <h2>관리자 로그인</h2>
-        <p className="muted small">현재 상태: {session?`${session.user.email} 로그인`:"미로그인"}</p>
-        <div className="grid grid-3">
-          <Field label="이메일"><input value={email} onChange={(e)=>setEmail(e.target.value)}/></Field>
-          <Field label="비밀번호"><input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/></Field>
-          <div style={{display:"flex",gap:8,alignItems:"end"}}>
-            <button className="btn primary" onClick={login}>로그인</button>
-            <button className="btn" onClick={logout}>로그아웃</button>
-          </div>
-        </div>
-      </section>
+      
 
       {editingItem && (
         <section className="card">
