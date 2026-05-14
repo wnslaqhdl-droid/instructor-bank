@@ -104,44 +104,6 @@ return (
       );
 }
 
-let toastSetter = null;
-
-export function showToast(text, type = "success") {
-  if (toastSetter) {
-    toastSetter({
-      text,
-      type,
-      visible: true,
-    });
-
-    setTimeout(() => {
-      toastSetter((prev) => ({
-        ...prev,
-        visible: false,
-      }));
-    }, 2500);
-  }
-}
-
-function Toast() {
-  const [toast, setToast] = useState({
-    text: "",
-    type: "success",
-    visible: false,
-  });
-
-  useEffect(() => {
-    toastSetter = setToast;
-  }, []);
-
-  if (!toast.visible) return null;
-
-  return (
-    <div className={`toast ${toast.type}`}>
-      {toast.text}
-    </div>
-  );
-}
 
 function CheckboxGroup({ options, values, onChange }) {
   function toggle(option) {
@@ -252,7 +214,7 @@ async function submitForm() {
         lectureExperiences,
       });
 
-    showToast(
+    window.alert(
       "등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다."
     );
 
@@ -991,7 +953,7 @@ function ModifyPage(){
       payload
     );
   
-    showToast(
+    window.alert(
       "수정 요청이 접수되었습니다. 관리자 검토 후 반영됩니다."
     );
   
@@ -1592,9 +1554,9 @@ function LoginPage() {
     });
 
     if (error) {
-      showToast("로그인 실패: " + error.message);
+      window.alert("로그인 실패: " + error.message);
     } else {
-      showToast("로그인 완료");
+      window.alert("로그인 완료");
     }
   }
 
@@ -1704,8 +1666,8 @@ function AdminPage(){
 
   async function login(){
     const {error}=await supabase.auth.signInWithPassword({email,password});
-    if(error)showToast("로그인 실패: "+error.message);
-    else{showToast("로그인 완료"); refreshSession();}
+    if(error)window.alert("로그인 실패: "+error.message);
+    else{window.alert("로그인 완료"); refreshSession();}
   }
 
   async function logout(){
@@ -1719,7 +1681,7 @@ function AdminPage(){
   
     setEditingItem(null);
   
-    showToast("로그아웃 완료");
+    window.alert("로그아웃 완료");
   }
 
   async function loadAdmin() {
@@ -1788,13 +1750,13 @@ async function approveRequest(req) {
   try {
     await applyUpdateRequest(req);
 
-    showToast("수정 요청 반영 완료");
+    window.alert("수정 요청 반영 완료");
 
     loadRequests();
     loadAdmin();
   } 
   catch (err) {
-    showToast(err.message);
+    window.alert(err.message);
   }
 }
 
@@ -1857,11 +1819,11 @@ async function rejectRequest(req){
     .eq("id", req.id);
 
   if(error){
-    showToast("반려 처리 실패: " + error.message);
+    window.alert("반려 처리 실패: " + error.message);
     return;
   }
 
-  showToast("수정 요청을 반려 처리했습니다.");
+  window.alert("수정 요청을 반려 처리했습니다.");
   loadRequests();
 }
   
@@ -1869,10 +1831,10 @@ async function updateStatus(id, status) {
   try {
     await updateInstructorStatus(id, status);
 
-    showToast(`${status} 처리 완료`);
+    window.alert(`${status} 처리 완료`);
     loadAdmin();
   } catch (err) {
-    showToast(err.message);
+    window.alert(err.message);
   }
 }
 
@@ -1882,10 +1844,10 @@ async function deleteItem(id) {
   try {
     await deleteInstructor(id);
 
-    showToast("삭제 완료");
+    window.alert("삭제 완료");
     loadAdmin();
   } catch (err) {
-    showToast(err.message);
+    window.alert(err.message);
   }
 }
 
@@ -2038,7 +2000,7 @@ async function deleteItem(id) {
           .insert(validLectures);
       }
       
-      showToast("수정 완료");
+      window.alert("수정 완료");
       setEditingItem(null);
       loadAdmin();
     }
@@ -2822,7 +2784,6 @@ function App(){
 
   return (
     <div>
-      <Toast />
       <nav>
         <button onClick={()=>go("search")}>검색</button>
         <button onClick={()=>go("register")}>등록</button>
