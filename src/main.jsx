@@ -2146,21 +2146,29 @@ async function deleteItem(id) {
     URL.revokeObjectURL(url);
   }
 
-const filteredItems = items.filter((item) => {
-  const keywordText = [
-    item.name,
-    item.email,
-    item.phone,
-    item.region,
-    item.main_topic,
-    item.organization
-  ].join(" ");
-
-  return (
-    (!adminKeyword || keywordText.includes(adminKeyword)) &&
-    (!adminStatus || item.public_status === adminStatus)
-  );
-});
+  const filteredItems = items.filter((item) => {
+    const keywordText = [
+      item.name,
+      item.email,
+      item.phone,
+      item.region,
+      item.main_topic,
+      item.organization
+    ].join(" ");
+  
+    return (
+      (!adminKeyword || keywordText.includes(adminKeyword)) &&
+      (!adminStatus || item.public_status === adminStatus)
+    );
+  });
+  
+  const filteredUpdateRequests = updateRequests.filter((req)=>{
+    if(requestStatusFilter){
+      return req.request_status === requestStatusFilter;
+    }
+  
+    return req.request_status !== "대체됨";
+  });
   
   const adminTotalPages = Math.ceil(
     filteredItems.length / adminItemsPerPage
@@ -2179,14 +2187,6 @@ const filteredItems = items.filter((item) => {
     (requestPage - 1) * requestItemsPerPage,
     requestPage * requestItemsPerPage
   );
-
-  const filteredUpdateRequests = updateRequests.filter((req)=>{
-    if(requestStatusFilter){
-      return req.request_status === requestStatusFilter;
-    }
-  
-    return req.request_status !== "대체됨";
-  });
   
   return (
     <div>
