@@ -771,7 +771,7 @@ function SearchPage(){
     </div>
   </div>
 )}
-</article>)}
+</article>))}
    
    {totalPages > 1 && (
     <div className="pagination">
