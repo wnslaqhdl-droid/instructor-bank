@@ -2922,9 +2922,7 @@ async function deleteItem(id) {
         
         </div>
       </section>
-
-    </section>
-
+      </section>
     </div>
   )
 }
