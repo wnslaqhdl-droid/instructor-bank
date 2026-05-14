@@ -10,6 +10,7 @@ import { getAdminInstructors, } from "./services/adminService";
 import { searchInstructors,} from "./services/instructorService";
 import { submitInstructorUpdateRequest} from "./services/instructorService";
 import { checkAdmin} from "./services/instructorService";
+import { isValidEmail, isValidPhone, hasRequiredInstructorFields,} from "./utils/validators";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -51,16 +52,6 @@ function Field({ label, required, help, children }) {
       {help ? <div className="help">{help}</div> : null}
     </label>
   );
-}
-
-function isValidEmail(value){
-  if(!value) return false;
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function isValidPhone(value){
-  if(!value) return false;
-  return /^(0\d{1,2})-\d{3,4}-\d{4}$/.test(value);
 }
 
 function MonthSelect({ label, value, min, max, disabled, onChange }){
@@ -193,13 +184,7 @@ async function submitForm() {
   setMessage("");
   setError("");
 
-  if (
-    !form.name ||
-    !form.email ||
-    !form.phone ||
-    !form.region ||
-    !form.main_topic
-  ) {
+  if (!hasRequiredInstructorFields(form)) {
     setError("성명, 연락처, 이메일, 거주지역, 주요 강의주제는 필수입니다.");
     scrollToTop();
     return;
