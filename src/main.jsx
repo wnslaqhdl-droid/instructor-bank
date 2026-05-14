@@ -452,7 +452,7 @@ function SearchPage(){
  const [sortType,setSortType]=useState("latest");
  const [onlyVerified,setOnlyVerified]=useState(false);
  const [currentPage, setCurrentPage] = useState(1);
- const itemsPerPage = 20;
+ const itemsPerPage = 5;
  const [loading, setLoading] = useState(true);
  async function load() {
     setLoading(true);
