@@ -1614,7 +1614,25 @@ function AdminPage(){
     );
   }
 
+  async function login(){
+    const {error}=await supabase.auth.signInWithPassword({email,password});
+    if(error)window.alert("로그인 실패: "+error.message);
+    else{window.alert("로그인 완료"); refreshSession();}
+  }
+
+  async function logout(){
+    await supabase.auth.signOut();
   
+    setSession(null);
+    setIsAdmin(false);
+  
+    setItems([]);
+    setUpdateRequests([]);
+  
+    setEditingItem(null);
+  
+    window.alert("로그아웃 완료");
+  }
 
   async function loadAdmin() {
     if (!session || !isAdmin) {
