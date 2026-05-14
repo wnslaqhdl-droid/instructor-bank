@@ -774,7 +774,7 @@ function SearchPage(){
     </div>
   </div>
 )}
-</article>)}}</div></div>;
+</article>)}</div></div>;
 }
 
 function ModifyPage(){
