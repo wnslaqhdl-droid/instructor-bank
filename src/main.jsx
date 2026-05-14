@@ -687,7 +687,7 @@ function SearchPage(){
     <span className="col-target">교육대상</span>
     <span className="col-type">교육유형</span>
 
-      //skeleon UI 추가
+      // skeleon UI 추가
       {loading && (
   <div className="skeleton-list">
     {[...Array(5)].map((_, i) => (
