@@ -903,7 +903,7 @@ function SearchPage(){
     </select>
   
   </div></div>;
-}
+}}
 
 function ModifyPage(){
   const [email,setEmail]=useState("");
