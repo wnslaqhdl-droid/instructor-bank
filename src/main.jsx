@@ -130,6 +130,115 @@ function CheckboxGroup({ options, values, onChange }) {
   );
 }
 
+function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) {
+
+  if (totalPages <= 1) return null;
+
+  function buildPages() {
+    const pages = [];
+
+    // 항상 첫 페이지
+    pages.push(1);
+
+    // 시작 범위
+    const start = Math.max(
+      currentPage - 2,
+      2
+    );
+
+    // 끝 범위
+    const end = Math.min(
+      currentPage + 2,
+      totalPages - 1
+    );
+
+    // 앞쪽 ...
+    if (start > 2) {
+      pages.push("start-ellipsis");
+    }
+
+    // 중간 페이지들
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    // 뒤쪽 ...
+    if (end < totalPages - 1) {
+      pages.push("end-ellipsis");
+    }
+
+    // 마지막 페이지
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+
+    return pages;
+  }
+
+  const pages = buildPages();
+
+  return (
+    <div className="pagination">
+
+      <button
+        disabled={currentPage === 1}
+        onClick={() =>
+          onPageChange(currentPage - 1)
+        }
+      >
+        이전
+      </button>
+
+      {pages.map((page, index) => {
+
+        if (
+          page === "start-ellipsis" ||
+          page === "end-ellipsis"
+        ) {
+          return (
+            <span
+              key={index}
+              className="pagination-ellipsis"
+            >
+              ...
+            </span>
+          );
+        }
+
+        return (
+          <button
+            key={page}
+            className={
+              currentPage === page
+                ? "page-btn active"
+                : "page-btn"
+            }
+            onClick={() =>
+              onPageChange(page)
+            }
+          >
+            {page}
+          </button>
+        );
+      })}
+
+      <button
+        disabled={currentPage === totalPages}
+        onClick={() =>
+          onPageChange(currentPage + 1)
+        }
+      >
+        다음
+      </button>
+
+    </div>
+  );
+}
+
 function Repeater({ title, help, items, setItems, emptyItem, render }) {
   const updateItem = (index, key, value) => setItems(items.map((item, i) => i === index ? { ...item, [key]: value } : item));
   const add = () => setItems([...items, clone(emptyItem)]);
@@ -772,36 +881,11 @@ function SearchPage(){
   </div>
 )}
 </article>)}
-   
-   {totalPages > 1 && (
-    <div className="pagination">
-  
-      <button
-        disabled={currentPage === 1}
-        onClick={() =>
-          setCurrentPage((p) => p - 1)
-        }
-      >
-        이전
-      </button>
-  
-      <span>
-        {currentPage} / {totalPages}
-      </span>
-  
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() =>
-          setCurrentPage((p) => p + 1)
-        }
-      >
-        다음
-      </button>
-  
-    </div>
-  )}
-
-   
+ <Pagination
+    currentPage={currentPage}
+    totalPages={totalPages}
+    onPageChange={setCurrentPage}
+  />
  </div></div>;
 }
 
