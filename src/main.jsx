@@ -903,7 +903,7 @@ function SearchPage(){
     </select>
   
   </div></div>;
-}}
+}
 
 function ModifyPage(){
   const [email,setEmail]=useState("");
@@ -2922,6 +2922,9 @@ async function deleteItem(id) {
         
         </div>
       </section>
+
+    </section>
+
     </div>
   )
 }
