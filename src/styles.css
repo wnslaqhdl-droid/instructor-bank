@@ -260,3 +260,28 @@ th{background:#f8fafc;color:#334155}
     background-position:0 50%;
   }
 }
+
+.top-nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.nav-left,
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.nav-right input{
+  width:180px;
+}
+
+.welcome{
+  font-weight:600;
+}
