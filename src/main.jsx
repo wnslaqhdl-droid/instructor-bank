@@ -561,7 +561,7 @@ function SearchPage(){
  const [sortType,setSortType]=useState("latest");
  const [onlyVerified,setOnlyVerified]=useState(false);
  const [currentPage, setCurrentPage] = useState(1);
- const itemsPerPage = 5;
+ const [itemsPerPage, setItemsPerPage] = useState(20);
  const [loading, setLoading] = useState(true);
  async function load() {
     setLoading(true);
@@ -881,12 +881,28 @@ function SearchPage(){
   </div>
 )}
 </article>)}
- <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    onPageChange={setCurrentPage}
-  />
- </div></div>;
+ <div className="pagination-row">
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={setCurrentPage}
+    />
+  
+    <select
+      value={itemsPerPage}
+      onChange={(e)=>{
+        setItemsPerPage(Number(e.target.value));
+        setCurrentPage(1);
+      }}
+      className="page-size-select"
+    >
+      <option value={10}>10명씩 보기</option>
+      <option value={20}>20명씩 보기</option>
+      <option value={50}>50명씩 보기</option>
+      <option value={100}>100명씩 보기</option>
+    </select>
+  
+  </div></div>;
 }
 
 function ModifyPage(){
@@ -1716,8 +1732,8 @@ function AdminPage(){
   const [requestStatusFilter,setRequestStatusFilter]=useState("");
   const [adminPage, setAdminPage] = useState(1);
   const [requestPage, setRequestPage] = useState(1);
-  const adminItemsPerPage = 10;
-  const requestItemsPerPage = 10;
+  const [adminItemsPerPage, setAdminItemsPerPage] = useState(10);
+  const [requestItemsPerPage, setRequestItemsPerPage] = useState(10);
   
   async function checkAdmin() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -2775,11 +2791,28 @@ async function deleteItem(id) {
               </tbody>
             </table>
           </div>
-          <Pagination
-            currentPage={requestPage}
-            totalPages={requestTotalPages}
-            onPageChange={setRequestPage}
-          />
+          <div className="pagination-row">
+            <Pagination
+              currentPage={requestPage}
+              totalPages={requestTotalPages}
+              onPageChange={setRequestPage}
+            />
+          
+            <select
+              value={requestItemsPerPage}
+              onChange={(e)=>{
+                setRequestItemsPerPage(Number(e.target.value));
+                setRequestPage(1);
+              }}
+              className="page-size-select"
+            >
+              <option value={10}>10개씩 보기</option>
+              <option value={20}>20개씩 보기</option>
+              <option value={50}>50개씩 보기</option>
+              <option value={100}>100개씩 보기</option>
+            </select>
+          
+          </div>
         </section>
         
 <div className="grid grid-3" style={{marginTop: "14px", marginBottom: "14px"}}>
@@ -2866,11 +2899,28 @@ async function deleteItem(id) {
             </tbody>
           </table>
         </div>
-        <Pagination
-          currentPage={adminPage}
-          totalPages={adminTotalPages}
-          onPageChange={setAdminPage}
-        />
+        <div className="pagination-row">
+          <Pagination
+            currentPage={adminPage}
+            totalPages={adminTotalPages}
+            onPageChange={setAdminPage}
+          />
+        
+          <select
+            value={adminItemsPerPage}
+            onChange={(e)=>{
+              setAdminItemsPerPage(Number(e.target.value));
+              setAdminPage(1);
+            }}
+            className="page-size-select"
+          >
+            <option value={10}>10명씩 보기</option>
+            <option value={20}>20명씩 보기</option>
+            <option value={50}>50명씩 보기</option>
+            <option value={100}>100명씩 보기</option>
+          </select>
+        
+        </div>
       </section>
     </div>
   )
