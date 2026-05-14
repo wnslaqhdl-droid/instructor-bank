@@ -11,38 +11,10 @@ import { searchInstructors,} from "./services/instructorService";
 import { submitInstructorUpdateRequest} from "./services/instructorService";
 import { checkAdmin} from "./services/instructorService";
 import { isValidEmail, isValidPhone, hasRequiredInstructorFields,} from "./utils/validators";
+import { getCurrentMonthKST, toMonthValue, monthToDate, formatMonth, formatPeriod,} from "./utils/date";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
-
-function getCurrentMonthKST(){
-  const now = new Date();
-  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-  return kst.toISOString().slice(0, 7);
-}
-
-function toMonthValue(value){
-  if(!value) return "";
-  return String(value).slice(0, 7);
-}
-
-function monthToDate(value){
-  if(!value) return null;
-  return `${value}-01`;
-}
-
-function formatMonth(value){
-  if(!value) return "";
-  const [year, month] = String(value).slice(0, 7).split("-");
-  if(!year || !month) return "";
-  return `${year}.${month}`;
-}
-
-function formatPeriod(startDate, endDate){
-  const start = formatMonth(startDate) || "-";
-  const end = endDate ? formatMonth(endDate) : "현재";
-  return `${start} ~ ${end}`;
-}
 
 function Field({ label, required, help, children }) {
   return (
