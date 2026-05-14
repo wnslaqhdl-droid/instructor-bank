@@ -483,6 +483,7 @@ async function submitForm() {
 function SearchPage(){
  const [items,setItems]=useState([]);
  const [keyword,setKeyword]=useState("");
+ const [debouncedKeyword, setDebouncedKeyword] = useState("");
  const [region,setRegion]=useState("");
  const [target,setTarget]=useState("");
  const [type,setType]=useState("");
@@ -502,29 +503,47 @@ function SearchPage(){
     }
   }
  useEffect(()=>{load()},[]);
- function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
- const filtered = items.filter((item) => {
-    const text = [
-      item.name,
-      item.region,
-      item.main_topic,
-      item.other_specialty,
-      item.intro,
-      (item.activity_regions || []).join(" "),
-      (item.targets || []).join(" "),
-      (item.types || []).join(" "),
-      (item.specialties || []).join(" ")
-    ].join(" ").toLowerCase();
+ useEffect(() => {
+  const timer = setTimeout(() => {
+    setDebouncedKeyword(keyword);
+  }, 300);
 
-    return (
-      (!onlyVerified || item.center_verified) &&
-      (!keyword || text.includes(keyword.toLowerCase())) &&
-      (!region || item.region === region || (item.activity_regions || []).includes(region)) &&
-      (!target || (item.targets || []).includes(target)) &&
-      (!type || (item.types || []).includes(type)) &&
-      (!specialty || (item.specialties || []).includes(specialty))
-    );
-  })
+  return () => clearTimeout(timer);
+}, [keyword]);
+ function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
+ const normalizedKeyword =
+  debouncedKeyword.trim().toLowerCase();
+
+const filtered = items.filter((item) => {
+  const text = [
+    item.name,
+    item.region,
+    item.main_topic,
+    item.other_specialty,
+    item.intro,
+    (item.activity_regions || []).join(" "),
+    (item.targets || []).join(" "),
+    (item.types || []).join(" "),
+    (item.specialties || []).join(" ")
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  return (
+    (!onlyVerified || item.center_verified) &&
+    (!normalizedKeyword ||
+      text.includes(normalizedKeyword)) &&
+    (!region ||
+      item.region === region ||
+      (item.activity_regions || []).includes(region)) &&
+    (!target ||
+      (item.targets || []).includes(target)) &&
+    (!type ||
+      (item.types || []).includes(type)) &&
+    (!specialty ||
+      (item.specialties || []).includes(specialty))
+  );
+})
   .sort((a, b) => {
     if (sortType === "latest") return new Date(b.created_at) - new Date(a.created_at);
     if (sortType === "name") return (a.name || "").localeCompare(b.name || "");
