@@ -493,13 +493,18 @@ function SearchPage(){
  const [openBadgeId,setOpenBadgeId]=useState(null);  
  const [sortType,setSortType]=useState("latest");
  const [onlyVerified,setOnlyVerified]=useState(false);
+ const [loading, setLoading] = useState(true);
  async function load() {
+    setLoading(true);
+  
     try {
       const data = await searchInstructors();
   
       setItems(data);
     } catch (err) {
       setMessage(err.message);
+    } finally {
+      setLoading(false);
     }
   }
  useEffect(()=>{load()},[]);
@@ -681,7 +686,19 @@ function SearchPage(){
     <span className="col-region">활동지역</span>
     <span className="col-target">교육대상</span>
     <span className="col-type">교육유형</span>
-  </div>{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
+
+      //skeleon UI 추가
+      {loading && (
+  <div className="skeleton-list">
+    {[...Array(5)].map((_, i) => (
+      <div
+        key={i}
+        className="skeleton-card"
+      />
+    ))}
+  </div>
+)}
+  </div>{filtered.length===0?<div className="card muted">검색 결과가 없습니다.</div>:null}{!loading && filtered.map((item)=><article className="instructor-card compact-card"  key={item.id}  onClick={() => toggleDetail(item.id)}  style={{ cursor: "pointer" }}
 >
   <div className="compact-row">
     <span className="compact-name name-cell">
@@ -757,7 +774,7 @@ function SearchPage(){
     </div>
   </div>
 )}
-</article>)}</div></div>;
+</article>)}}</div></div>;
 }
 
 function ModifyPage(){
