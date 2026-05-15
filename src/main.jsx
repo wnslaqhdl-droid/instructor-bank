@@ -16,6 +16,7 @@ import InstructorCard from "./components/InstructorCard";
 import Pagination from "./components/Pagination";
 import { submitInstructorForm } from "./utils/submitInstructorForm";
 import { filterAndSortInstructors } from "./utils/searchFilters";
+import SearchFilters from "./components/SearchFilters";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -269,63 +270,37 @@ function SearchPage(){
  </section>
    {message?<div className="error">{message}</div>:null}
    <section className="card">
-     <div className="grid grid-4">
-       <Field label="키워드">
-       <input value={keyword} onChange={(e)=>setKeyword(e.target.value)} 
-         placeholder="이름, 주제, 소개 검색"/></Field>
-       
-       <Field label="지역">
-           <select value={region} onChange={(e)=>setRegion(e.target.value)}>
-           <option value="">전체</option>{regionOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select>
-       </Field>
-       <Field label="교육대상">
-         <select value={target} onChange={(e)=>setTarget(e.target.value)}>
-           <option value="">전체</option>{targetOptions.map((r)=>
-           <option key={r} value={r}>{r}</option>)}</select>
-       </Field>
-       <Field label="교육유형">
-         <select value={type} onChange={(e)=>setType(e.target.value)}>
-           <option value="">전체</option>{typeOptions.map((r)=><option key={r} value={r}>{r}</option>)}</select>
-       </Field></div>
-     <div className="grid grid-3" style={{marginTop:14}}>
-  <Field label="강의 분야">
-    <select value={specialty} onChange={(e)=>setSpecialty(e.target.value)}>
-      <option value="">전체</option>
-      {specialtyOptions.map((r)=><option key={r} value={r}>{r}</option>)}
-    </select>
-  </Field>
-
-  <Field label="정렬">
-    <select value={sortType} onChange={(e)=>setSortType(e.target.value)}>
-      <option value="latest">최신순</option>
-      <option value="name">이름순</option>
-      <option value="region">지역순</option>
-    </select>
-  </Field>
-  <label style={{display:"block", marginTop:8}}>
-    <input
-      type="checkbox"
-      checked={onlyVerified}
-      onChange={(e)=>setOnlyVerified(e.target.checked)}
-    />
-    <span style={{marginLeft:6}}>개발원 과정 수료자만 보기</span>
-  </label>
-
-  <div style={{display:"flex",alignItems:"end",justifyContent:"flex-end"}}>
-    <button className="btn" onClick={()=>{
-      setKeyword("");
-      setRegion("");
-      setTarget("");
-      setType("");
-      setSpecialty("");
-      setOnlyVerified(false);
-      setSortType("latest");
-    }}>
-      필터 초기화
-    </button>
-  </div>
-</div>
- </section><div className="list">
+     <SearchFilters
+        keyword={keyword}
+        setKeyword={setKeyword}
+        region={region}
+        setRegion={setRegion}
+        target={target}
+        setTarget={setTarget}
+        type={type}
+        setType={setType}
+        specialty={specialty}
+        setSpecialty={setSpecialty}
+        sortType={sortType}
+        setSortType={setSortType}
+        onlyVerified={onlyVerified}
+        setOnlyVerified={setOnlyVerified}
+        regionOptions={regionOptions}
+        targetOptions={targetOptions}
+        typeOptions={typeOptions}
+        specialtyOptions={specialtyOptions}
+        resetFilters={()=>{
+          setKeyword("");
+          setRegion("");
+          setTarget("");
+          setType("");
+          setSpecialty("");
+          setOnlyVerified(false);
+          setSortType("latest");
+        }}
+      />
+    
+     <div className="list">
      <div className="muted small" style={{marginBottom:8}}>
      검색 결과: 총 {filtered.length}명
      </div>
