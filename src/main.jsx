@@ -174,7 +174,7 @@ async function submitForm() {
     emptyLecture,
     clone
   });
-}
+}}
 
 function SearchPage() {
 
