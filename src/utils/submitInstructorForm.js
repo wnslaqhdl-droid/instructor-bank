@@ -2,7 +2,7 @@ import {
   hasRequiredInstructorFields,
   isValidEmail,
   isValidPhone
-} from "./validation";
+} from "./validators";
 
 export async function submitInstructorForm({
   form,
