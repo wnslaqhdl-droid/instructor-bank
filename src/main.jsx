@@ -23,6 +23,9 @@ import RegisterTrainingSection from "./components/RegisterTrainingSection";
 import RegisterWelfareSection from "./components/RegisterWelfareSection";
 import RegisterLectureSection from "./components/RegisterLectureSection";
 import RegisterProfileSection from "./components/RegisterProfileSection";
+import RegisterWelfareExperience from "./components/RegisterWelfareExperience";
+import RegisterLectureExperience from "./components/RegisterLectureExperience";
+import RegisterProfileSettings from "./components/RegisterProfileSettings";
 import Repeater from "./components/Repeater";
 import "./styles.css";
 
