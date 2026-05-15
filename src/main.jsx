@@ -19,6 +19,10 @@ import { filterAndSortInstructors } from "./utils/searchFilters";
 import SearchFilters from "./components/SearchFilters";
 import ActiveFilters from "./components/ActiveFilters";
 import RegisterBasicInfo from "./components/RegisterBasicInfo";
+import RegisterTrainingSection from "./components/RegisterTrainingSection";
+import RegisterWelfareSection from "./components/RegisterWelfareSection";
+import RegisterLectureSection from "./components/RegisterLectureSection";
+import RegisterProfileSection from "./components/RegisterProfileSection";
 import Repeater from "./components/Repeater";
 import "./styles.css";
 
