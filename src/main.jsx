@@ -18,6 +18,7 @@ import { submitInstructorForm } from "./utils/submitInstructorForm";
 import { filterAndSortInstructors } from "./utils/searchFilters";
 import SearchFilters from "./components/SearchFilters";
 import ActiveFilters from "./components/ActiveFilters";
+import RegisterBasicInfo from "./components/RegisterBasicInfo";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
