@@ -17,6 +17,7 @@ import Pagination from "./components/Pagination";
 import { submitInstructorForm } from "./utils/submitInstructorForm";
 import { filterAndSortInstructors } from "./utils/searchFilters";
 import SearchFilters from "./components/SearchFilters";
+import ActiveFilters from "./components/ActiveFilters";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -335,56 +336,18 @@ function SearchPage() {
             : "지역순"}
         </div>
 
-        <div className="active-filters">
-
-          {region && (
-            <span
-              className="filter-chip"
-              onClick={() => setRegion("")}
-            >
-              지역: {region} ✕
-            </span>
-          )}
-
-          {target && (
-            <span
-              className="filter-chip"
-              onClick={() => setTarget("")}
-            >
-              대상: {target} ✕
-            </span>
-          )}
-
-          {type && (
-            <span
-              className="filter-chip"
-              onClick={() => setType("")}
-            >
-              유형: {type} ✕
-            </span>
-          )}
-
-          {specialty && (
-            <span
-              className="filter-chip"
-              onClick={() => setSpecialty("")}
-            >
-              분야: {specialty} ✕
-            </span>
-          )}
-
-          {onlyVerified && (
-            <span
-              className="filter-chip"
-              onClick={() =>
-                setOnlyVerified(false)
-              }
-            >
-              개발원 과정 수료자 ✕
-            </span>
-          )}
-
-        </div>
+        <ActiveFilters
+          region={region}
+          setRegion={setRegion}
+          target={target}
+          setTarget={setTarget}
+          type={type}
+          setType={setType}
+          specialty={specialty}
+          setSpecialty={setSpecialty}
+          onlyVerified={onlyVerified}
+          setOnlyVerified={setOnlyVerified}
+        />
 
         <div className="compact-row header-row">
 
