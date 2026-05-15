@@ -175,28 +175,29 @@ async function submitForm() {
   });
 }}
 
-function SearchPage(){
- const [items,setItems]=useState([]);
- const [keyword,setKeyword]=useState("");
- const [debouncedKeyword, setDebouncedKeyword] = useState("");
- const [region,setRegion]=useState("");
- const [target,setTarget]=useState("");
- const [type,setType]=useState("");
- const [specialty,setSpecialty]=useState("");
- const [message,setMessage]=useState("");
- const [openId,setOpenId]=useState(null);
- const [openBadgeId,setOpenBadgeId]=useState(null);  
- const [sortType,setSortType]=useState("latest");
- const [onlyVerified,setOnlyVerified]=useState(false);
- const [currentPage, setCurrentPage] = useState(1);
- const itemsPerPage = 5;
- const [loading, setLoading] = useState(true);
- async function load() {
+function SearchPage() {
+
+  const [items, setItems] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
+  const [region, setRegion] = useState("");
+  const [target, setTarget] = useState("");
+  const [type, setType] = useState("");
+  const [specialty, setSpecialty] = useState("");
+  const [message, setMessage] = useState("");
+  const [openId, setOpenId] = useState(null);
+  const [openBadgeId, setOpenBadgeId] = useState(null);
+  const [sortType, setSortType] = useState("latest");
+  const [onlyVerified, setOnlyVerified] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const [loading, setLoading] = useState(true);
+
+  async function load() {
     setLoading(true);
-  
+
     try {
       const data = await searchInstructors();
-  
       setItems(data);
     } catch (err) {
       setMessage(err.message);
@@ -204,14 +205,18 @@ function SearchPage(){
       setLoading(false);
     }
   }
- useEffect(()=>{load()},[]);
- useEffect(() => {
-  const timer = setTimeout(() => {
-    setDebouncedKeyword(keyword);
-  }, 300);
 
-  return () => clearTimeout(timer);
-}, [keyword]);
+  useEffect(() => {
+    load();
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [keyword]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -225,12 +230,15 @@ function SearchPage(){
     sortType
   ]);
 
-  
- function toggleDetail(id){ setOpenId(prev => (prev === id ? null : id))}
+  function toggleDetail(id) {
+    setOpenId((prev) =>
+      prev === id ? null : id
+    );
+  }
 
   const normalizedKeyword =
     debouncedKeyword.trim().toLowerCase();
-  
+
   const filtered = useMemo(() => {
 
     return filterAndSortInstructors({
@@ -243,7 +251,7 @@ function SearchPage(){
       sortType,
       onlyVerified
     });
-  
+
   }, [
     items,
     normalizedKeyword,
@@ -258,19 +266,32 @@ function SearchPage(){
   const totalPages = Math.ceil(
     filtered.length / itemsPerPage
   );
-  
+
   const paginatedItems = filtered.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  
- return <div><section className="hero">
-   <h1>성인권 교육 강사 검색</h1>
-   <p>공개 승인된 강사를 지역, 교육대상, 교육유형, 강의 분야로 검색합니다.</p>
- </section>
-   {message?<div className="error">{message}</div>:null}
-   <section className="card">
-     <SearchFilters
+
+  return (
+    <div>
+
+      <section className="hero">
+        <h1>성인권 교육 강사 검색</h1>
+
+        <p>
+          공개 승인된 강사를 지역,
+          교육대상, 교육유형,
+          강의 분야로 검색합니다.
+        </p>
+      </section>
+
+      {message ? (
+        <div className="error">
+          {message}
+        </div>
+      ) : null}
+
+      <SearchFilters
         keyword={keyword}
         setKeyword={setKeyword}
         region={region}
@@ -289,94 +310,151 @@ function SearchPage(){
         targetOptions={targetOptions}
         typeOptions={typeOptions}
         specialtyOptions={specialtyOptions}
-        resetFilters={()=>{
-          setKeyword("");
-          setRegion("");
-          setTarget("");
-          setType("");
-          setSpecialty("");
-          setOnlyVerified(false);
-          setSortType("latest");
-        }}
+        Field={Field}
       />
-    
-     <div className="list">
-     <div className="muted small" style={{marginBottom:8}}>
-     검색 결과: 총 {filtered.length}명
-     </div>
-     <div className="muted small" style={{marginBottom:8}}>
-       정렬 기준: {sortType === "latest" ? "최신순" : sortType === "name" ? "이름순" : "지역순"}
-     </div>
-     <div className="active-filters">
-      {region && (
-        <span className="filter-chip" onClick={()=>setRegion("")}>
-          지역: {region} ✕
-        </span>
-      )}
-      {target && (
-        <span className="filter-chip" onClick={()=>setTarget("")}>
-          대상: {target} ✕
-        </span>
-      )}
-      {type && (
-        <span className="filter-chip" onClick={()=>setType("")}>
-          유형: {type} ✕
-        </span>
-      )}
-      {specialty && (
-        <span className="filter-chip" onClick={()=>setSpecialty("")}>
-          분야: {specialty} ✕
-        </span>
-      )}
-      {onlyVerified && (
-        <span className="filter-chip" onClick={()=>setOnlyVerified(false)}>
-          개발원 과정 수료자 ✕
-        </span>
-      )}
-    </div>
-    <div className="compact-row header-row">
-    <span className="compact-name">이름</span>
-    <span>주요 강의주제</span>
-    <span className="col-region">활동지역</span>
-    <span className="col-target">교육대상</span>
-    <span className="col-type">교육유형</span>
 
-      {loading && (
-  <div className="skeleton-list">
-    {[...Array(5)].map((_, i) => (
-      <div
-        key={i}
-        className="skeleton-card"
-      />
-    ))}
-  </div>
-)}
-  </div>
-   {filtered.length===0 ? (
-      <div className="card muted">
-        검색 결과가 없습니다.
-      </div>
-    ) : null}
-    
-    {!loading &&
-      paginatedItems.map((item)=>(
-        <InstructorCard
-          key={item.id}
-          item={item}
-          openId={openId}
-          openBadgeId={openBadgeId}
-          toggleDetail={toggleDetail}
-          setOpenBadgeId={setOpenBadgeId}
-          formatPeriod={formatPeriod}
+      <div className="list">
+
+        <div
+          className="muted small"
+          style={{ marginBottom: 8 }}
+        >
+          검색 결과: 총 {filtered.length}명
+        </div>
+
+        <div
+          className="muted small"
+          style={{ marginBottom: 8 }}
+        >
+          정렬 기준:
+          {" "}
+          {sortType === "latest"
+            ? "최신순"
+            : sortType === "name"
+            ? "이름순"
+            : "지역순"}
+        </div>
+
+        <div className="active-filters">
+
+          {region && (
+            <span
+              className="filter-chip"
+              onClick={() => setRegion("")}
+            >
+              지역: {region} ✕
+            </span>
+          )}
+
+          {target && (
+            <span
+              className="filter-chip"
+              onClick={() => setTarget("")}
+            >
+              대상: {target} ✕
+            </span>
+          )}
+
+          {type && (
+            <span
+              className="filter-chip"
+              onClick={() => setType("")}
+            >
+              유형: {type} ✕
+            </span>
+          )}
+
+          {specialty && (
+            <span
+              className="filter-chip"
+              onClick={() => setSpecialty("")}
+            >
+              분야: {specialty} ✕
+            </span>
+          )}
+
+          {onlyVerified && (
+            <span
+              className="filter-chip"
+              onClick={() =>
+                setOnlyVerified(false)
+              }
+            >
+              개발원 과정 수료자 ✕
+            </span>
+          )}
+
+        </div>
+
+        <div className="compact-row header-row">
+
+          <span className="compact-name">
+            이름
+          </span>
+
+          <span>
+            주요 강의주제
+          </span>
+
+          <span className="col-region">
+            활동지역
+          </span>
+
+          <span className="col-target">
+            교육대상
+          </span>
+
+          <span className="col-type">
+            교육유형
+          </span>
+
+        </div>
+
+        {loading && (
+          <div className="skeleton-list">
+
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="skeleton-card"
+              />
+            ))}
+
+          </div>
+        )}
+
+        {!loading &&
+          filtered.length === 0 && (
+            <div className="card muted">
+              검색 결과가 없습니다.
+            </div>
+          )
+        }
+
+        {!loading &&
+          paginatedItems.map((item) => (
+            <InstructorCard
+              key={item.id}
+              item={item}
+              openId={openId}
+              openBadgeId={openBadgeId}
+              toggleDetail={toggleDetail}
+              setOpenBadgeId={setOpenBadgeId}
+              formatPeriod={formatPeriod}
+            />
+          ))
+        }
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
         />
-      ))
-    }
- <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    onPageChange={setCurrentPage}
-  />
- </div></div>;
+
+      </div>
+
+    </div>
+  );
 }
 
 function ModifyPage(){
