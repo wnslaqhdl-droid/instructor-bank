@@ -12,6 +12,7 @@ import { submitInstructorUpdateRequest} from "./services/instructorService";
 import { checkAdmin} from "./services/instructorService";
 import { isValidEmail, isValidPhone, hasRequiredInstructorFields,} from "./utils/validators";
 import { getCurrentMonthKST, toMonthValue, monthToDate, formatMonth, formatPeriod,} from "./utils/date";
+import Pagination from "./components/Pagination";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -126,115 +127,6 @@ function CheckboxGroup({ options, values, onChange }) {
           <span>{option}</span>
         </label>
       ))}
-    </div>
-  );
-}
-
-function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) {
-
-  if (totalPages <= 1) return null;
-
-  function buildPages() {
-    const pages = [];
-
-    // 항상 첫 페이지
-    pages.push(1);
-
-    // 시작 범위
-    const start = Math.max(
-      currentPage - 2,
-      2
-    );
-
-    // 끝 범위
-    const end = Math.min(
-      currentPage + 2,
-      totalPages - 1
-    );
-
-    // 앞쪽 ...
-    if (start > 2) {
-      pages.push("start-ellipsis");
-    }
-
-    // 중간 페이지들
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    // 뒤쪽 ...
-    if (end < totalPages - 1) {
-      pages.push("end-ellipsis");
-    }
-
-    // 마지막 페이지
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-
-    return pages;
-  }
-
-  const pages = buildPages();
-
-  return (
-    <div className="pagination">
-
-      <button
-        disabled={currentPage === 1}
-        onClick={() =>
-          onPageChange(currentPage - 1)
-        }
-      >
-        이전
-      </button>
-
-      {pages.map((page, index) => {
-
-        if (
-          page === "start-ellipsis" ||
-          page === "end-ellipsis"
-        ) {
-          return (
-            <span
-              key={index}
-              className="pagination-ellipsis"
-            >
-              ...
-            </span>
-          );
-        }
-
-        return (
-          <button
-            key={page}
-            className={
-              currentPage === page
-                ? "page-btn active"
-                : "page-btn"
-            }
-            onClick={() =>
-              onPageChange(page)
-            }
-          >
-            {page}
-          </button>
-        );
-      })}
-
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() =>
-          onPageChange(currentPage + 1)
-        }
-      >
-        다음
-      </button>
-
     </div>
   );
 }
