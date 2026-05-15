@@ -139,16 +139,32 @@ function CheckboxGroup({ options, values, onChange }) {
 }
 
 function RegisterPage() {
-  const [form, setForm] = useState(clone(emptyInstructor));
-  const [trainingCourses, setTrainingCourses] = useState([clone(emptyTraining)]);
-  const [welfareExperiences, setWelfareExperiences] = useState([clone(emptyWelfare)]);
-  const [lectureExperiences, setLectureExperiences] = useState([clone(emptyLecture)]);
+
+  const [form, setForm] = useState(
+    clone(emptyInstructor)
+  );
+
+  const [trainingCourses, setTrainingCourses] =
+    useState([clone(emptyTraining)]);
+
+  const [welfareExperiences, setWelfareExperiences] =
+    useState([clone(emptyWelfare)]);
+
+  const [lectureExperiences, setLectureExperiences] =
+    useState([clone(emptyLecture)]);
+
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
-  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+
+  const update = (key, value) =>
+    setForm((current) => ({
+      ...current,
+      [key]: value
+    }));
 
   async function submitForm() {
+
     await submitInstructorForm({
       form,
       password,
@@ -169,18 +185,25 @@ function RegisterPage() {
       emptyLecture,
       clone
     });
+
   }
+
   return (
+
     <div>
-  
+
       {message ? (
-        <div className="notice">{message}</div>
+        <div className="notice">
+          {message}
+        </div>
       ) : null}
-  
+
       {error ? (
-        <div className="error">{error}</div>
+        <div className="error">
+          {error}
+        </div>
       ) : null}
-  
+
       <RegisterBasicInfo
         form={form}
         update={update}
@@ -189,12 +212,67 @@ function RegisterPage() {
         regionOptions={regionOptions}
         Field={Field}
       />
-  
+
+      <RegisterTrainingSection
+        trainingCourses={trainingCourses}
+        setTrainingCourses={setTrainingCourses}
+        emptyTraining={emptyTraining}
+        Field={Field}
+        Repeater={Repeater}
+        clone={clone}
+      />
+
+      <RegisterWelfareSection
+        welfareExperiences={welfareExperiences}
+        setWelfareExperiences={setWelfareExperiences}
+        emptyWelfare={emptyWelfare}
+        Field={Field}
+        Repeater={Repeater}
+        MonthSelect={MonthSelect}
+        clone={clone}
+        getCurrentMonthKST={getCurrentMonthKST}
+        toMonthValue={toMonthValue}
+        monthToDate={monthToDate}
+      />
+
+      <RegisterLectureSection
+        lectureExperiences={lectureExperiences}
+        setLectureExperiences={setLectureExperiences}
+        emptyLecture={emptyLecture}
+        Field={Field}
+        Repeater={Repeater}
+        MonthSelect={MonthSelect}
+        clone={clone}
+        getCurrentMonthKST={getCurrentMonthKST}
+        toMonthValue={toMonthValue}
+        monthToDate={monthToDate}
+      />
+
+      <RegisterProfileSection
+        form={form}
+        update={update}
+        regionOptions={regionOptions}
+        targetOptions={targetOptions}
+        typeOptions={typeOptions}
+        specialtyOptions={specialtyOptions}
+        CheckboxGroup={CheckboxGroup}
+        Field={Field}
+      />
+
+      <div className="actions">
+
+        <button
+          className="btn primary"
+          onClick={submitForm}
+        >
+          등록 신청
+        </button>
+
+      </div>
+
     </div>
   );
 }
-
-
 
 function SearchPage() {
 
