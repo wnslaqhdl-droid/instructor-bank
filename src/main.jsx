@@ -171,7 +171,7 @@ async function submitForm() {
     emptyLecture,
     clone
   });
-}
+}}
 
 function SearchPage(){
  const [items,setItems]=useState([]);
