@@ -19,6 +19,7 @@ import { filterAndSortInstructors } from "./utils/searchFilters";
 import SearchFilters from "./components/SearchFilters";
 import ActiveFilters from "./components/ActiveFilters";
 import RegisterBasicInfo from "./components/RegisterBasicInfo";
+import Repeater from "./components/Repeater";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -135,13 +136,6 @@ function CheckboxGroup({ options, values, onChange }) {
       ))}
     </div>
   );
-}
-
-function Repeater({ title, help, items, setItems, emptyItem, render }) {
-  const updateItem = (index, key, value) => setItems(items.map((item, i) => i === index ? { ...item, [key]: value } : item));
-  const add = () => setItems([...items, clone(emptyItem)]);
-  const remove = (index) => { if (items.length > 1) setItems(items.filter((_, i) => i !== index)); };
-  return <section className="card"><div className="instructor-top"><div><h2>{title}</h2>{help ? <p className="muted small">{help}</p> : null}</div><button className="btn primary" type="button" onClick={add}>추가</button></div>{items.map((item, index) => <div className="repeat" key={index}><div className="instructor-top"><strong>입력 {index + 1}</strong><button className="btn danger" type="button" onClick={() => remove(index)}>삭제</button></div>{render(item, index, updateItem)}</div>)}</section>;
 }
 
 function RegisterPage() {
