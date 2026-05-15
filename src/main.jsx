@@ -196,21 +196,20 @@ function RegisterPage() {
   }
 
   return (
-
     <div>
-
+  
       {message ? (
         <div className="notice">
           {message}
         </div>
       ) : null}
-
+  
       {error ? (
         <div className="error">
           {error}
         </div>
       ) : null}
-
+  
       <RegisterBasicInfo
         form={form}
         update={update}
@@ -219,64 +218,51 @@ function RegisterPage() {
         regionOptions={regionOptions}
         Field={Field}
       />
-
+  
       <RegisterTrainingSection
         trainingCourses={trainingCourses}
         setTrainingCourses={setTrainingCourses}
         emptyTraining={emptyTraining}
         Field={Field}
         Repeater={Repeater}
-        clone={clone}
       />
-
-      <RegisterWelfareSection
+  
+      <RegisterWelfareExperience
         welfareExperiences={welfareExperiences}
         setWelfareExperiences={setWelfareExperiences}
         emptyWelfare={emptyWelfare}
         Field={Field}
         Repeater={Repeater}
         MonthSelect={MonthSelect}
-        clone={clone}
         getCurrentMonthKST={getCurrentMonthKST}
         toMonthValue={toMonthValue}
         monthToDate={monthToDate}
       />
-
-      <RegisterLectureSection
+  
+      <RegisterLectureExperience
         lectureExperiences={lectureExperiences}
         setLectureExperiences={setLectureExperiences}
         emptyLecture={emptyLecture}
         Field={Field}
         Repeater={Repeater}
         MonthSelect={MonthSelect}
-        clone={clone}
         getCurrentMonthKST={getCurrentMonthKST}
         toMonthValue={toMonthValue}
         monthToDate={monthToDate}
       />
-
-      <RegisterProfileSection
+  
+      <RegisterProfileSettings
         form={form}
         update={update}
         regionOptions={regionOptions}
         targetOptions={targetOptions}
         typeOptions={typeOptions}
         specialtyOptions={specialtyOptions}
-        CheckboxGroup={CheckboxGroup}
         Field={Field}
+        CheckboxGroup={CheckboxGroup}
+        submitForm={submitForm}
       />
-
-      <div className="actions">
-
-        <button
-          className="btn primary"
-          onClick={submitForm}
-        >
-          등록 신청
-        </button>
-
-      </div>
-
+  
     </div>
   );
 }
