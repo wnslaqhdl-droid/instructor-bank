@@ -175,7 +175,18 @@ function RegisterPage() {
       clone
     });
   }
- 
+  return (
+    <div>
+     <RegisterBasicInfo
+        form={form}
+        update={update}
+        password={password}
+        setPassword={setPassword}
+        regionOptions={regionOptions}
+        Field={Field}
+      />
+    </div>
+    );
 }
 
 
