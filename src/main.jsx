@@ -178,7 +178,16 @@ function RegisterPage() {
   }
   return (
     <div>
-     <RegisterBasicInfo
+  
+      {message ? (
+        <div className="notice">{message}</div>
+      ) : null}
+  
+      {error ? (
+        <div className="error">{error}</div>
+      ) : null}
+  
+      <RegisterBasicInfo
         form={form}
         update={update}
         password={password}
@@ -186,8 +195,9 @@ function RegisterPage() {
         regionOptions={regionOptions}
         Field={Field}
       />
+  
     </div>
-    );
+  );
 }
 
 
