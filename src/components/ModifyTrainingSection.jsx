@@ -1,3 +1,5 @@
+import updateArrayItem from "../utils/updateArrayItem";
+
 export default function ModifyTrainingSection({
   modifyTrainings,
   setModifyTrainings,
@@ -16,14 +18,15 @@ export default function ModifyTrainingSection({
               <input
                 value={t.course_name || ""}
                 onChange={(e) => {
-                  const copy = [...modifyTrainings];
-
-                  copy[i] = {
-                    ...copy[i],
-                    course_name: e.target.value
-                  };
-
-                  setModifyTrainings(copy);
+                  updateArrayItem(
+                    modifyTrainings,
+                    i,
+                    {
+                      course_name:
+                        e.target.value
+                    },
+                    setModifyTrainings
+                  );
                 }}
               />
             </Field>
@@ -32,14 +35,15 @@ export default function ModifyTrainingSection({
               <input
                 value={t.institution || ""}
                 onChange={(e) => {
-                  const copy = [...modifyTrainings];
-
-                  copy[i] = {
-                    ...copy[i],
-                    institution: e.target.value
-                  };
-
-                  setModifyTrainings(copy);
+                  updateArrayItem(
+                    modifyTrainings,
+                    i,
+                    {
+                      course_name:
+                        e.target.value
+                    },
+                    setModifyTrainings
+                  );
                 }}
               />
             </Field>
@@ -48,15 +52,15 @@ export default function ModifyTrainingSection({
               <input
                 value={t.completion_year || ""}
                 onChange={(e) => {
-                  const copy = [...modifyTrainings];
-
-                  copy[i] = {
-                    ...copy[i],
-                    completion_year:
-                      e.target.value
-                  };
-
-                  setModifyTrainings(copy);
+                  updateArrayItem(
+                    modifyTrainings,
+                    i,
+                    {
+                      course_name:
+                        e.target.value
+                    },
+                    setModifyTrainings
+                  );
                 }}
               />
             </Field>
