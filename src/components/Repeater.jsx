@@ -4,7 +4,8 @@ export default function Repeater({
   items,
   setItems,
   emptyItem,
-  render
+  render,
+  clone
 }) {
 
   const updateItem = (index, key, value) =>
