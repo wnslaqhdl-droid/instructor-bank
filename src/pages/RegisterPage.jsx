@@ -1,0 +1,108 @@
+import {
+  regionOptions,
+  targetOptions,
+  typeOptions,
+  specialtyOptions,
+  emptyInstructor,
+  emptyTraining,
+  emptyWelfare,
+  emptyLecture
+} from "../constants";
+
+import Field from "../components/Field";
+import Repeater from "../components/Repeater";
+
+import RegisterBasicInfo from "../components/RegisterBasicInfo";
+import RegisterTrainingSection from "../components/RegisterTrainingSection";
+import RegisterWelfareExperience from "../components/RegisterWelfareExperience";
+import RegisterLectureExperience from "../components/RegisterLectureExperience";
+import RegisterProfileSettings from "../components/RegisterProfileSettings";
+
+import useRegisterForm from "../hooks/useRegisterForm";
+
+export default function RegisterPage() {
+
+  const {
+    form,
+    update,
+
+    password,
+    setPassword,
+
+    trainingCourses,
+    setTrainingCourses,
+
+    welfareExperiences,
+    setWelfareExperiences,
+
+    lectureExperiences,
+    setLectureExperiences,
+
+    message,
+    error,
+
+    submitForm
+  } = useRegisterForm();
+
+  return (
+    <div>
+
+      {message ? (
+        <div className="notice">
+          {message}
+        </div>
+      ) : null}
+
+      {error ? (
+        <div className="error">
+          {error}
+        </div>
+      ) : null}
+
+      <RegisterBasicInfo
+        form={form}
+        update={update}
+        password={password}
+        setPassword={setPassword}
+        regionOptions={regionOptions}
+        Field={Field}
+      />
+
+      <RegisterTrainingSection
+        trainingCourses={trainingCourses}
+        setTrainingCourses={setTrainingCourses}
+        emptyTraining={emptyTraining}
+        Field={Field}
+        Repeater={Repeater}
+      />
+
+      <RegisterWelfareExperience
+        welfareExperiences={welfareExperiences}
+        setWelfareExperiences={setWelfareExperiences}
+        emptyWelfare={emptyWelfare}
+        Field={Field}
+        Repeater={Repeater}
+      />
+
+      <RegisterLectureExperience
+        lectureExperiences={lectureExperiences}
+        setLectureExperiences={setLectureExperiences}
+        emptyLecture={emptyLecture}
+        Field={Field}
+        Repeater={Repeater}
+      />
+
+      <RegisterProfileSettings
+        form={form}
+        update={update}
+        regionOptions={regionOptions}
+        targetOptions={targetOptions}
+        typeOptions={typeOptions}
+        specialtyOptions={specialtyOptions}
+        Field={Field}
+        submitForm={submitForm}
+      />
+
+    </div>
+  );
+}
