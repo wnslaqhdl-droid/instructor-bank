@@ -17,9 +17,15 @@ import RegisterTrainingSection from "../components/RegisterTrainingSection";
 import RegisterWelfareExperience from "../components/RegisterWelfareExperience";
 import RegisterLectureExperience from "../components/RegisterLectureExperience";
 import RegisterProfileSettings from "../components/RegisterProfileSettings";
+import MonthSelect from "../components/MonthSelect";
 
 import useRegisterForm from "../hooks/useRegisterForm";
 import { clone } from "../utils/helpers";
+import {
+  getCurrentMonthKST,
+  toMonthValue,
+  monthToDate
+} from "../utils/date";
 
 export default function RegisterPage() {
 
@@ -84,6 +90,10 @@ export default function RegisterPage() {
         emptyWelfare={emptyWelfare}
         Field={Field}
         Repeater={Repeater}
+        MonthSelect={MonthSelect}
+        getCurrentMonthKST={getCurrentMonthKST}
+        toMonthValue={toMonthValue}
+        monthToDate={monthToDate}
         clone={clone}
       />
 
@@ -93,6 +103,10 @@ export default function RegisterPage() {
         emptyLecture={emptyLecture}
         Field={Field}
         Repeater={Repeater}
+        MonthSelect={MonthSelect}
+        getCurrentMonthKST={getCurrentMonthKST}
+        toMonthValue={toMonthValue}
+        monthToDate={monthToDate}
         clone={clone}
       />
 
