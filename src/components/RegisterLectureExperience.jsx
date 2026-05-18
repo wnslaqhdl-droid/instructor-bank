@@ -17,6 +17,7 @@ export default function RegisterLectureExperience({
       items={lectureExperiences}
       setItems={setLectureExperiences}
       emptyItem={emptyLecture}
+      clone={clone}
       render={(item, index, updateItem) => (
         <div className="grid grid-3">
 
