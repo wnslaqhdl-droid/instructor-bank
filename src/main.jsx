@@ -464,7 +464,6 @@ function ModifyPage(){
   function isChangedValue(oldValue, newValue){
     return JSON.stringify(normalizeValue(oldValue)) !== JSON.stringify(normalizeValue(newValue));
   }
-}
   
   async function submitRequest(){
     function scrollToTop(){
