@@ -1,4 +1,4 @@
-import { updateArrayItem } from "../utils/updateArrayItem";
+import updateArrayItem from "../utils/updateArrayItem";
 
 export default function ModifyLectureSection({
   modifyLectures,
