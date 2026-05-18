@@ -18,6 +18,7 @@ export default function RegisterWelfareExperience({
       items={welfareExperiences}
       setItems={setWelfareExperiences}
       emptyItem={emptyWelfare}
+      clone={clone}
       render={(item, index, updateItem) => (
         <div className="grid grid-2">
 
