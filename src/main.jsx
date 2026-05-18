@@ -1,37 +1,97 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useMemo
+} from "react";
+
 import { createRoot } from "react-dom/client";
 import { supabase } from "./supabase";
-import { regionOptions, targetOptions, typeOptions, specialtyOptions, emptyInstructor, emptyTraining, emptyWelfare, emptyLecture } from "./constants";
-import { registerInstructor } from "./services/instructorService";
-import { updateInstructorStatus, deleteInstructor,} from "./services/adminService";
-import { applyUpdateRequest, rejectUpdateRequest, } from "./services/adminService";
-import { getUpdateRequests } from "./services/requestService";
-import { getAdminInstructors, } from "./services/adminService";
-import { searchInstructors,} from "./services/instructorService";
-import { submitInstructorUpdateRequest} from "./services/instructorService";
-import { checkAdmin} from "./services/instructorService";
-import { isValidEmail, isValidPhone, hasRequiredInstructorFields,} from "./utils/validators";
-import { getCurrentMonthKST, toMonthValue, monthToDate, formatMonth, formatPeriod,} from "./utils/date";
+
+import "./styles.css";
+
+
+// constants
+import {
+  regionOptions,
+  targetOptions,
+  typeOptions,
+  specialtyOptions,
+  emptyInstructor,
+  emptyTraining,
+  emptyWelfare,
+  emptyLecture
+} from "./constants";
+
+
+// services
+import {
+  registerInstructor,
+  searchInstructors,
+  submitInstructorUpdateRequest,
+  checkAdmin
+} from "./services/instructorService";
+
+import {
+  updateInstructorStatus,
+  deleteInstructor,
+  applyUpdateRequest,
+  rejectUpdateRequest,
+  getAdminInstructors
+} from "./services/adminService";
+
+import {
+  getUpdateRequests
+} from "./services/requestService";
+
+
+// hooks
+import useRegisterForm from "./hooks/useRegisterForm";
+import useSearchPage from "./hooks/useSearchPage";
+import useModifyInstructor from "./hooks/useModifyInstructor";
+
+
+// utils
+import {
+  isValidEmail,
+  isValidPhone,
+  hasRequiredInstructorFields
+} from "./utils/validators";
+
+import {
+  getCurrentMonthKST,
+  toMonthValue,
+  monthToDate,
+  formatMonth,
+  formatPeriod
+} from "./utils/date";
+
+import {
+  submitInstructorForm
+} from "./utils/submitInstructorForm";
+
+import {
+  filterAndSortInstructors
+} from "./utils/searchFilters";
+
+import submitModifyRequest from "./utils/submitModifyRequest";
+
+
+// components
 import InstructorCard from "./components/InstructorCard";
 import Pagination from "./components/Pagination";
-import ModifyRequestStatus from "./components/ModifyRequestStatus";
-import ModifyBasicInfo from "./components/ModifyBasicInfo";
-import { submitInstructorForm } from "./utils/submitInstructorForm";
-import { filterAndSortInstructors } from "./utils/searchFilters";
 import SearchFilters from "./components/SearchFilters";
 import ActiveFilters from "./components/ActiveFilters";
+
 import RegisterBasicInfo from "./components/RegisterBasicInfo";
 import RegisterTrainingSection from "./components/RegisterTrainingSection";
 import RegisterWelfareExperience from "./components/RegisterWelfareExperience";
 import RegisterLectureExperience from "./components/RegisterLectureExperience";
 import RegisterProfileSettings from "./components/RegisterProfileSettings";
-import Repeater from "./components/Repeater";
-import useModifyInstructor from "./hooks/useModifyInstructor";
-import submitModifyRequest from "./utils/submitModifyRequest";
+
 import ModifyRequestStatus from "./components/ModifyRequestStatus";
-import useRegisterForm from "./hooks/useRegisterForm";
-import useSearchPage from "./hooks/useSearchPage";
-import "./styles.css";
+import ModifyBasicInfo from "./components/ModifyBasicInfo";
+
+import Repeater from "./components/Repeater";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
 
