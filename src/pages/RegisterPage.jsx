@@ -9,6 +9,11 @@ import {
   emptyLecture
 } from "../constants";
 
+import { supabase } from "../supabase";
+import {
+  registerInstructor
+} from "../services/instructorService";
+
 import Field from "../components/Field";
 import Repeater from "../components/Repeater";
 
@@ -49,8 +54,16 @@ export default function RegisterPage() {
     error,
 
     submitForm
-  } = useRegisterForm();
-
+      } = useRegisterForm({
+        clone,
+        emptyInstructor,
+        emptyTraining,
+        emptyWelfare,
+        emptyLecture,
+        supabase,
+        registerInstructor
+      });
+  
   return (
     <div>
 
