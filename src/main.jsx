@@ -92,6 +92,7 @@ import ModifyRequestStatus from "./components/ModifyRequestStatus";
 import ModifyBasicInfo from "./components/ModifyBasicInfo";
 import ModifyTrainingSection from "./components/ModifyTrainingSection";
 import ModifyWelfareSection from "./components/ModifyWelfareSection";
+import ModifyLectureSection from "./components/ModifyLectureSection";
 
 import Repeater from "./components/Repeater";
 
