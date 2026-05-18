@@ -90,6 +90,7 @@ import RegisterProfileSettings from "./components/RegisterProfileSettings";
 
 import ModifyRequestStatus from "./components/ModifyRequestStatus";
 import ModifyBasicInfo from "./components/ModifyBasicInfo";
+import ModifyTrainingSection from "./components/ModifyTrainingSection";
 
 import Repeater from "./components/Repeater";
 
