@@ -97,33 +97,9 @@ import ModifyLectureSection from "./components/ModifyLectureSection";
 import Repeater from "./components/Repeater";
 import Field from "./components/Field";
 import MonthSelect from "./components/MonthSelect";
+import CheckboxGroup from "./components/CheckboxGroup";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
-
-function CheckboxGroup({ options, values, onChange }) {
-  function toggle(option) {
-    if (values.includes(option)) {
-      onChange(values.filter((v) => v !== option));
-    } else {
-      onChange([...values, option]);
-    }
-  }
-
-  return (
-    <div className="check-grid">
-      {options.map((option) => (
-        <label key={option} className="check">
-          <input
-            type="checkbox"
-            checked={values.includes(option)}
-            onChange={() => toggle(option)}
-          />
-          <span>{option}</span>
-        </label>
-      ))}
-    </div>
-  );
-}
 
 function RegisterPage() {
 
