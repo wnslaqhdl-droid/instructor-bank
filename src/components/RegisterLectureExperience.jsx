@@ -8,7 +8,7 @@ export default function RegisterLectureExperience({
   getCurrentMonthKST,
   toMonthValue,
   monthToDate,
-  clone,
+  clone
 }) {
 
   return (
