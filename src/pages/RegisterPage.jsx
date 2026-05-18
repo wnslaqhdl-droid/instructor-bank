@@ -19,6 +19,7 @@ import RegisterLectureExperience from "../components/RegisterLectureExperience";
 import RegisterProfileSettings from "../components/RegisterProfileSettings";
 
 import useRegisterForm from "../hooks/useRegisterForm";
+import { clone } from "../utils/helpers";
 
 export default function RegisterPage() {
 
@@ -74,6 +75,7 @@ export default function RegisterPage() {
         emptyTraining={emptyTraining}
         Field={Field}
         Repeater={Repeater}
+        clone={clone}
       />
 
       <RegisterWelfareExperience
@@ -82,6 +84,7 @@ export default function RegisterPage() {
         emptyWelfare={emptyWelfare}
         Field={Field}
         Repeater={Repeater}
+        clone={clone}
       />
 
       <RegisterLectureExperience
@@ -90,6 +93,7 @@ export default function RegisterPage() {
         emptyLecture={emptyLecture}
         Field={Field}
         Repeater={Repeater}
+        clone={clone}
       />
 
       <RegisterProfileSettings
