@@ -20,7 +20,7 @@ export default function Repeater({
   const add = () =>
     setItems([
       ...items,
-      structuredClone(emptyItem)
+      clone(emptyItem)
     ]);
 
   const remove = (index) => {
