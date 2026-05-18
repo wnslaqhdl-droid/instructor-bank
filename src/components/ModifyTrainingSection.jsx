@@ -39,7 +39,7 @@ export default function ModifyTrainingSection({
                     modifyTrainings,
                     i,
                     {
-                      course_name:
+                      institution:
                         e.target.value
                     },
                     setModifyTrainings
@@ -56,7 +56,7 @@ export default function ModifyTrainingSection({
                     modifyTrainings,
                     i,
                     {
-                      course_name:
+                      completion_year:
                         e.target.value
                     },
                     setModifyTrainings
