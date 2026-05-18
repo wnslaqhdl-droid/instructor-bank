@@ -102,6 +102,8 @@ import Field from "./components/Field";
 import MonthSelect from "./components/MonthSelect";
 import CheckboxGroup from "./components/CheckboxGroup";
 
+import AdminEditPanel from "./components/admin/AdminEditPanel";
+
 function SearchPage() {
 
   const {
@@ -783,87 +785,40 @@ async function deleteItem(id) {
 
       
 
-      {editingItem && (
-        <section className="card">
-          <h2>강사 정보 수정</h2>
+      <AdminEditPanel
+        editingItem={editingItem}
+        setEditingItem={setEditingItem}
       
-          <p className="muted small">
-            관리자가 수정한 내용은 즉시 공개 정보에 반영됩니다.
-            중앙센터 수료 확인은 중앙센터에서 확인 가능한 경우에만 체크합니다.
-          </p>
+        updateEdit={updateEdit}
+        saveEdit={saveEdit}
       
-          <ModifyBasicInfo
-            found={editingItem}
-            updateField={updateEdit}
-            regionOptions={regionOptions}
-            targetOptions={targetOptions}
-            typeOptions={typeOptions}
-            specialtyOptions={specialtyOptions}
-            Field={Field}
-            CheckboxGroup={CheckboxGroup}
-          />
+        editingTrainings={editingTrainings}
+        setEditingTrainings={setEditingTrainings}
       
-          <ModifyTrainingSection
-            modifyTrainings={editingTrainings}
-            setModifyTrainings={setEditingTrainings}
-            Field={Field}
-          />
+        editingWelfares={editingWelfares}
+        setEditingWelfares={setEditingWelfares}
       
-          <ModifyWelfareSection
-            modifyWelfares={editingWelfares}
-            setModifyWelfares={setEditingWelfares}
-            Field={Field}
-            MonthSelect={MonthSelect}
-            getCurrentMonthKST={getCurrentMonthKST}
-            toMonthValue={toMonthValue}
-            monthToDate={monthToDate}
-          />
+        editingLectures={editingLectures}
+        setEditingLectures={setEditingLectures}
       
-          <ModifyLectureSection
-            modifyLectures={editingLectures}
-            setModifyLectures={setEditingLectures}
-            Field={Field}
-            MonthSelect={MonthSelect}
-            getCurrentMonthKST={getCurrentMonthKST}
-            toMonthValue={toMonthValue}
-            monthToDate={monthToDate}
-          />
+        regionOptions={regionOptions}
+        targetOptions={targetOptions}
+        typeOptions={typeOptions}
+        specialtyOptions={specialtyOptions}
       
-          <div className="check-grid">
-            <label className="check">
-              <input
-                type="checkbox"
-                checked={!!editingItem.center_verified}
-                onChange={(e)=>
-                  updateEdit(
-                    "center_verified",
-                    e.target.checked
-                  )
-                }
-              />
-              중앙센터 수료 확인
-            </label>
-          </div>
+        Field={Field}
+        CheckboxGroup={CheckboxGroup}
       
-          <div className="actions">
-            <button
-              className="btn"
-              onClick={()=>
-                setEditingItem(null)
-              }
-            >
-              취소
-            </button>
+        MonthSelect={MonthSelect}
       
-            <button
-              className="btn primary"
-              onClick={saveEdit}
-            >
-              저장
-            </button>
-          </div>
-        </section>
-      )}
+        getCurrentMonthKST={
+          getCurrentMonthKST
+        }
+      
+        toMonthValue={toMonthValue}
+      
+        monthToDate={monthToDate}
+      />
 
       <section className="card">
         <div className="actions">
