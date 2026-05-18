@@ -785,401 +785,82 @@ async function deleteItem(id) {
 
       {editingItem && (
         <section className="card">
-        <h2>강사 정보 수정</h2>
-        <p className="muted small">
-          관리자가 수정한 내용은 즉시 공개 정보에 반영됩니다.
-          중앙센터 수료 확인은 중앙센터에서 확인 가능한 경우에만 체크합니다.
-        </p>
-
-        <div className="grid grid-2">
-          <Field label="성명"><input value={editingItem.name||""} onChange={(e)=>updateEdit("name",e.target.value)}/></Field>
-          <Field label="연락처"><input value={editingItem.phone||""} onChange={(e)=>updateEdit("phone",e.target.value)}/></Field>
-          <Field label="이메일"><input value={editingItem.email||""} onChange={(e)=>updateEdit("email",e.target.value)}/></Field>
-          <Field label="거주지역">
-            <select value={editingItem.region||""} onChange={(e)=>updateEdit("region",e.target.value)}>
-              <option value="">선택</option>
-              {regionOptions.map(r=><option key={r} value={r}>{r}</option>)}
-            </select>
-          </Field>
-          <Field label="소속기관"><input value={editingItem.organization||""} onChange={(e)=>updateEdit("organization",e.target.value)}/></Field>
-          <Field label="직위/직업군"><input value={editingItem.position||""} onChange={(e)=>updateEdit("position",e.target.value)}/></Field>
-        </div>
-
-        <Field label="활동 가능 지역">
-          <CheckboxGroup options={regionOptions} values={editingItem.activity_regions||[]} onChange={(v)=>updateEdit("activity_regions",v)}/>
-        </Field>
-
-        <Field label="교육대상">
-          <CheckboxGroup options={targetOptions} values={editingItem.targets||[]} onChange={(v)=>updateEdit("targets",v)}/>
-        </Field>
-
-        <Field label="교육유형">
-          <CheckboxGroup options={typeOptions} values={editingItem.types||[]} onChange={(v)=>updateEdit("types",v)}/>
-        </Field>
-
-        <Field label="강의 분야">
-          <CheckboxGroup options={specialtyOptions} values={editingItem.specialties||[]} onChange={(v)=>updateEdit("specialties",v)}/>
-        </Field>
-
-        <div className="grid grid-2">
-          <Field label="그 외 주제"><input value={editingItem.other_specialty||""} onChange={(e)=>updateEdit("other_specialty",e.target.value)}/></Field>
-          <Field label="주요 강의주제"><input value={editingItem.main_topic||""} maxLength={80} onChange={(e)=>updateEdit("main_topic",e.target.value)}/></Field>
-        </div>
-
-        <Field label="강사 소개">
-          <textarea value={editingItem.intro||""} onChange={(e)=>updateEdit("intro",e.target.value)}/>
-        </Field>
-        <h3>양성과정 수료 정보</h3>
-        
-        {editingTrainings.map((t, i) => (
-          <div key={i} className="repeat">
-            <div className="grid grid-3">
-              <Field label="양성과정명">
-                <input
-                  value={t.course_name || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingTrainings];
-                    copy[i] = { ...copy[i], course_name: e.target.value };
-                    setEditingTrainings(copy);
-                  }}
-                />
-              </Field>
-        
-              <Field label="수료기관">
-                <input
-                  value={t.institution || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingTrainings];
-                    copy[i] = { ...copy[i], institution: e.target.value };
-                    setEditingTrainings(copy);
-                  }}
-                />
-              </Field>
-        
-              <Field label="수료연도">
-                <input
-                  value={t.completion_year || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingTrainings];
-                    copy[i] = { ...copy[i], completion_year: e.target.value };
-                    setEditingTrainings(copy);
-                  }}
-                />
-              </Field>
-            </div>
-        
-            <div className="actions">
-              <button
-                className="btn danger"
-                onClick={()=>{
-                  setEditingTrainings(editingTrainings.filter((_, idx)=>idx !== i));
-                }}
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-        ))}
-        
-        <button
-          className="btn"
-          onClick={()=>{
-            setEditingTrainings([
-              ...editingTrainings,
-              { course_name:"", institution:"", completion_year:"" }
-            ]);
-          }}
-        >
-          양성과정 추가
-        </button>
-        <h3>실무경력</h3>
-    
-        {editingWelfares.map((w, i) => (
-          <div key={i} className="repeat">
-            <div className="grid grid-2">
-        
-              <Field label="기관명">
-                <input
-                  value={w.organization || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingWelfares];
-                    copy[i] = { ...copy[i], organization: e.target.value };
-                    setEditingWelfares(copy);
-                  }}
-                />
-              </Field>
-        
-              <Field label="역할">
-                <input
-                  value={w.role || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingWelfares];
-                    copy[i] = { ...copy[i], role: e.target.value };
-                    setEditingWelfares(copy);
-                  }}
-                />
-              </Field>
-        
-              <MonthSelect
-                label="시작월"
-                value={w.start_date}
-                max={getCurrentMonthKST()}
-                onChange={(date)=>{
-                  const copy = [...editingWelfares];
-                  const nextStartMonth = toMonthValue(date);
-                  const currentEndMonth = toMonthValue(copy[i].end_date);
-              
-                  copy[i] = {
-                    ...copy[i],
-                    start_date: date,
-                    end_date:
-                      currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
-                        ? null
-                        : copy[i].end_date
-                  };
-              
-                  setEditingWelfares(copy);
-                }}
-              />
-              
-              <MonthSelect
-                label="종료월"
-                value={w.end_date}
-                min={toMonthValue(w.start_date)}
-                max={getCurrentMonthKST()}
-                disabled={!!w.is_current}
-                onChange={(date)=>{
-                  const copy = [...editingWelfares];
-                  copy[i] = {
-                    ...copy[i],
-                    end_date: date
-                  };
-                  setEditingWelfares(copy);
-                }}
-              />
-              
-              <label className="check">
-                <input
-                  type="checkbox"
-                  checked={!!w.is_current}
-                  onChange={(e)=>{
-                    const checked = e.target.checked;
-                    const copy = [...editingWelfares];
-              
-                    copy[i] = {
-                      ...copy[i],
-                      is_current: checked,
-                      end_date: checked
-                        ? null
-                        : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
-                    };
-              
-                    setEditingWelfares(copy);
-                  }}
-                />
-                <span>현재 진행 중</span>
-              </label>
-        
-              <Field label="주요 업무">
-                <textarea
-                  value={w.description || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingWelfares];
-                    copy[i] = { ...copy[i], description: e.target.value };
-                    setEditingWelfares(copy);
-                  }}
-                />
-              </Field>
-        
-            </div>
-        
-            <div className="actions">
-              <button
-                className="btn danger"
-                onClick={()=>{
-                  setEditingWelfares(editingWelfares.filter((_, idx)=>idx !== i));
-                }}
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-        ))}
-        
-        <button
-          className="btn"
-          onClick={()=>{
-            setEditingWelfares([
-              ...editingWelfares,
-              {
-                organization:"",
-                role:"",
-                start_date:"",
-                end_date:"",
-                description:"",
-                is_current:false
-              }
-            ]);
-          }}
-        >
-          실무경력 추가
-        </button>
-    
-        <h3>강의경력</h3>
-    
-        {editingLectures.map((l, i) => (
-          <div key={i} className="repeat">
-            <div className="grid grid-2">
-        
-              <Field label="강의기관">
-                <input
-                  value={l.organization || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingLectures];
-                    copy[i] = { ...copy[i], organization: e.target.value };
-                    setEditingLectures(copy);
-                  }}
-                />
-              </Field>
-        
-              <Field label="교육대상">
-                <input
-                  value={l.target || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingLectures];
-                    copy[i] = { ...copy[i], target: e.target.value };
-                    setEditingLectures(copy);
-                  }}
-                />
-              </Field>
-        
-              <Field label="강의주제">
-                <input
-                  value={l.topic || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingLectures];
-                    copy[i] = { ...copy[i], topic: e.target.value };
-                    setEditingLectures(copy);
-                  }}
-                />
-              </Field>
-        
-              <Field label="강의횟수">
-                <input
-                  value={l.count || ""}
-                  onChange={(e)=>{
-                    const copy = [...editingLectures];
-                    copy[i] = { ...copy[i], count: e.target.value };
-                    setEditingLectures(copy);
-                  }}
-                />
-              </Field>
-        
-              <MonthSelect
-                label="시작월"
-                value={l.start_date}
-                max={getCurrentMonthKST()}
-                onChange={(date)=>{
-                  const copy = [...editingLectures];
-                  const nextStartMonth = toMonthValue(date);
-                  const currentEndMonth = toMonthValue(copy[i].end_date);
-              
-                  copy[i] = {
-                    ...copy[i],
-                    start_date: date,
-                    end_date:
-                      currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
-                        ? null
-                        : copy[i].end_date
-                  };
-              
-                  setEditingLectures(copy);
-                }}
-              />
-              
-              <MonthSelect
-                label="종료월"
-                value={l.end_date}
-                min={toMonthValue(l.start_date)}
-                max={getCurrentMonthKST()}
-                disabled={!!l.is_current}
-                onChange={(date)=>{
-                  const copy = [...editingLectures];
-                  copy[i] = {
-                    ...copy[i],
-                    end_date: date
-                  };
-                  setEditingLectures(copy);
-                }}
-              />
-              
-              <label className="check">
-                <input
-                  type="checkbox"
-                  checked={!!l.is_current}
-                  onChange={(e)=>{
-                    const checked = e.target.checked;
-                    const copy = [...editingLectures];
-              
-                    copy[i] = {
-                      ...copy[i],
-                      is_current: checked,
-                      end_date: checked
-                        ? null
-                        : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
-                    };
-              
-                    setEditingLectures(copy);
-                  }}
-                />
-                <span>현재 진행 중</span>
-              </label>
-        
-            </div>
-        
-            <div className="actions">
-              <button
-                className="btn danger"
-                onClick={()=>{
-                  setEditingLectures(editingLectures.filter((_, idx)=>idx !== i));
-                }}
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-        ))}
-        
-        <button
-          className="btn"
-          onClick={()=>{
-            setEditingLectures([
-              ...editingLectures,
-              {
-                organization:"",
-                target:"",
-                topic:"",
-                start_date:"",
-                end_date:"",
-                count:"",
-                is_current:false
-              }
-            ]);
-          }}
-        >
-          강의경력 추가
-        </button>
-    
+          <h2>강사 정보 수정</h2>
+      
+          <p className="muted small">
+            관리자가 수정한 내용은 즉시 공개 정보에 반영됩니다.
+            중앙센터 수료 확인은 중앙센터에서 확인 가능한 경우에만 체크합니다.
+          </p>
+      
+          <ModifyBasicInfo
+            found={editingItem}
+            updateField={updateEdit}
+            regionOptions={regionOptions}
+            targetOptions={targetOptions}
+            typeOptions={typeOptions}
+            specialtyOptions={specialtyOptions}
+            Field={Field}
+            CheckboxGroup={CheckboxGroup}
+          />
+      
+          <ModifyTrainingSection
+            modifyTrainings={editingTrainings}
+            setModifyTrainings={setEditingTrainings}
+            Field={Field}
+          />
+      
+          <ModifyWelfareSection
+            modifyWelfares={editingWelfares}
+            setModifyWelfares={setEditingWelfares}
+            Field={Field}
+            MonthSelect={MonthSelect}
+            getCurrentMonthKST={getCurrentMonthKST}
+            toMonthValue={toMonthValue}
+            monthToDate={monthToDate}
+          />
+      
+          <ModifyLectureSection
+            modifyLectures={editingLectures}
+            setModifyLectures={setEditingLectures}
+            Field={Field}
+            MonthSelect={MonthSelect}
+            getCurrentMonthKST={getCurrentMonthKST}
+            toMonthValue={toMonthValue}
+            monthToDate={monthToDate}
+          />
+      
           <div className="check-grid">
-            <label className="check"><input type="checkbox" checked={editingItem.show_phone} onChange={(e)=>updateEdit("show_phone",e.target.checked)}/> 연락처 공개</label>
-            <label className="check"><input type="checkbox" checked={editingItem.show_email} onChange={(e)=>updateEdit("show_email",e.target.checked)}/> 이메일 공개</label>
-            <label className="check"><input type="checkbox" checked={editingItem.show_profile} onChange={(e)=>updateEdit("show_profile",e.target.checked)}/> 프로필 공개</label>
-            <label className="check"><input type="checkbox" checked={!!editingItem.center_verified} onChange={(e)=>updateEdit("center_verified",e.target.checked)}/> 중앙센터 수료 확인</label>
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={!!editingItem.center_verified}
+                onChange={(e)=>
+                  updateEdit(
+                    "center_verified",
+                    e.target.checked
+                  )
+                }
+              />
+              중앙센터 수료 확인
+            </label>
           </div>
-
+      
           <div className="actions">
-            <button className="btn" onClick={()=>setEditingItem(null)}>취소</button>
-            <button className="btn primary" onClick={saveEdit}>저장</button>
+            <button
+              className="btn"
+              onClick={()=>
+                setEditingItem(null)
+              }
+            >
+              취소
+            </button>
+      
+            <button
+              className="btn primary"
+              onClick={saveEdit}
+            >
+              저장
+            </button>
           </div>
         </section>
       )}
