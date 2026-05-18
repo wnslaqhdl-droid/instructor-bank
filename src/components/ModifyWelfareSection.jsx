@@ -1,3 +1,5 @@
+import updateArrayItem from "../utils/updateArrayItem";
+
 export default function ModifyWelfareSection({
   modifyWelfares,
   setModifyWelfares,
@@ -18,32 +20,30 @@ export default function ModifyWelfareSection({
             <Field label="기관명">
               <input
                 value={w.organization || ""}
-                onChange={(e) => {
-                  const copy = [...modifyWelfares];
-
-                  copy[i] = {
-                    ...copy[i],
-                    organization: e.target.value
-                  };
-
-                  setModifyWelfares(copy);
-                }}
+                onChange={(e)=>
+                  updateArrayItem(
+                    modifyWelfares,
+                    setModifyWelfares,
+                    i,
+                    "organization",
+                    e.target.value
+                  )
+                }
               />
             </Field>
 
             <Field label="역할">
               <input
                 value={w.role || ""}
-                onChange={(e) => {
-                  const copy = [...modifyWelfares];
-
-                  copy[i] = {
-                    ...copy[i],
-                    role: e.target.value
-                  };
-
-                  setModifyWelfares(copy);
-                }}
+                onChange={(e)=>
+                  updateArrayItem(
+                    modifyWelfares,
+                    setModifyWelfares,
+                    i,
+                    "role",
+                    e.target.value
+                  )
+                }
               />
             </Field>
 
