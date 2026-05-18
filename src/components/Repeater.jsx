@@ -4,8 +4,7 @@ export default function Repeater({
   items,
   setItems,
   emptyItem,
-  render,
-  clone
+  render
 }) {
 
   const updateItem = (index, key, value) =>
@@ -20,7 +19,7 @@ export default function Repeater({
   const add = () =>
     setItems([
       ...items,
-      clone(emptyItem)
+      structuredClone(emptyItem)
     ]);
 
   const remove = (index) => {
