@@ -49,6 +49,7 @@ import useRegisterForm from "./hooks/useRegisterForm";
 import useSearchPage from "./hooks/useSearchPage";
 import ModifyPage from "./pages/ModifyPage";
 import useModifyInstructor from "./hooks/useModifyInstructor";
+import RegisterPage from "./pages/RegisterPage";
 
 
 // utils
@@ -101,104 +102,6 @@ import MonthSelect from "./components/MonthSelect";
 import CheckboxGroup from "./components/CheckboxGroup";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
-
-function RegisterPage() {
-
- const {
-    form,
-    trainingCourses,
-    setTrainingCourses,
-    welfareExperiences,
-    setWelfareExperiences,
-    lectureExperiences,
-    setLectureExperiences,
-    message,
-    error,
-    password,
-    setPassword,
-    update,
-    submitForm
-  } = useRegisterForm({
-    clone,
-    emptyInstructor,
-    emptyTraining,
-    emptyWelfare,
-    emptyLecture,
-    supabase,
-    registerInstructor
-  });
-
-  return (
-    <div>
-  
-      {message ? (
-        <div className="notice">
-          {message}
-        </div>
-      ) : null}
-  
-      {error ? (
-        <div className="error">
-          {error}
-        </div>
-      ) : null}
-  
-      <RegisterBasicInfo
-        form={form}
-        update={update}
-        password={password}
-        setPassword={setPassword}
-        regionOptions={regionOptions}
-        Field={Field}
-      />
-  
-      <RegisterTrainingSection
-        trainingCourses={trainingCourses}
-        setTrainingCourses={setTrainingCourses}
-        emptyTraining={emptyTraining}
-        Field={Field}
-        Repeater={Repeater}
-      />
-  
-      <RegisterWelfareExperience
-        welfareExperiences={welfareExperiences}
-        setWelfareExperiences={setWelfareExperiences}
-        emptyWelfare={emptyWelfare}
-        Field={Field}
-        Repeater={Repeater}
-        MonthSelect={MonthSelect}
-        getCurrentMonthKST={getCurrentMonthKST}
-        toMonthValue={toMonthValue}
-        monthToDate={monthToDate}
-      />
-  
-      <RegisterLectureExperience
-        lectureExperiences={lectureExperiences}
-        setLectureExperiences={setLectureExperiences}
-        emptyLecture={emptyLecture}
-        Field={Field}
-        Repeater={Repeater}
-        MonthSelect={MonthSelect}
-        getCurrentMonthKST={getCurrentMonthKST}
-        toMonthValue={toMonthValue}
-        monthToDate={monthToDate}
-      />
-  
-      <RegisterProfileSettings
-        form={form}
-        update={update}
-        regionOptions={regionOptions}
-        targetOptions={targetOptions}
-        typeOptions={typeOptions}
-        specialtyOptions={specialtyOptions}
-        Field={Field}
-        CheckboxGroup={CheckboxGroup}
-        submitForm={submitForm}
-      />
-  
-    </div>
-  );
-}
 
 function SearchPage() {
 
