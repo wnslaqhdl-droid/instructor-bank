@@ -16,7 +16,6 @@ export default function RegisterTrainingSection({
       items={trainingCourses}
       setItems={setTrainingCourses}
       emptyItem={emptyTraining}
-      clone={clone}
       render={(item, index, updateItem)=>(
 
         <div className="grid grid-3">
