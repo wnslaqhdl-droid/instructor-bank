@@ -24,6 +24,7 @@ import RegisterWelfareExperience from "./components/RegisterWelfareExperience";
 import RegisterLectureExperience from "./components/RegisterLectureExperience";
 import RegisterProfileSettings from "./components/RegisterProfileSettings";
 import Repeater from "./components/Repeater";
+import useRegisterForm from "./hooks/useRegisterForm";
 import "./styles.css";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -144,53 +145,29 @@ function CheckboxGroup({ options, values, onChange }) {
 
 function RegisterPage() {
 
-  const [form, setForm] = useState(
-    clone(emptyInstructor)
-  );
-
-  const [trainingCourses, setTrainingCourses] =
-    useState([clone(emptyTraining)]);
-
-  const [welfareExperiences, setWelfareExperiences] =
-    useState([clone(emptyWelfare)]);
-
-  const [lectureExperiences, setLectureExperiences] =
-    useState([clone(emptyLecture)]);
-
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [password, setPassword] = useState("");
-
-  const update = (key, value) =>
-    setForm((current) => ({
-      ...current,
-      [key]: value
-    }));
-
-  async function submitForm() {
-
-    await submitInstructorForm({
-      form,
-      password,
-      trainingCourses,
-      welfareExperiences,
-      lectureExperiences,
-      supabase,
-      registerInstructor,
-      setError,
-      setMessage,
-      setForm,
-      setTrainingCourses,
-      setWelfareExperiences,
-      setLectureExperiences,
-      emptyInstructor,
-      emptyTraining,
-      emptyWelfare,
-      emptyLecture,
-      clone
-    });
-
-  }
+ const {
+    form,
+    trainingCourses,
+    setTrainingCourses,
+    welfareExperiences,
+    setWelfareExperiences,
+    lectureExperiences,
+    setLectureExperiences,
+    message,
+    error,
+    password,
+    setPassword,
+    update,
+    submitForm
+  } = useRegisterForm({
+    clone,
+    emptyInstructor,
+    emptyTraining,
+    emptyWelfare,
+    emptyLecture,
+    supabase,
+    registerInstructor
+  });
 
   return (
     <div>
