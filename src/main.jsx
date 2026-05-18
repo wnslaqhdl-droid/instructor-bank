@@ -28,6 +28,7 @@ import RegisterProfileSettings from "./components/RegisterProfileSettings";
 import Repeater from "./components/Repeater";
 import useModifyInstructor from "./hooks/useModifyInstructor";
 import submitModifyRequest from "./utils/submitModifyRequest";
+import ModifyRequestStatus from "./components/ModifyRequestStatus";
 import useRegisterForm from "./hooks/useRegisterForm";
 import useSearchPage from "./hooks/useSearchPage";
 import "./styles.css";
@@ -566,344 +567,31 @@ function ModifyPage(){
             Field={Field}
             CheckboxGroup={CheckboxGroup}
           />
-          <h3>양성과정 수료 정보</h3>
-
-          {modifyTrainings.map((t, i) => (
-            <div key={i} className="repeat">
-              <div className="grid grid-3">
-                <Field label="양성과정명">
-                  <input
-                    value={t.course_name || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyTrainings];
-                      copy[i] = { ...copy[i], course_name: e.target.value };
-                      setModifyTrainings(copy);
-                    }}
-                  />
-                </Field>
+          <ModifyTrainingSection
+            modifyTrainings={modifyTrainings}
+            setModifyTrainings={setModifyTrainings}
+            Field={Field}
+          />
           
-                <Field label="수료기관">
-                  <input
-                    value={t.institution || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyTrainings];
-                      copy[i] = { ...copy[i], institution: e.target.value };
-                      setModifyTrainings(copy);
-                    }}
-                  />
-                </Field>
+          <ModifyWelfareSection
+            modifyWelfares={modifyWelfares}
+            setModifyWelfares={setModifyWelfares}
+            Field={Field}
+            MonthSelect={MonthSelect}
+            getCurrentMonthKST={getCurrentMonthKST}
+            toMonthValue={toMonthValue}
+            monthToDate={monthToDate}
+          />
           
-                <Field label="수료연도">
-                  <input
-                    value={t.completion_year || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyTrainings];
-                      copy[i] = { ...copy[i], completion_year: e.target.value };
-                      setModifyTrainings(copy);
-                    }}
-                  />
-                </Field>
-              </div>
-          
-              <div className="actions">
-                <button
-                  className="btn danger"
-                  onClick={()=>{
-                    setModifyTrainings(modifyTrainings.filter((_, idx)=>idx !== i));
-                  }}
-                >
-                  삭제
-                </button>
-              </div>
-            </div>
-          ))}
-          
-          <button
-            className="btn"
-            onClick={()=>{
-              setModifyTrainings([
-                ...modifyTrainings,
-                { course_name:"", institution:"", completion_year:"" }
-              ]);
-            }}
-          >
-            양성과정 추가
-          </button>
-
-          <h3>실무경력</h3>
-
-          {modifyWelfares.map((w, i) => (
-            <div key={i} className="repeat">
-              <div className="grid grid-2">
-                <Field label="기관명">
-                  <input
-                    value={w.organization || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyWelfares];
-                      copy[i] = { ...copy[i], organization: e.target.value };
-                      setModifyWelfares(copy);
-                    }}
-                  />
-                </Field>
-          
-                <Field label="역할">
-                  <input
-                    value={w.role || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyWelfares];
-                      copy[i] = { ...copy[i], role: e.target.value };
-                      setModifyWelfares(copy);
-                    }}
-                  />
-                </Field>
-          
-                <MonthSelect
-                  label="시작월"
-                  value={w.start_date}
-                  max={getCurrentMonthKST()}
-                  onChange={(date)=>{
-                    const copy = [...modifyWelfares];
-                    const nextStartMonth = toMonthValue(date);
-                    const currentEndMonth = toMonthValue(copy[i].end_date);
-                
-                    copy[i] = {
-                      ...copy[i],
-                      start_date: date,
-                      end_date:
-                        currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
-                          ? null
-                          : copy[i].end_date
-                    };
-                
-                    setModifyWelfares(copy);
-                  }}
-                />
-                
-                <MonthSelect
-                  label="종료월"
-                  value={w.end_date}
-                  min={toMonthValue(w.start_date)}
-                  max={getCurrentMonthKST()}
-                  disabled={!!w.is_current}
-                  onChange={(date)=>{
-                    const copy = [...modifyWelfares];
-                    copy[i] = {
-                      ...copy[i],
-                      end_date: date
-                    };
-                    setModifyWelfares(copy);
-                  }}
-                />
-                
-                <label className="check">
-                  <input
-                    type="checkbox"
-                    checked={!!w.is_current}
-                    onChange={(e)=>{
-                      const checked = e.target.checked;
-                      const copy = [...modifyWelfares];
-                
-                      copy[i] = {
-                        ...copy[i],
-                        is_current: checked,
-                        end_date: checked
-                          ? null
-                          : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
-                      };
-                
-                      setModifyWelfares(copy);
-                    }}
-                  />
-                  <span>현재 진행 중</span>
-                </label>
-          
-                <Field label="주요 업무">
-                  <textarea
-                    value={w.description || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyWelfares];
-                      copy[i] = { ...copy[i], description: e.target.value };
-                      setModifyWelfares(copy);
-                    }}
-                  />
-                </Field>
-              </div>
-          
-              <div className="actions">
-                <button
-                  className="btn danger"
-                  onClick={()=>{
-                    setModifyWelfares(modifyWelfares.filter((_, idx)=>idx !== i));
-                  }}
-                >
-                  삭제
-                </button>
-              </div>
-            </div>
-          ))}
-          
-          <button
-            className="btn"
-            onClick={()=>{
-              setModifyWelfares([
-                ...modifyWelfares,
-                {
-                  organization:"",
-                  role:"",
-                  start_date:"",
-                  end_date:"",
-                  description:"",
-                  is_current:false
-                }
-              ]);
-            }}
-          >
-            실무경력 추가
-          </button>
-          
-          <h3>강의경력</h3>
-          
-          {modifyLectures.map((l, i) => (
-            <div key={i} className="repeat">
-              <div className="grid grid-2">
-                <Field label="강의기관">
-                  <input
-                    value={l.organization || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyLectures];
-                      copy[i] = { ...copy[i], organization: e.target.value };
-                      setModifyLectures(copy);
-                    }}
-                  />
-                </Field>
-          
-                <Field label="교육대상">
-                  <input
-                    value={l.target || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyLectures];
-                      copy[i] = { ...copy[i], target: e.target.value };
-                      setModifyLectures(copy);
-                    }}
-                  />
-                </Field>
-          
-                <Field label="강의주제">
-                  <input
-                    value={l.topic || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyLectures];
-                      copy[i] = { ...copy[i], topic: e.target.value };
-                      setModifyLectures(copy);
-                    }}
-                  />
-                </Field>
-          
-                <Field label="강의횟수">
-                  <input
-                    value={l.count || ""}
-                    onChange={(e)=>{
-                      const copy = [...modifyLectures];
-                      copy[i] = { ...copy[i], count: e.target.value };
-                      setModifyLectures(copy);
-                    }}
-                  />
-                </Field>
-          
-                <MonthSelect
-                label="시작월"
-                value={l.start_date}
-                max={getCurrentMonthKST()}
-                onChange={(date)=>{
-                  const copy = [...modifyLectures];
-                  const nextStartMonth = toMonthValue(date);
-                  const currentEndMonth = toMonthValue(copy[i].end_date);
-              
-                  copy[i] = {
-                    ...copy[i],
-                    start_date: date,
-                    end_date:
-                      currentEndMonth && nextStartMonth && nextStartMonth > currentEndMonth
-                        ? null
-                        : copy[i].end_date
-                  };
-              
-                  setModifyLectures(copy);
-                }}
-              />
-              
-              <MonthSelect
-                label="종료월"
-                value={l.end_date}
-                min={toMonthValue(l.start_date)}
-                max={getCurrentMonthKST()}
-                disabled={!!l.is_current}
-                onChange={(date)=>{
-                  const copy = [...modifyLectures];
-                  copy[i] = {
-                    ...copy[i],
-                    end_date: date
-                  };
-                  setModifyLectures(copy);
-                }}
-              />
-              
-              <label className="check">
-                <input
-                  type="checkbox"
-                  checked={!!l.is_current}
-                  onChange={(e)=>{
-                    const checked = e.target.checked;
-                    const copy = [...modifyLectures];
-              
-                    copy[i] = {
-                      ...copy[i],
-                      is_current: checked,
-                      end_date: checked
-                        ? null
-                        : (copy[i].end_date || monthToDate(getCurrentMonthKST()))
-                    };
-              
-                    setModifyLectures(copy);
-                  }}
-                />
-                <span>현재 진행 중</span>
-              </label>
-              </div>
-          
-              <div className="actions">
-                <button
-                  className="btn danger"
-                  onClick={()=>{
-                    setModifyLectures(modifyLectures.filter((_, idx)=>idx !== i));
-                  }}
-                >
-                  삭제
-                </button>
-              </div>
-            </div>
-          ))}
-          
-          <button
-            className="btn"
-            onClick={()=>{
-              setModifyLectures([
-                ...modifyLectures,
-                {
-                  organization:"",
-                  target:"",
-                  topic:"",
-                  start_date:"",
-                  end_date:"",
-                  count:"",
-                  is_current:false
-                }
-              ]);
-            }}
-          >
-            강의경력 추가
-          </button>
-
+          <ModifyLectureSection
+            modifyLectures={modifyLectures}
+            setModifyLectures={setModifyLectures}
+            Field={Field}
+            MonthSelect={MonthSelect}
+            getCurrentMonthKST={getCurrentMonthKST}
+            toMonthValue={toMonthValue}
+            monthToDate={monthToDate}
+          />
           
           <div style={{marginTop:16}}>
             <button className="btn primary" onClick={submitRequest}>
