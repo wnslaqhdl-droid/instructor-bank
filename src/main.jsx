@@ -95,18 +95,10 @@ import ModifyWelfareSection from "./components/ModifyWelfareSection";
 import ModifyLectureSection from "./components/ModifyLectureSection";
 
 import Repeater from "./components/Repeater";
+import Field from "./components/Field";
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
 
-function Field({ label, required, help, children }) {
-  return (
-    <label className="field">
-      <span>{label}{required ? " *" : ""}</span>
-      {children}
-      {help ? <div className="help">{help}</div> : null}
-    </label>
-  );
-}
 
 function MonthSelect({ label, value, min, max, disabled, onChange }){
   const currentYear = Number(getCurrentMonthKST().slice(0, 4));
