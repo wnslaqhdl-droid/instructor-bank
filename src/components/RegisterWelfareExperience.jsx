@@ -8,6 +8,7 @@ export default function RegisterWelfareExperience({
   getCurrentMonthKST,
   toMonthValue,
   monthToDate
+  clone,
 }) {
 
   return (
