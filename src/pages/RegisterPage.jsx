@@ -16,6 +16,7 @@ import {
 
 import Field from "../components/Field";
 import Repeater from "../components/Repeater";
+import CheckboxGroup from "../components/CheckboxGroup";
 
 import RegisterBasicInfo from "../components/RegisterBasicInfo";
 import RegisterTrainingSection from "../components/RegisterTrainingSection";
@@ -131,6 +132,7 @@ export default function RegisterPage() {
         typeOptions={typeOptions}
         specialtyOptions={specialtyOptions}
         Field={Field}
+        CheckboxGroup={CheckboxGroup}
         submitForm={submitForm}
       />
 
