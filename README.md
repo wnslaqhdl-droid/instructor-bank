@@ -21,3 +21,9 @@
 ## 환경변수 권장
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_PUBLISHABLE_KEY`
+
+## 작업 방향
+- 관리자 수정 UI는 반드시 components/admin/AdminEditPanel.jsx 에서 관리한다.
+- 기본 정보/양성과정/실무경력/강의경력은 기존 Modify* 컴포넌트를 재사용한다.
+- main 파일에 대형 form JSX를 직접 작성하지 않는다.
+- 수정 폼 로직 변경 시 AdminEditPanel과 사용자 수정 폼이 동일 동작하도록 유지한다.
