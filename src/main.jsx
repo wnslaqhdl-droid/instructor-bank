@@ -76,6 +76,7 @@ import {
 } from "./utils/searchFilters";
 
 import submitModifyRequest from "./utils/submitModifyRequest";
+import { clone } from "./utils/helpers";
 
 
 // components
@@ -100,8 +101,6 @@ import Repeater from "./components/Repeater";
 import Field from "./components/Field";
 import MonthSelect from "./components/MonthSelect";
 import CheckboxGroup from "./components/CheckboxGroup";
-
-const clone = (v) => JSON.parse(JSON.stringify(v));
 
 function SearchPage() {
 
