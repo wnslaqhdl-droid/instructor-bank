@@ -1,3 +1,5 @@
+import { updateArrayItem } from "../utils/updateArrayItem";
+
 export default function ModifyLectureSection({
   modifyLectures,
   setModifyLectures,
@@ -13,73 +15,66 @@ export default function ModifyLectureSection({
 
       {modifyLectures.map((l, i) => (
         <div key={i} className="repeat">
+
           <div className="grid grid-2">
 
             <Field label="강의기관">
               <input
                 value={l.organization || ""}
-                onChange={(e) => {
-                  const copy = [...modifyLectures];
-
-                  copy[i] = {
-                    ...copy[i],
-                    organization:
-                      e.target.value
-                  };
-
-                  setModifyLectures(copy);
-                }}
+                onChange={(e)=>
+                  updateArrayItem(
+                    modifyLectures,
+                    setModifyLectures,
+                    i,
+                    "organization",
+                    e.target.value
+                  )
+                }
               />
             </Field>
 
             <Field label="교육대상">
               <input
                 value={l.target || ""}
-                onChange={(e) => {
-                  const copy = [...modifyLectures];
-
-                  copy[i] = {
-                    ...copy[i],
-                    target:
-                      e.target.value
-                  };
-
-                  setModifyLectures(copy);
-                }}
+                onChange={(e)=>
+                  updateArrayItem(
+                    modifyLectures,
+                    setModifyLectures,
+                    i,
+                    "target",
+                    e.target.value
+                  )
+                }
               />
             </Field>
 
             <Field label="강의주제">
               <input
                 value={l.topic || ""}
-                onChange={(e) => {
-                  const copy = [...modifyLectures];
-
-                  copy[i] = {
-                    ...copy[i],
-                    topic:
-                      e.target.value
-                  };
-
-                  setModifyLectures(copy);
-                }}
+                onChange={(e)=>
+                  updateArrayItem(
+                    modifyLectures,
+                    setModifyLectures,
+                    i,
+                    "topic",
+                    e.target.value
+                  )
+                }
               />
             </Field>
 
             <Field label="강의횟수">
               <input
                 value={l.count || ""}
-                onChange={(e) => {
-                  const copy = [...modifyLectures];
-
-                  copy[i] = {
-                    ...copy[i],
-                    count:
-                      e.target.value
-                  };
-
-                  setModifyLectures(copy);
-                }}
+                onChange={(e)=>
+                  updateArrayItem(
+                    modifyLectures,
+                    setModifyLectures,
+                    i,
+                    "count",
+                    e.target.value
+                  )
+                }
               />
             </Field>
 
@@ -125,18 +120,15 @@ export default function ModifyLectureSection({
               )}
               max={getCurrentMonthKST()}
               disabled={!!l.is_current}
-              onChange={(date) => {
-                const copy = [
-                  ...modifyLectures
-                ];
-
-                copy[i] = {
-                  ...copy[i],
-                  end_date: date
-                };
-
-                setModifyLectures(copy);
-              }}
+              onChange={(date)=>
+                updateArrayItem(
+                  modifyLectures,
+                  setModifyLectures,
+                  i,
+                  "end_date",
+                  date
+                )
+              }
             />
 
             <label className="check">
@@ -193,6 +185,7 @@ export default function ModifyLectureSection({
               삭제
             </button>
           </div>
+
         </div>
       ))}
 
