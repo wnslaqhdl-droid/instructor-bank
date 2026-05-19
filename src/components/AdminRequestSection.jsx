@@ -385,11 +385,26 @@ export default function AdminRequestSection({
         </table>
       </div>
 
-      <Pagination
-        currentPage={requestPage}
-        totalPages={requestTotalPages}
-        onPageChange={setRequestPage}
-      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "12px",
+          marginTop: "16px"
+        }}
+      >
+        <Pagination
+          currentPage={requestPage}
+          totalPages={requestTotalPages}
+          onPageChange={setRequestPage}
+        />
+      
+        <PageSizeSelector
+          itemsPerPage={requestItemsPerPage}
+          setItemsPerPage={setRequestItemsPerPage}
+        />
+      </div>
     </section>
   );
 }
