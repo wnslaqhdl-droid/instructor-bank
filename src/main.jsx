@@ -924,6 +924,14 @@ async function deleteItem(id) {
           adminTotalPages
         }
       
+        adminItemsPerPage={
+          adminItemsPerPage
+        }
+      
+        setAdminItemsPerPage={
+          setAdminItemsPerPage
+        }
+      
         updateStatus={updateStatus}
       
         startEdit={startEdit}
