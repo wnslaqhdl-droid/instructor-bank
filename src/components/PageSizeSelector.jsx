@@ -1,32 +1,33 @@
 export default function PageSizeSelector({
   value,
-  onChange,
-  label = "목록 개수"
+  onChange
 }) {
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "6px"
-      }}
+    <select
+      value={value}
+      onChange={(e)=>
+        onChange(
+          Number(e.target.value)
+        )
+      }
+      className="select"
     >
-      <span className="small muted">
-        {label}
-      </span>
+      <option value={10}>
+        10개씩
+      </option>
 
-      <select
-        value={value}
-        onChange={(e)=>
-          onChange(Number(e.target.value))
-        }
-      >
-        <option value={10}>10개</option>
-        <option value={20}>20개</option>
-        <option value={50}>50개</option>
-        <option value={100}>100개</option>
-      </select>
-    </div>
+      <option value={20}>
+        20개씩
+      </option>
+
+      <option value={50}>
+        50개씩
+      </option>
+
+      <option value={100}>
+        100개씩
+      </option>
+    </select>
   );
 }
