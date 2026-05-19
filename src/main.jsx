@@ -799,20 +799,6 @@ async function deleteItem(id) {
         
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "16px",
-            marginBottom: "8px"
-          }}
-        >
-          <PageSizeSelector
-            value={requestItemsPerPage}
-            onChange={setRequestItemsPerPage}
-          />
-        </div>
-        
         <AdminRequestSection
         requestStatusFilter={
           requestStatusFilter
@@ -887,19 +873,6 @@ async function deleteItem(id) {
         Pagination={Pagination}
       />   
         
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "24px",
-          marginBottom: "8px"
-        }}
-      >
-        <PageSizeSelector
-          value={adminItemsPerPage}
-          onChange={setAdminItemsPerPage}
-        />
-      </div>
         
       <AdminInstructorTableSection
         adminKeyword={adminKeyword}
