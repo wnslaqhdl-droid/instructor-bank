@@ -640,46 +640,6 @@ function AdminPage(){
       });
   }
 
-  async function approveRequest(req){
-
-    if (openRequestId !== req.id) {
-
-      setMessage(
-        "먼저 상세 내용을 확인한 후 승인해 주세요."
-      );
-
-      setOpenRequestId(req.id);
-
-      return;
-    }
-
-    if (
-      !window.confirm(
-        "이 수정 요청을 승인하고 실제 강사 정보에 반영하시겠습니까?"
-      )
-    ){
-      return;
-    }
-
-    setMessage("");
-
-    try {
-
-      await applyUpdateRequest(req);
-
-      window.alert(
-        "수정 요청 반영 완료"
-      );
-
-      loadRequests();
-      loadAdmin();
-
-    } catch (err) {
-
-      window.alert(err.message);
-
-    }
-  }
 
   function isChanged(oldValue, newValue) {
     return JSON.stringify(oldValue ?? "") !==
@@ -774,94 +734,7 @@ function AdminPage(){
   }
 
   
-  async function rejectRequest(req){
-
-    const reason =
-      window.prompt(
-        "반려 사유를 입력하세요."
-      );
-
-    if(reason === null) return;
-
-    const { error } =
-      await supabase
-      .from(
-        "instructor_update_requests"
-      )
-      .update({
-        request_status:"반려",
-        admin_memo:reason,
-        reviewed_at:
-          new Date().toISOString()
-      })
-      .eq("id", req.id);
-
-    if(error){
-
-      window.alert(
-        "반려 처리 실패: " +
-        error.message
-      );
-
-      return;
-    }
-
-    window.alert(
-      "수정 요청을 반려 처리했습니다."
-    );
-
-    loadRequests();
-  }
-
-  async function updateStatus(
-    id,
-    status
-  ){
-
-    try {
-
-      await updateInstructorStatus(
-        id,
-        status
-      );
-
-      window.alert(
-        `${status} 처리 완료`
-      );
-
-      loadAdmin();
-
-    } catch (err) {
-
-      window.alert(err.message);
-
-    }
-  }
-
-  async function deleteItem(id){
-
-    if (
-      !confirm(
-        "정말 삭제하시겠습니까?"
-      )
-    ) return;
-
-    try {
-
-      await deleteInstructor(id);
-
-      window.alert("삭제 완료");
-
-      loadAdmin();
-
-    } catch (err) {
-
-      window.alert(err.message);
-
-    }
-  }
-
-  async function startEdit(item){
+   async function startEdit(item){
 
     setEditingItem({
       ...item,
