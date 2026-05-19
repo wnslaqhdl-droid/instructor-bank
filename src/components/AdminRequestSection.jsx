@@ -1,4 +1,5 @@
 import React from "react";
+import PageSizeSelector from "./PageSizeSelector";
 
 export default function AdminRequestSection({
   requestStatusFilter,
