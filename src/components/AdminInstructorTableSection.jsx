@@ -307,11 +307,26 @@ export default function AdminInstructorTableSection({
 
       </div>
 
-      <Pagination
-        currentPage={adminPage}
-        totalPages={adminTotalPages}
-        onPageChange={setAdminPage}
-      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "12px",
+          marginTop: "16px"
+        }}
+      >
+        <Pagination
+          currentPage={adminPage}
+          totalPages={adminTotalPages}
+          onPageChange={setAdminPage}
+        />
+      
+        <PageSizeSelector
+          itemsPerPage={adminItemsPerPage}
+          setItemsPerPage={setAdminItemsPerPage}
+        />
+      </div>
     </>
   );
 }
