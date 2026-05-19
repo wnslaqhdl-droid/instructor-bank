@@ -6,4 +6,4 @@ export const emptyInstructor = {name:"",phone:"",email:"",region:"",activity_reg
 export const emptyTraining = { course_name:"", institution:"", completion_year:"" };
 export const emptyWelfare = { organization:"", role:"", start_date:"", end_date:"", description:"" };
 export const emptyLecture = { organization:"", target:"", topic:"", start_date:"", end_date:"", count:"" };
-export const emptyCertificate = { certificate_name: "", issuer: "", acquired_date: "", expire_date: "", is_public: false};
+export const emptyCertificate = { name: "", organization: "", acquired_date: "", expire_date: "", is_public: true};
