@@ -1,3 +1,5 @@
+import PageSizeSelector from "./PageSizeSelector";
+
 export default function AdminInstructorTableSection({
   adminKeyword,
   setAdminKeyword,
