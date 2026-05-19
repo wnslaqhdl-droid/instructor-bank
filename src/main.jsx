@@ -54,6 +54,7 @@ import useSearchPage from "./hooks/useSearchPage";
 import ModifyPage from "./pages/ModifyPage";
 import useModifyInstructor from "./hooks/useModifyInstructor";
 import RegisterPage from "./pages/RegisterPage";
+import usePageSize from "./hooks/usePageSize";
 
 
 // utils
@@ -109,6 +110,8 @@ import CheckboxGroup from "./components/CheckboxGroup";
 import AdminEditPanel from "./components/admin/AdminEditPanel";
 import AdminRequestSection from "./components/AdminRequestSection";
 import AdminInstructorTableSection from "./components/AdminInstructorTableSection";
+
+import PageSizeSelector from "./components/PageSizeSelector";
 
 function SearchPage() {
 
@@ -308,8 +311,15 @@ function AdminPage(){
   const [requestStatusFilter,setRequestStatusFilter]=useState("");
   const [adminPage, setAdminPage] = useState(1);
   const [requestPage, setRequestPage] = useState(1);
-  const adminItemsPerPage = 10;
-  const requestItemsPerPage = 10;
+  const [
+    adminItemsPerPage,
+    setAdminItemsPerPage
+  ] = usePageSize(10);
+  
+  const [
+    requestItemsPerPage,
+    setRequestItemsPerPage
+  ] = usePageSize(10);
   
   async function checkAdmin() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -748,9 +758,36 @@ async function deleteItem(id) {
 
       <section className="card">
         <div className="actions">
-          <button className="btn primary" onClick={loadAdmin}>강사 목록 불러오기</button>
-          <button className="btn" onClick={loadRequests}>수정 요청 불러오기</button>
-          <button className="btn" onClick={downloadCSV}>CSV 다운로드</button>
+          <button
+            className="btn primary"
+            onClick={loadAdmin}
+          >
+            강사 목록 불러오기
+          </button>
+        
+          <button
+            className="btn"
+            onClick={loadRequests}
+          >
+            수정 요청 불러오기
+          </button>
+        
+          <button
+            className="btn"
+            onClick={downloadCSV}
+          >
+            CSV 다운로드
+          </button>
+        
+          <PageSizeSelector
+            value={adminItemsPerPage}
+            onChange={setAdminItemsPerPage}
+          />
+        
+          <PageSizeSelector
+            value={requestItemsPerPage}
+            onChange={setRequestItemsPerPage}
+          />
         </div>
 
         <AdminRequestSection
