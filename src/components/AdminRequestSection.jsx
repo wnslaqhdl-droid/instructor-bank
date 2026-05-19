@@ -13,6 +13,9 @@ export default function AdminRequestSection({
   requestTotalPages,
   setRequestPage,
 
+  requestItemsPerPage,
+  setRequestItemsPerPage,
+
   openRequestId,
   setOpenRequestId,
 
