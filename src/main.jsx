@@ -827,8 +827,8 @@ async function deleteItem(id) {
           <button className="btn" onClick={loadRequests}>수정 요청 불러오기</button>
           <button className="btn" onClick={downloadCSV}>CSV 다운로드</button>
         </div>
-      <section className="card">
-      <AdminRequestSection
+
+        <AdminRequestSection
         requestStatusFilter={
           requestStatusFilter
         }
