@@ -845,7 +845,14 @@ async function deleteItem(id) {
         setOpenRequestId={
           setOpenRequestId
         }
-      
+          
+        requestItemsPerPage={
+          requestItemsPerPage
+        }
+        
+        setRequestItemsPerPage={
+          setRequestItemsPerPage
+        }
         approveRequest={
           approveRequest
         }
