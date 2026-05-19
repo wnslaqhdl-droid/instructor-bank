@@ -1,4 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo
+} from "react";
+
+import usePageSize
+  from "./usePageSize";
+
 import { filterAndSortInstructors } from "../utils/searchFilters";
 
 export default function useSearchPage({
@@ -56,7 +64,10 @@ export default function useSearchPage({
     setLoading] =
     useState(true);
 
-  const itemsPerPage = 5;
+  const [
+    itemsPerPage,
+    setItemsPerPage
+  ] = usePageSize(5);
 
   async function load() {
 
@@ -206,6 +217,9 @@ export default function useSearchPage({
     paginatedItems,
     totalPages,
 
-    toggleDetail
+    toggleDetail,
+    
+    itemsPerPage,
+    setItemsPerPage
   };
 }
