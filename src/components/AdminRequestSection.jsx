@@ -404,9 +404,9 @@ export default function AdminRequestSection({
           onPageChange={setRequestPage}
         />
       
-        <PageSizeSelector
-          itemsPerPage={requestItemsPerPage}
-          setItemsPerPage={setRequestItemsPerPage}
+        <<PageSizeSelector
+          value={requestItemsPerPage}
+          onChange={setRequestItemsPerPage}
         />
       </div>
     </section>
