@@ -7,6 +7,7 @@ export default function useRegisterForm({
   emptyTraining,
   emptyWelfare,
   emptyLecture,
+  emptyCertificate,
   supabase,
   registerInstructor
 }) {
@@ -25,6 +26,10 @@ export default function useRegisterForm({
   const [lectureExperiences,
     setLectureExperiences] =
     useState([clone(emptyLecture)]);
+
+  const [certificates,
+    setCertificates] = 
+    useState([clone(emptyCertificate)]);
 
   const [message, setMessage] =
     useState("");
@@ -49,6 +54,7 @@ export default function useRegisterForm({
       trainingCourses,
       welfareExperiences,
       lectureExperiences,
+      certificates,
       supabase,
       registerInstructor,
       setError,
@@ -57,10 +63,12 @@ export default function useRegisterForm({
       setTrainingCourses,
       setWelfareExperiences,
       setLectureExperiences,
+      setCertificates,
       emptyInstructor,
       emptyTraining,
       emptyWelfare,
       emptyLecture,
+      emptyCertificate,
       clone
     });
 
@@ -78,6 +86,9 @@ export default function useRegisterForm({
 
     lectureExperiences,
     setLectureExperiences,
+
+    certificates,
+    setCertificates,
 
     message,
     error,
