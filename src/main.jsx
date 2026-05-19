@@ -299,8 +299,8 @@ function SearchPage() {
           />
         
           <PageSizeSelector
-            itemsPerPage={itemsPerPage}
-            setItemsPerPage={setItemsPerPage}
+            value={itemsPerPage}
+            onChange={setItemsPerPage}
           />
         </div>
         
