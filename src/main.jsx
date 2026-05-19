@@ -429,87 +429,6 @@ function AdminPage(){
     isAdmin
   ]);
 
-  const filteredItems =
-    items.filter((item)=>{
-
-      const keywordText = [
-        item.name,
-        item.email,
-        item.phone,
-        item.region,
-        item.main_topic,
-        item.organization
-      ].join(" ");
-
-      return (
-        (!adminKeyword ||
-          keywordText.includes(
-            adminKeyword
-          )) &&
-
-        (!adminStatus ||
-          item.public_status ===
-          adminStatus)
-      );
-    });
-
-  const filteredUpdateRequests =
-    updateRequests.filter((req)=>{
-
-      if (requestStatusFilter) {
-        return (
-          req.request_status ===
-          requestStatusFilter
-        );
-      }
-
-      return (
-        req.request_status !==
-        "대체됨"
-      );
-    });
-
-  useEffect(() => {
-
-    const totalPages =
-      Math.ceil(
-        filteredItems.length /
-        adminItemsPerPage
-      );
-
-    if (
-      adminPage > totalPages &&
-      totalPages > 0
-    ) {
-      setAdminPage(totalPages);
-    }
-
-  }, [
-    adminPage,
-    filteredItems,
-    adminItemsPerPage
-  ]);
-
-  useEffect(() => {
-
-    const totalPages =
-      Math.ceil(
-        filteredUpdateRequests.length /
-        requestItemsPerPage
-      );
-
-    if (
-      requestPage > totalPages &&
-      totalPages > 0
-    ) {
-      setRequestPage(totalPages);
-    }
-
-  }, [
-    requestPage,
-    filteredUpdateRequests,
-    requestItemsPerPage
-  ]);
 
   if (loadingAdmin) {
     return (
@@ -921,36 +840,7 @@ function AdminPage(){
     URL.revokeObjectURL(url);
   }
 
-  const adminTotalPages =
-    Math.ceil(
-      filteredItems.length /
-      adminItemsPerPage
-    );
-
-  const paginatedAdminItems =
-    filteredItems.slice(
-      (adminPage - 1)
-        * adminItemsPerPage,
-
-      adminPage
-        * adminItemsPerPage
-    );
-
-  const requestTotalPages =
-    Math.ceil(
-      filteredUpdateRequests.length /
-      requestItemsPerPage
-    );
-
-  const paginatedRequests =
-    filteredUpdateRequests.slice(
-      (requestPage - 1)
-        * requestItemsPerPage,
-
-      requestPage
-        * requestItemsPerPage
-    );
-
+  
   return (
     <div>
 
