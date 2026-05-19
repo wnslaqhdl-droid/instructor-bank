@@ -6,13 +6,12 @@ import {
   emptyInstructor,
   emptyTraining,
   emptyWelfare,
-  emptyLecture
+  emptyLecture,
+  emptyCertificate
 } from "../constants";
 
 import { supabase } from "../supabase";
-import {
-  registerInstructor
-} from "../services/instructorService";
+import { registerInstructor } from "../services/instructorService";
 
 import Field from "../components/Field";
 import Repeater from "../components/Repeater";
@@ -23,6 +22,7 @@ import RegisterTrainingSection from "../components/RegisterTrainingSection";
 import RegisterWelfareExperience from "../components/RegisterWelfareExperience";
 import RegisterLectureExperience from "../components/RegisterLectureExperience";
 import RegisterProfileSettings from "../components/RegisterProfileSettings";
+import RegisterCertificateSection from "../components/RegisterCertificateSection";
 import MonthSelect from "../components/MonthSelect";
 
 import useRegisterForm from "../hooks/useRegisterForm";
@@ -51,6 +51,9 @@ export default function RegisterPage() {
     lectureExperiences,
     setLectureExperiences,
 
+    certificates,
+    setCertificates,
+
     message,
     error,
 
@@ -61,6 +64,7 @@ export default function RegisterPage() {
         emptyTraining,
         emptyWelfare,
         emptyLecture,
+        emptyCertificate,
         supabase,
         registerInstructor
       });
@@ -122,6 +126,19 @@ export default function RegisterPage() {
         toMonthValue={toMonthValue}
         monthToDate={monthToDate}
         clone={clone}
+      />
+
+      <RegisterCertificateSection
+        certificates={certificates}
+        setCertificates={setCertificates}
+        emptyCertificate={emptyCertificate}
+        Field={Field}
+        Repeater={Repeater}
+        clone={clone}
+        MonthSelect={MonthSelect}
+        getCurrentMonthKST={getCurrentMonthKST}
+        toMonthValue={toMonthValue}
+        monthToDate={monthToDate}
       />
 
       <RegisterProfileSettings
