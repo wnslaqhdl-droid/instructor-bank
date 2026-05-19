@@ -9,12 +9,16 @@ export default function RegisterCertificateSection({
   clone,
 
   MonthSelect,
-  getCurrentMonthKST,
+
   toMonthValue,
   monthToDate
 }) {
 
-  function updateCertificate(index, key, value) {
+  function updateCertificate(
+    index,
+    key,
+    value
+  ) {
 
     setCertificates(current =>
       current.map((item, i) =>
@@ -29,6 +33,7 @@ export default function RegisterCertificateSection({
   }
 
   return (
+
     <section className="card">
 
       <h2>
@@ -37,18 +42,22 @@ export default function RegisterCertificateSection({
 
       <Repeater
         items={certificates}
-
         setItems={setCertificates}
-
         emptyItem={emptyCertificate}
+        clone={clone}
+      >
 
-        renderItem={(item, index)=>(
+        {(item, index)=>(
 
-          <div className="card">
+          <>
 
             <Field label="자격증명">
+
               <input
-                value={item.certificate_name}
+                value={
+                  item.certificate_name
+                }
+
                 onChange={(e)=>
                   updateCertificate(
                     index,
@@ -56,13 +65,18 @@ export default function RegisterCertificateSection({
                     e.target.value
                   )
                 }
-                placeholder="예: 사회복지사 1급"
+
+                placeholder="
+사회복지사 1급"
               />
+
             </Field>
 
             <Field label="발급기관">
+
               <input
                 value={item.issuer}
+
                 onChange={(e)=>
                   updateCertificate(
                     index,
@@ -70,15 +84,20 @@ export default function RegisterCertificateSection({
                     e.target.value
                   )
                 }
-                placeholder="예: 보건복지부"
+
+                placeholder="
+보건복지부"
               />
+
             </Field>
 
             <Field label="취득일">
+
               <MonthSelect
                 value={toMonthValue(
                   item.acquired_date
                 )}
+
                 onChange={(value)=>
                   updateCertificate(
                     index,
@@ -87,13 +106,16 @@ export default function RegisterCertificateSection({
                   )
                 }
               />
+
             </Field>
 
             <Field label="만료일">
+
               <MonthSelect
                 value={toMonthValue(
                   item.expire_date
                 )}
+
                 onChange={(value)=>
                   updateCertificate(
                     index,
@@ -102,6 +124,7 @@ export default function RegisterCertificateSection({
                   )
                 }
               />
+
             </Field>
 
             <Field label="공개 여부">
@@ -116,7 +139,10 @@ export default function RegisterCertificateSection({
 
                 <input
                   type="checkbox"
-                  checked={item.is_public}
+
+                  checked={
+                    item.is_public
+                  }
 
                   onChange={(e)=>
                     updateCertificate(
@@ -133,13 +159,11 @@ export default function RegisterCertificateSection({
 
             </Field>
 
-          </div>
+          </>
 
         )}
 
-        clone={clone}
-
-      />
+      </Repeater>
 
     </section>
   );
