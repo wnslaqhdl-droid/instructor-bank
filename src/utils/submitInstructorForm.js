@@ -10,6 +10,7 @@ export async function submitInstructorForm({
   trainingCourses,
   welfareExperiences,
   lectureExperiences,
+  certificates,
   supabase,
   registerInstructor,
   setError,
@@ -18,10 +19,12 @@ export async function submitInstructorForm({
   setTrainingCourses,
   setWelfareExperiences,
   setLectureExperiences,
+  setCertificates,
   emptyInstructor,
   emptyTraining,
   emptyWelfare,
   emptyLecture,
+  emptyCertificate,
   clone
 }) {
 
@@ -88,6 +91,7 @@ export async function submitInstructorForm({
       trainingCourses,
       welfareExperiences,
       lectureExperiences,
+      certificates
     });
 
     window.alert(
@@ -98,6 +102,7 @@ export async function submitInstructorForm({
     setTrainingCourses([clone(emptyTraining)]);
     setWelfareExperiences([clone(emptyWelfare)]);
     setLectureExperiences([clone(emptyLecture)]);
+    setCertificates([clone(emptyCertificate)]);
 
     scrollToTop();
 
