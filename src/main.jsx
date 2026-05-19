@@ -676,6 +676,99 @@ function AdminPage(){
     }
   }
 
+  function isChanged(oldValue, newValue) {
+    return JSON.stringify(oldValue ?? "") !==
+           JSON.stringify(newValue ?? "");
+  }
+  
+  function renderChangedField(
+    label,
+    oldValue,
+    newValue
+  ) {
+    if (!isChanged(oldValue, newValue)) {
+      return null;
+    }
+  
+    return (
+      <div className="change-item">
+        <b>{label}</b>
+        <br />
+  
+        기존:
+        {" "}
+        {Array.isArray(oldValue)
+          ? oldValue.join(", ")
+          : (oldValue || "-")}
+  
+        <br />
+  
+        요청:
+        {" "}
+  
+        <span className="changed-value">
+          {Array.isArray(newValue)
+            ? newValue.join(", ")
+            : (newValue || "-")}
+        </span>
+      </div>
+    );
+  }
+  
+  function renderChangedList(
+    label,
+    oldList,
+    newList,
+    renderItem
+  ) {
+    const oldValue = oldList || [];
+    const newValue = newList || [];
+  
+    if (!isChanged(oldValue, newValue)) {
+      return null;
+    }
+  
+    return (
+      <div className="change-item">
+  
+        <b>{label}</b>
+  
+        <br />
+  
+        <div className="muted small">
+          기존
+        </div>
+  
+        {oldValue.length
+          ? oldValue.map((item, i) => (
+              <div key={`old-${i}`}>
+                {renderItem(item)}
+              </div>
+            ))
+          : "-"}
+  
+        <div
+          className="muted small"
+          style={{ marginTop: 6 }}
+        >
+          요청
+        </div>
+  
+        <div className="changed-value">
+          {newValue.length
+            ? newValue.map((item, i) => (
+                <div key={`new-${i}`}>
+                  {renderItem(item)}
+                </div>
+              ))
+            : "-"}
+        </div>
+  
+      </div>
+    );
+  }
+
+  
   async function rejectRequest(req){
 
     const reason =
