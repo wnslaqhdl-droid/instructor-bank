@@ -1,170 +1,108 @@
 export default function RegisterCertificateSection({
   certificates,
   setCertificates,
-
   emptyCertificate,
-
   Field,
   Repeater,
-  clone,
-
-  MonthSelect,
-
-  toMonthValue,
-  monthToDate
+  clone
 }) {
-
-  function updateCertificate(
-    index,
-    key,
-    value
-  ) {
-
-    setCertificates(current =>
-      current.map((item, i) =>
-        i === index
-          ? {
-              ...item,
-              [key]: value
-            }
-          : item
-      )
-    );
-  }
 
   return (
 
-    <section className="card">
+    <Repeater
+      clone={clone}
 
-      <h2>
-        자격증 정보
-      </h2>
+      title="5. 자격증 정보"
 
-      <Repeater
-        items={certificates}
-        setItems={setCertificates}
-        emptyItem={emptyCertificate}
-        clone={clone}
-      >
+      help="보유 자격증을 입력합니다."
 
-        {(item, index)=>(
+      items={certificates}
 
-          <>
+      setItems={setCertificates}
 
-            <Field label="자격증명">
+      emptyItem={emptyCertificate}
 
-              <input
-                value={
-                  item.certificate_name
-                }
+      render={(item, index, updateItem) => (
 
-                onChange={(e)=>
-                  updateCertificate(
-                    index,
-                    "certificate_name",
-                    e.target.value
-                  )
-                }
+        <div className="grid grid-3">
 
-                placeholder="
-사회복지사 1급"
-              />
+          <Field label="자격증명">
+            <input
+              value={item.name || ""}
+              onChange={(e)=>
+                updateItem(
+                  index,
+                  "name",
+                  e.target.value
+                )
+              }
+            />
+          </Field>
 
-            </Field>
+          <Field label="발급기관">
+            <input
+              value={item.organization || ""}
+              onChange={(e)=>
+                updateItem(
+                  index,
+                  "organization",
+                  e.target.value
+                )
+              }
+            />
+          </Field>
 
-            <Field label="발급기관">
+          <Field label="취득일">
+            <input
+              type="date"
+              value={item.acquired_date || ""}
+              onChange={(e)=>
+                updateItem(
+                  index,
+                  "acquired_date",
+                  e.target.value
+                )
+              }
+            />
+          </Field>
 
-              <input
-                value={item.issuer}
+          <Field label="만료일">
+            <input
+              type="date"
+              value={item.expire_date || ""}
+              onChange={(e)=>
+                updateItem(
+                  index,
+                  "expire_date",
+                  e.target.value
+                )
+              }
+            />
+          </Field>
 
-                onChange={(e)=>
-                  updateCertificate(
-                    index,
-                    "issuer",
-                    e.target.value
-                  )
-                }
-
-                placeholder="
-보건복지부"
-              />
-
-            </Field>
-
-            <Field label="취득일">
-
-              <MonthSelect
-                value={toMonthValue(
-                  item.acquired_date
-                )}
-
-                onChange={(value)=>
-                  updateCertificate(
-                    index,
-                    "acquired_date",
-                    monthToDate(value)
-                  )
-                }
-              />
-
-            </Field>
-
-            <Field label="만료일">
-
-              <MonthSelect
-                value={toMonthValue(
-                  item.expire_date
-                )}
-
-                onChange={(value)=>
-                  updateCertificate(
-                    index,
-                    "expire_date",
-                    monthToDate(value)
-                  )
-                }
-              />
-
-            </Field>
-
-            <Field label="공개 여부">
-
-              <label
-                style={{
-                  display:"flex",
-                  gap:"8px",
-                  alignItems:"center"
-                }}
-              >
-
-                <input
-                  type="checkbox"
-
-                  checked={
-                    item.is_public
-                  }
-
-                  onChange={(e)=>
-                    updateCertificate(
-                      index,
-                      "is_public",
-                      e.target.checked
-                    )
-                  }
-                />
-
+          <Field label="공개 여부">
+            <select
+              value={String(item.is_public)}
+              onChange={(e)=>
+                updateItem(
+                  index,
+                  "is_public",
+                  e.target.value === "true"
+                )
+              }
+            >
+              <option value="true">
                 공개
+              </option>
 
-              </label>
+              <option value="false">
+                비공개
+              </option>
+            </select>
+          </Field>
 
-            </Field>
-
-          </>
-
-        )}
-
-      </Repeater>
-
-    </section>
+        </div>
+      )}
+    />
   );
 }
