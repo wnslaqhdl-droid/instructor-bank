@@ -140,6 +140,10 @@ function SearchPage() {
     filtered,
     paginatedItems,
     totalPages,
+    
+    itemsPerPage,
+    setItemsPerPage,
+    
     toggleDetail
   } = useSearchPage({
     searchInstructors
@@ -194,7 +198,10 @@ function SearchPage() {
         >
           검색 결과: 총 {filtered.length}명
         </div>
-
+        <PageSizeSelector
+          itemsPerPage={itemsPerPage}
+          setItemsPerPage={setItemsPerPage}
+        />
         <div
           className="muted small"
           style={{ marginBottom: 8 }}
@@ -248,7 +255,7 @@ function SearchPage() {
         {loading && (
           <div className="skeleton-list">
 
-            {[...Array(5)].map((_, i) => (
+            {[...Array(itemsPerPage)].map((_, i) => (
               <div
                 key={i}
                 className="skeleton-card"
