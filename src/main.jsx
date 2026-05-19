@@ -297,7 +297,13 @@ function SearchPage() {
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
-
+        
+          <PageSizeSelector
+            itemsPerPage={itemsPerPage}
+            setItemsPerPage={setItemsPerPage}
+          />
+        </div>
+        
       </div>
 
     </div>
