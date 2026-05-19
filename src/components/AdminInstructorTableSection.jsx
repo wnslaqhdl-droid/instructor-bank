@@ -328,8 +328,8 @@ export default function AdminInstructorTableSection({
         />
       
         <PageSizeSelector
-          itemsPerPage={adminItemsPerPage}
-          setItemsPerPage={setAdminItemsPerPage}
+          value={adminItemsPerPage}
+          onChange={setAdminItemsPerPage}
         />
       </div>
     </>
