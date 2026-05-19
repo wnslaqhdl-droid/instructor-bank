@@ -489,55 +489,6 @@ function AdminPage(){
     );
   }
 
-  async function loadAdmin() {
-
-    if (!session || !isAdmin) {
-
-      setMessage(
-        "관리자만 접근 가능합니다."
-      );
-
-      return;
-    }
-
-    try {
-
-      const data =
-        await getAdminInstructors();
-
-      setItems(data);
-
-    } catch (err) {
-
-      setMessage(err.message);
-
-    }
-  }
-
-  async function loadRequests() {
-
-    if (!session || !isAdmin) {
-
-      setMessage(
-        "관리자만 접근 가능합니다."
-      );
-
-      return;
-    }
-
-    try {
-
-      const data =
-        await getUpdateRequests();
-
-      setUpdateRequests(data);
-
-    } catch (err) {
-
-      setMessage(err.message);
-
-    }
-  }
 
   function formatKST(value){
 
