@@ -170,6 +170,20 @@ export default function useSearchPage({
       itemsPerPage
     );
 
+  useEffect(() => {
+  
+    if (
+      currentPage > totalPages &&
+      totalPages > 0
+    ) {
+      setCurrentPage(totalPages);
+    }
+  
+  }, [
+    currentPage,
+    totalPages
+  ]);
+
   const paginatedItems =
     filtered.slice(
       (currentPage - 1)
