@@ -310,12 +310,12 @@ function AdminPage(){
   const [openRequestId,setOpenRequestId]=useState(null);
   const [requestStatusFilter,setRequestStatusFilter]=useState("");
   const [adminPage, setAdminPage] = useState(1);
-  const [requestPage, setRequestPage] = useState(1);
-  const [
+    const [
     adminItemsPerPage,
     setAdminItemsPerPage
   ] = usePageSize(10);
   
+  const [requestPage, setRequestPage] = useState(1);
   const [
     requestItemsPerPage,
     setRequestItemsPerPage
