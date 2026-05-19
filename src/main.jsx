@@ -55,6 +55,7 @@ import ModifyPage from "./pages/ModifyPage";
 import useModifyInstructor from "./hooks/useModifyInstructor";
 import RegisterPage from "./pages/RegisterPage";
 import usePageSize from "./hooks/usePageSize";
+import useAdminPage from "./hooks/useAdminPage";
 
 
 // utils
@@ -311,59 +312,50 @@ function SearchPage() {
 }
 
 function AdminPage(){
-
-  const [session,setSession]=useState(null);
-  const [isAdmin,setIsAdmin]=useState(false);
-  const [loadingAdmin,setLoadingAdmin]=useState(true);
-
-  const [email,setEmail]=useState("");
-  const [password,setPassword]=useState("");
-
-  const [items,setItems]=useState([]);
-  const [updateRequests,setUpdateRequests]=useState([]);
-
-  const [message,setMessage]=useState("");
-
-  const [editingItem,setEditingItem]=useState(null);
-
-  const [editingTrainings,
-    setEditingTrainings] = useState([]);
-
-  const [editingWelfares,
-    setEditingWelfares] = useState([]);
-
-  const [editingLectures,
-    setEditingLectures] = useState([]);
-
-  const [adminKeyword,
-    setAdminKeyword] = useState("");
-
-  const [adminStatus,
-    setAdminStatus] = useState("");
-
-  const [openRequestId,
-    setOpenRequestId] = useState(null);
-
-  const [requestStatusFilter,
-    setRequestStatusFilter] = useState("");
-
-  const [adminPage,
-    setAdminPage] = useState(1);
-
-  const [
-    adminItemsPerPage,
-    setAdminItemsPerPage
-  ] = usePageSize(10);
-
-  const [requestPage,
-    setRequestPage] = useState(1);
-
-  const [
-    requestItemsPerPage,
-    setRequestItemsPerPage
-  ] = usePageSize(10);
-
-  async function checkAdmin() {
+  
+    const [session,setSession]=useState(null);
+    const [isAdmin,setIsAdmin]=useState(false);
+    const [loadingAdmin,setLoadingAdmin]=useState(true);
+    const [email,setEmail]=useState("");
+    const [password,setPassword]=useState("");
+    const [editingItem,setEditingItem]=useState(null);
+    const [editingTrainings, setEditingTrainings] = useState([]);
+    const [editingWelfares, setEditingWelfares] = useState([]);
+    const [editingLectures, setEditingLectures] = useState([]);
+    const [openRequestId, setOpenRequestId] = useState(null);
+    const {
+      message,
+      loadAdmin,
+      loadRequests,
+      items,
+      updateRequests,
+      adminKeyword,
+      setAdminKeyword,
+      adminStatus,
+      setAdminStatus,
+      requestStatusFilter,
+      setRequestStatusFilter,
+      adminPage,
+      setAdminPage,
+      requestPage,
+      setRequestPage,
+      adminItemsPerPage,
+      setAdminItemsPerPage,
+      requestItemsPerPage,
+      setRequestItemsPerPage,
+      paginatedAdminItems,
+      paginatedRequests,
+      filteredItems,
+      filteredUpdateRequests,
+      adminTotalPages,
+      requestTotalPages,
+      updateStatus,
+      deleteItem,
+      approveRequest,
+      rejectRequest
+    } = useAdminPage();
+  
+    async function checkAdmin() {
 
     const {
       data: { session }
