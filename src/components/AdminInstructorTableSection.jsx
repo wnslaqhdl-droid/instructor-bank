@@ -16,6 +16,9 @@ export default function AdminInstructorTableSection({
   adminPage,
   adminTotalPages,
 
+  adminItemsPerPage,
+  setAdminItemsPerPage
+
   updateStatus,
   startEdit,
   deleteItem,
