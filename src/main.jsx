@@ -43,6 +43,10 @@ import {
   getUpdateRequests
 } from "./services/requestService";
 
+import {
+  saveInstructorEdit
+} from "./services/saveInstructorEdit";
+
 
 // hooks
 import useRegisterForm from "./hooks/useRegisterForm";
@@ -593,113 +597,33 @@ async function deleteItem(id) {
     setEditingItem(current=>({...current,[key]:value}));
   }
 
-  async function saveEdit(){
-    
-    if(!isValidEmail(editingItem.email)){
-      setMessage("이메일은 이메일@도메인.com 형식으로 입력해 주세요.");
-      return;
-    }
-    
-    if(!isValidPhone(editingItem.phone)){
-      setMessage("전화번호는 00-0000-0000, 000-0000-0000 또는 010-0000-0000 형식으로 입력해 주세요.");
-      return;
-    }
-    const {error}=await supabase
-      .from("instructors")
-      .update({
-        name:editingItem.name,
-        phone:editingItem.phone,
-        email:editingItem.email,
-        region:editingItem.region,
-        activity_regions:editingItem.activity_regions,
-        organization:editingItem.organization,
-        position:editingItem.position,
-        main_topic:editingItem.main_topic,
-        specialties:editingItem.specialties,
-        other_specialty:editingItem.other_specialty,
-        targets:editingItem.targets,
-        types:editingItem.types,
-        intro:editingItem.intro,
-        show_phone:editingItem.show_phone,
-        show_email:editingItem.show_email,
-        show_profile:editingItem.show_profile,
-        center_verified:editingItem.center_verified
-      })
-      .eq("id",editingItem.id);
+  async function saveEdit() {
 
-    if(error)setMessage("수정 실패: "+error.message);
-    else{
-            /* 🔥 양성과정 저장 */
-            // 1. 기존 삭제
-      await supabase
-        .from("training_courses")
-        .delete()
-        .eq("instructor_id", editingItem.id);
-            // 2. 새로 insert
-      const validTrainings = editingTrainings
-        .filter(t => t.course_name || t.institution || t.completion_year)
-        .map(t => ({
-          instructor_id: editingItem.id,
-          course_name: t.course_name || "",
-          institution: t.institution || "",
-          completion_year: t.completion_year || ""
-        }));
-      
-      if(validTrainings.length){
-        await supabase
-          .from("training_courses")
-          .insert(validTrainings);
-      }
-            /* 🔥 실무경력 저장 */
-            // 1. 기존 삭제
-      await supabase
-        .from("welfare_experiences")
-        .delete()
-        .eq("instructor_id", editingItem.id);
-      
-      const validWelfares = editingWelfares
-        .filter(w => w.organization || w.role || w.start_date || w.end_date || w.description)
-        .map(w => ({
-          instructor_id: editingItem.id,
-          organization: w.organization || "",
-          role: w.role || "",
-          start_date: w.start_date || null,
-          end_date: w.end_date || null,
-          description: w.description || ""
-        }));
-      
-      if(validWelfares.length){
-        await supabase
-          .from("welfare_experiences")
-          .insert(validWelfares);
-      }
-
-      await supabase
-        .from("lecture_experiences")
-        .delete()
-        .eq("instructor_id", editingItem.id);
-      
-      const validLectures = editingLectures
-        .filter(l => l.organization || l.target || l.topic || l.start_date || l.end_date || l.count)
-        .map(l => ({
-          instructor_id: editingItem.id,
-          organization: l.organization || "",
-          target: l.target || "",
-          topic: l.topic || "",
-          start_date: l.start_date || null,
-          end_date: l.end_date || null,
-          count: l.count || ""
-        }));
-      
-      if(validLectures.length){
-        await supabase
-          .from("lecture_experiences")
-          .insert(validLectures);
-      }
-      
+    try {
+  
+      await saveInstructorEdit({
+        supabase,
+  
+        editingItem,
+  
+        editingTrainings,
+  
+        editingWelfares,
+  
+        editingLectures
+      });
+  
       window.alert("수정 완료");
+  
       setEditingItem(null);
+  
       loadAdmin();
+  
+    }
+    catch (err) {
+  
+      setMessage(err.message);
+  
     }
   }
 
