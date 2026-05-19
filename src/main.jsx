@@ -198,10 +198,6 @@ function SearchPage() {
         >
           검색 결과: 총 {filtered.length}명
         </div>
-        <PageSizeSelector
-          itemsPerPage={itemsPerPage}
-          setItemsPerPage={setItemsPerPage}
-        />
         <div
           className="muted small"
           style={{ marginBottom: 8 }}
@@ -287,11 +283,20 @@ function SearchPage() {
           ))
         }
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "12px",
+            marginTop: "16px"
+          }}
+        >
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
 
       </div>
 
