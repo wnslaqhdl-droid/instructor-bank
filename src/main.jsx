@@ -416,6 +416,19 @@ function AdminPage(){
     refreshSession();
   },[]);
 
+  useEffect(() => {
+    if (
+      session &&
+      isAdmin
+    ) {
+      loadAdmin();
+      loadRequests();
+    }
+  }, [
+    session,
+    isAdmin
+  ]);
+
   const filteredItems =
     items.filter((item)=>{
 
