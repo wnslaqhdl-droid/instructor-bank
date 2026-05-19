@@ -722,7 +722,35 @@ async function deleteItem(id) {
   const requestTotalPages = Math.ceil(
     filteredUpdateRequests.length / requestItemsPerPage
   );
+
+  useEffect(() => {
   
+    if (
+      adminPage > adminTotalPages &&
+      adminTotalPages > 0
+    ) {
+      setAdminPage(adminTotalPages);
+    }
+  
+  }, [
+    adminPage,
+    adminTotalPages
+  ]);
+  
+  useEffect(() => {
+  
+    if (
+      requestPage > requestTotalPages &&
+      requestTotalPages > 0
+    ) {
+      setRequestPage(requestTotalPages);
+    }
+  
+  }, [
+    requestPage,
+    requestTotalPages
+  ]);
+
   const paginatedRequests = filteredUpdateRequests.slice(
     (requestPage - 1) * requestItemsPerPage,
     requestPage * requestItemsPerPage
