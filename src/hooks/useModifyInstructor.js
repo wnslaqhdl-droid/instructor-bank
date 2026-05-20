@@ -25,6 +25,9 @@ export default function useModifyInstructor(
   const [modifyLectures, setModifyLectures] =
     useState([]);
 
+  const [modifyCertificates, setModifyCertificates] =
+    useState([]);
+
   const [originalInstructor, setOriginalInstructor] =
     useState(null);
 
@@ -35,6 +38,9 @@ export default function useModifyInstructor(
     useState([]);
 
   const [originalLectures, setOriginalLectures] =
+    useState([]);
+
+  const [originalCertificates, setOriginalCertificates] =
     useState([]);
 
   const [message, setMessage] =
@@ -55,6 +61,7 @@ export default function useModifyInstructor(
     setSession(data.session);
 
     if (data.session) {
+
       await search(
         data.session.user.id
       );
@@ -81,17 +88,21 @@ export default function useModifyInstructor(
       .maybeSingle();
 
     if (error) {
+
       setError(
         "조회 실패: " +
         error.message
       );
+
       return;
     }
 
     if (!data) {
+
       setError(
         "해당 이메일로 등록된 강사를 찾을 수 없습니다."
       );
+
       return;
     }
 
@@ -140,6 +151,20 @@ export default function useModifyInstructor(
     );
 
     const {
+      data: certificateData
+    } = await supabase
+      .from("certificates")
+      .select("*")
+      .eq(
+        "instructor_id",
+        data.id
+      );
+
+    setOriginalCertificates(
+      certificateData || []
+    );
+
+    const {
       data: requestData
     } = await supabase
       .from(
@@ -152,7 +177,9 @@ export default function useModifyInstructor(
       )
       .order(
         "requested_at",
-        { ascending: false }
+        {
+          ascending: false
+        }
       )
       .limit(1)
       .maybeSingle();
@@ -210,6 +237,14 @@ export default function useModifyInstructor(
         }))
       );
 
+      setModifyCertificates(
+        requestData.requested_data.certificates?.length
+          ? requestData.requested_data.certificates
+          : (
+              certificateData || []
+            )
+      );
+
     } else {
 
       setFound(data);
@@ -237,6 +272,10 @@ export default function useModifyInstructor(
             !l.end_date
         }))
       );
+
+      setModifyCertificates(
+        certificateData || []
+      );
     }
   }
 
@@ -256,10 +295,14 @@ export default function useModifyInstructor(
     modifyLectures,
     setModifyLectures,
 
+    modifyCertificates,
+    setModifyCertificates,
+
     originalInstructor,
     originalTrainings,
     originalWelfares,
     originalLectures,
+    originalCertificates,
 
     message,
     setMessage,
