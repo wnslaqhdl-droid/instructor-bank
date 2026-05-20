@@ -199,7 +199,7 @@ export async function registerInstructor({
           x.expire_date || null,
 
         is_public:
-          x.is_public,
+          !!x.is_public,
       }));
 
   // 양성과정 저장
@@ -291,7 +291,8 @@ export async function searchInstructors() {
       *,
       training_courses(*),
       welfare_experiences(*),
-      lecture_experiences(*)
+      lecture_experiences(*),
+      certificates(*)
     `)
     .eq(
       "public_status",
