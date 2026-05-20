@@ -322,6 +322,7 @@ function AdminPage(){
     const [editingTrainings, setEditingTrainings] = useState([]);
     const [editingWelfares, setEditingWelfares] = useState([]);
     const [editingLectures, setEditingLectures] = useState([]);
+    const [editingCertificates, setEditingCertificates] = useState([]);
     const [openRequestId, setOpenRequestId] = useState(null);
     const {
       message,
@@ -661,6 +662,20 @@ function AdminPage(){
         })
       )
     );
+
+         const {
+      data: certificateData
+    } = await supabase
+      .from("certificates")
+      .select("*")
+      .eq(
+        "instructor_id",
+        item.id
+      );
+
+    setEditingCertificates(
+      certificateData || []
+    );
   }
 
   function updateEdit(key,value){
@@ -809,23 +824,35 @@ function AdminPage(){
         setEditingItem={setEditingItem}
         updateEdit={updateEdit}
         saveEdit={saveEdit}
+      
         editingTrainings={editingTrainings}
         setEditingTrainings={setEditingTrainings}
+      
         editingWelfares={editingWelfares}
         setEditingWelfares={setEditingWelfares}
+      
         editingLectures={editingLectures}
         setEditingLectures={setEditingLectures}
+      
+        editingCertificates={editingCertificates}
+        setEditingCertificates={setEditingCertificates}
+      
         regionOptions={regionOptions}
         targetOptions={targetOptions}
         typeOptions={typeOptions}
         specialtyOptions={specialtyOptions}
+      
         Field={Field}
         CheckboxGroup={CheckboxGroup}
+      
         MonthSelect={MonthSelect}
+      
         getCurrentMonthKST={
           getCurrentMonthKST
         }
+      
         toMonthValue={toMonthValue}
+      
         monthToDate={monthToDate}
       />
 
