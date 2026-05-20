@@ -363,6 +363,30 @@ export default function AdminRequestSection({
                             ?.center_verified
                         )}
 
+                        {renderChangedList(
+                          "양성과정",
+                          req.training_courses,
+                          req.requested_data?.training_courses
+                        )}
+                        
+                        {renderChangedList(
+                          "실무경력",
+                          req.welfare_experiences,
+                          req.requested_data?.welfare_experiences
+                        )}
+                        
+                        {renderChangedList(
+                          "강의경력",
+                          req.lecture_experiences,
+                          req.requested_data?.lecture_experiences
+                        )}
+                        
+                        {renderChangedList(
+                          "자격증",
+                          req.certificates,
+                          req.requested_data?.certificates
+                        )}
+
                       </div>
 
                     </td>
