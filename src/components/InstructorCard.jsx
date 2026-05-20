@@ -118,7 +118,7 @@ export default function InstructorCard({
 
               {(item.training_courses || []).length ? (
                 item.training_courses.map((t, i)=>(
-                  <div key={i}>
+                  <div key={`certificate-${i}`}>
                     {t.course_name || "-"} /
                     {t.institution || "-"} /
                     {t.completion_year || "-"}
@@ -133,7 +133,7 @@ export default function InstructorCard({
 
               {(item.welfare_experiences || []).length ? (
                 item.welfare_experiences.map((w, i)=>(
-                  <div key={i}>
+                  <div key={`certificate-${i}`}>
                     {w.organization || "-"} /
                     {w.role || "-"} /
                     {formatPeriod(
@@ -155,7 +155,7 @@ export default function InstructorCard({
 
               {(item.lecture_experiences || []).length ? (
                 item.lecture_experiences.map((l, i)=>(
-                  <div key={i}>
+                  <div key={`certificate-${i}`}>
                     {l.organization || "-"} /
                     {l.target || "-"} /
                     {l.topic || "-"} /
@@ -176,7 +176,7 @@ export default function InstructorCard({
                 item.certificates
                   .filter((c) => c.is_public)
                   .map((c, i)=>(
-                    <div key={i}>
+                    <div key={`certificate-${i}`}>
             
                       {c.name || "-"}
             
