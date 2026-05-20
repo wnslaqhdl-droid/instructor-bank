@@ -10,14 +10,17 @@ import {
 export default async function submitModifyRequest({
 
   found,
+
   modifyTrainings,
   modifyWelfares,
   modifyLectures,
+  modifyCertificates,
 
   originalInstructor,
   originalTrainings,
   originalWelfares,
   originalLectures,
+  originalCertificates,
 
   setError,
   setMessage,
@@ -31,6 +34,7 @@ export default async function submitModifyRequest({
 }) {
 
   function normalizeValue(value){
+
     if(
       value === null ||
       value === undefined
@@ -59,6 +63,7 @@ export default async function submitModifyRequest({
   if(
     !isValidEmail(found.email)
   ){
+
     setError(
       "이메일은 이메일@도메인.com 형식으로 입력해 주세요."
     );
@@ -70,6 +75,7 @@ export default async function submitModifyRequest({
   if(
     !isValidPhone(found.phone)
   ){
+
     setError(
       "전화번호는 00-0000-0000, 000-0000-0000 또는 010-0000-0000 형식으로 입력해 주세요."
     );
@@ -79,6 +85,7 @@ export default async function submitModifyRequest({
   }
 
   const payload = {
+
     instructor: {
       ...found
     },
@@ -90,7 +97,10 @@ export default async function submitModifyRequest({
       modifyWelfares,
 
     lecture_experiences:
-      modifyLectures
+      modifyLectures,
+
+    certificates:
+      modifyCertificates
   };
 
   const hasInstructorChange = [
@@ -183,6 +193,7 @@ export default async function submitModifyRequest({
   ].some(Boolean);
 
   const hasAnyChange =
+
     hasInstructorChange ||
 
     isChangedValue(
@@ -198,6 +209,11 @@ export default async function submitModifyRequest({
     isChangedValue(
       originalLectures,
       modifyLectures
+    ) ||
+
+    isChangedValue(
+      originalCertificates,
+      modifyCertificates
     );
 
   if(!hasAnyChange){
