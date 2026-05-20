@@ -14,7 +14,10 @@ export default function ModifyLectureSection({
       <h3>강의경력</h3>
 
       {modifyLectures.map((l, i) => (
-        <div key={i} className="repeat">
+        <div
+          key={`lecture-${l.id || i}`}
+          className="repeat"
+        >
 
           <div className="grid grid-2">
 
