@@ -115,7 +115,7 @@ export default function InstructorCard({
             <div style={{gridColumn:"1 / -1"}}>
               <b>양성과정 수료 정보</b>
               <br />
-
+            
               {(item.training_courses || []).length ? (
                 item.training_courses.map((t, i)=>(
                   <div key={`training-${i}`}>
@@ -126,11 +126,11 @@ export default function InstructorCard({
                 ))
               ) : "-"}
             </div>
-
+            
             <div style={{gridColumn:"1 / -1"}}>
               <b>실무경력</b>
               <br />
-
+            
               {(item.welfare_experiences || []).length ? (
                 item.welfare_experiences.map((w, i)=>(
                   <div key={`welfare-${i}`}>
@@ -140,7 +140,7 @@ export default function InstructorCard({
                       w.start_date,
                       w.end_date
                     )}
-
+            
                     {w.description
                       ? ` / ${w.description}`
                       : ""}
@@ -148,11 +148,11 @@ export default function InstructorCard({
                 ))
               ) : "-"}
             </div>
-
+            
             <div style={{gridColumn:"1 / -1"}}>
               <b>강의경력</b>
               <br />
-
+            
               {(item.lecture_experiences || []).length ? (
                 item.lecture_experiences.map((l, i)=>(
                   <div key={`lecture-${i}`}>
@@ -164,7 +164,7 @@ export default function InstructorCard({
                 ))
               ) : "-"}
             </div>
-
+            
             <div style={{gridColumn:"1 / -1"}}>
               <b>자격증</b>
               <br />
@@ -196,7 +196,6 @@ export default function InstructorCard({
                   ))
             
               ) : "-"}
-            
             </div>
 
             {item.show_phone && (
