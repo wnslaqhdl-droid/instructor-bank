@@ -211,41 +211,41 @@ export default function AdminRequestSection({
                           <b>
                             변경 요청 상세
                           </b>
-
+                      
                           <p>
                             변경된 항목만
                             표시됩니다.
                           </p>
                         </div>
-
+                      
                         {renderChangedField(
                           "성명",
                           req.instructors?.name,
                           req.requested_data
                             ?.instructor?.name
                         )}
-
+                      
                         {renderChangedField(
                           "연락처",
                           req.instructors?.phone,
                           req.requested_data
                             ?.instructor?.phone
                         )}
-
+                      
                         {renderChangedField(
                           "이메일",
                           req.instructors?.email,
                           req.requested_data
                             ?.instructor?.email
                         )}
-
+                      
                         {renderChangedField(
                           "거주지역",
                           req.instructors?.region,
                           req.requested_data
                             ?.instructor?.region
                         )}
-
+                      
                         {renderChangedField(
                           "활동 가능 지역",
                           req.instructors
@@ -254,7 +254,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.activity_regions
                         )}
-
+                      
                         {renderChangedField(
                           "소속기관",
                           req.instructors
@@ -263,7 +263,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.organization
                         )}
-
+                      
                         {renderChangedField(
                           "직위/직업군",
                           req.instructors
@@ -272,7 +272,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.position
                         )}
-
+                      
                         {renderChangedField(
                           "주요 강의주제",
                           req.instructors
@@ -281,7 +281,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.main_topic
                         )}
-
+                      
                         {renderChangedField(
                           "강의 분야",
                           req.instructors
@@ -290,7 +290,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.specialties
                         )}
-
+                      
                         {renderChangedField(
                           "그 외 주제",
                           req.instructors
@@ -299,7 +299,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.other_specialty
                         )}
-
+                      
                         {renderChangedField(
                           "교육대상",
                           req.instructors
@@ -308,7 +308,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.targets
                         )}
-
+                      
                         {renderChangedField(
                           "교육유형",
                           req.instructors
@@ -317,7 +317,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.types
                         )}
-
+                      
                         {renderChangedField(
                           "강사 소개",
                           req.instructors
@@ -326,7 +326,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.intro
                         )}
-
+                      
                         {renderChangedField(
                           "연락처 공개",
                           req.instructors
@@ -335,7 +335,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.show_phone
                         )}
-
+                      
                         {renderChangedField(
                           "이메일 공개",
                           req.instructors
@@ -344,7 +344,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.show_email
                         )}
-
+                      
                         {renderChangedField(
                           "프로필 공개",
                           req.instructors
@@ -353,7 +353,7 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.show_profile
                         )}
-
+                      
                         {renderChangedField(
                           "개발원 과정 수료 확인",
                           req.instructors
@@ -362,31 +362,38 @@ export default function AdminRequestSection({
                             ?.instructor
                             ?.center_verified
                         )}
-
+                      
                         {renderChangedList(
                           "양성과정",
                           req.instructors?.training_courses,
-                          req.requested_data?.training_courses
+                          req.requested_data?.training_courses,
+                          (item) => item.course_name || "-"
                         )}
-                        
+                      
                         {renderChangedList(
                           "실무경력",
                           req.instructors?.welfare_experiences,
-                          req.requested_data?.welfare_experiences
+                          req.requested_data?.welfare_experiences,
+                          (item) =>
+                            `${item.organization || "-"} / ${item.position || "-"}`
                         )}
-                        
+                      
                         {renderChangedList(
                           "강의경력",
                           req.instructors?.lecture_experiences,
-                          req.requested_data?.lecture_experiences
+                          req.requested_data?.lecture_experiences,
+                          (item) =>
+                            `${item.title || "-"} / ${item.organization || "-"}`
                         )}
-                        
+                      
                         {renderChangedList(
                           "자격증",
                           req.instructors?.certificates,
-                          req.requested_data?.certificates
+                          req.requested_data?.certificates,
+                          (item) =>
+                            `${item.name || "-"} / ${item.issuer || "-"}`
                         )}
-
+                      
                       </div>
 
                     </td>
