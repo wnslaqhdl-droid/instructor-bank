@@ -118,7 +118,7 @@ export default function InstructorCard({
 
               {(item.training_courses || []).length ? (
                 item.training_courses.map((t, i)=>(
-                  <div key={`certificate-${i}`}>
+                  <div key={`training-${i}`}>
                     {t.course_name || "-"} /
                     {t.institution || "-"} /
                     {t.completion_year || "-"}
@@ -133,7 +133,7 @@ export default function InstructorCard({
 
               {(item.welfare_experiences || []).length ? (
                 item.welfare_experiences.map((w, i)=>(
-                  <div key={`certificate-${i}`}>
+                  <div key={`welfare-${i}`}>
                     {w.organization || "-"} /
                     {w.role || "-"} /
                     {formatPeriod(
@@ -155,7 +155,7 @@ export default function InstructorCard({
 
               {(item.lecture_experiences || []).length ? (
                 item.lecture_experiences.map((l, i)=>(
-                  <div key={`certificate-${i}`}>
+                  <div key={`lecture-${i}`}>
                     {l.organization || "-"} /
                     {l.target || "-"} /
                     {l.topic || "-"} /
