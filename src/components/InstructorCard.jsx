@@ -165,6 +165,40 @@ export default function InstructorCard({
               ) : "-"}
             </div>
 
+            <div style={{gridColumn:"1 / -1"}}>
+              <b>자격증</b>
+              <br />
+            
+              {(item.certificates || [])
+                .filter((c) => c.is_public)
+                .length ? (
+            
+                item.certificates
+                  .filter((c) => c.is_public)
+                  .map((c, i)=>(
+                    <div key={i}>
+            
+                      {c.name || "-"}
+            
+                      {" / "}
+            
+                      {c.organization || "-"}
+            
+                      {" / 취득일: "}
+            
+                      {c.acquired_date || "-"}
+            
+                      {c.expire_date
+                        ? ` / 만료일: ${c.expire_date}`
+                        : ""}
+            
+                    </div>
+                  ))
+            
+              ) : "-"}
+            
+            </div>
+
             {item.show_phone && (
               <div>
                 <b>연락처</b>
