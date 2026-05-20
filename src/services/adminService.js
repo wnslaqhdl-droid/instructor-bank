@@ -128,6 +128,30 @@ export async function applyUpdateRequest(req) {
       );
   }
 
+    // 자격증 반영
+  await supabase
+    .from("certificates")
+    .delete()
+    .eq("instructor_id", req.instructor_id);
+
+  const certificates =
+    req.requested_data.certificates || [];
+
+  if (certificates.length) {
+    await supabase
+      .from("certificates")
+      .insert(
+        certificates.map((c) => ({
+          instructor_id: req.instructor_id,
+          name: c.name || "",
+          organization: c.organization || "",
+          acquired_date: c.acquired_date || null,
+          expire_date: c.expire_date || null,
+          is_public: !!c.is_public,
+        }))
+      );
+  }
+
   // 요청 승인 처리
   const { error: statusError } = await supabase
     .from("instructor_update_requests")
@@ -172,7 +196,8 @@ export async function getAdminInstructors() {
       *,
       training_courses(*),
       welfare_experiences(*),
-      lecture_experiences(*)
+      lecture_experiences(*),
+      certificates(*)
     `)
     .order("created_at", {
       ascending: false,
