@@ -62,7 +62,7 @@ export default function Pagination({
         ) {
           return (
             <span
-              key={index}
+              key={`ellipsis-${index}`}
               className="pagination-ellipsis"
             >
               ...
@@ -72,7 +72,7 @@ export default function Pagination({
 
         return (
           <button
-            key={page}
+            key={`page-${page}-${index}`}
             className={
               currentPage === page
                 ? "page-btn active"
