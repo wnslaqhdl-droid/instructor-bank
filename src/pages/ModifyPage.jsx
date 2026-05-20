@@ -56,11 +56,15 @@ export default function ModifyPage() {
 
     modifyLectures,
     setModifyLectures,
+    
+    modifyCertificates,
+    setModifyCertificates,
 
     originalInstructor,
     originalTrainings,
     originalWelfares,
     originalLectures,
+    originalCertificates,
 
     message,
     setMessage,
