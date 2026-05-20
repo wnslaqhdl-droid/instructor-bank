@@ -14,7 +14,10 @@ export default function ModifyWelfareSection({
       <h3>실무경력</h3>
 
       {modifyWelfares.map((w, i) => (
-        <div key={i} className="repeat">
+        <div
+          key={`welfare-${w.id || i}`}
+          className="repeat"
+        >
           <div className="grid grid-2">
 
             <Field label="기관명">
