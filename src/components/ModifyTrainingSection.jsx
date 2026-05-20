@@ -11,7 +11,7 @@ export default function ModifyTrainingSection({
 
       {modifyTrainings.map((t, i) => (
         <div
-          key={`training-edit-${t.id || i}`}
+          key={`training-${t.id || i}`}
           className="repeat"
         >
 
