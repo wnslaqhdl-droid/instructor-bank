@@ -900,9 +900,67 @@ function AdminPage(){
           renderChangedField={
             renderChangedField
           }
-          renderChangedList={
-            renderChangedList
-          }
+        
+          renderChangedList={(
+            label,
+            oldList,
+            newList
+          ) => {
+        
+            function renderItem(item){
+        
+              if(!item) return "-";
+        
+              if(item.course_name){
+        
+                return `
+        ${item.course_name || "-"} /
+        ${item.institution || "-"} /
+        ${item.completion_year || "-"}
+                `;
+              }
+        
+              if(item.role){
+        
+                return `
+        ${item.organization || "-"} /
+        ${item.role || "-"} /
+        ${formatPeriod(
+          item.start_date,
+          item.end_date
+        )}
+                `;
+              }
+        
+              if(item.topic){
+        
+                return `
+        ${item.organization || "-"} /
+        ${item.topic || "-"} /
+        ${item.count || "-"}회
+                `;
+              }
+        
+              if(item.name){
+        
+                return `
+        ${item.name || "-"} /
+        ${item.organization || "-"} /
+        ${item.acquired_date || "-"}
+                `;
+              }
+        
+              return JSON.stringify(item);
+            }
+        
+            return renderChangedList(
+              label,
+              oldList,
+              newList,
+              renderItem
+            );
+          }}
+        
           isChanged={isChanged}
           formatKST={formatKST}
           formatPeriod={formatPeriod}
