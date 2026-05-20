@@ -139,7 +139,7 @@ export default function AdminInstructorTableSection({
                       ?.length
                       ? item.training_courses.map(
                           (c)=>(
-                            <div key={c.id}>
+                            <div key={`training-${c.id || Math.random()}`}>
                               {c.course_name ||
                                 "-"}{" "}
                               /{" "}
@@ -164,9 +164,7 @@ export default function AdminInstructorTableSection({
                             i
                           )=>(
                             <div
-                              key={
-                                w.id || i
-                              }
+                              key={`welfare-${w.id || i}`}
                             >
                               {w.organization ||
                                 "-"}{" "}
@@ -194,9 +192,7 @@ export default function AdminInstructorTableSection({
                             i
                           )=>(
                             <div
-                              key={
-                                l.id || i
-                              }
+                              key={`lecture-${l.id || i}`}
                             >
                               {l.organization ||
                                 "-"}{" "}
