@@ -2,6 +2,7 @@ import ModifyBasicInfo from "../ModifyBasicInfo";
 import ModifyTrainingSection from "../ModifyTrainingSection";
 import ModifyWelfareSection from "../ModifyWelfareSection";
 import ModifyLectureSection from "../ModifyLectureSection";
+import ModifyCertificateSection from "../ModifyCertificateSection";
 
 export default function AdminEditPanel({
   editingItem,
@@ -18,6 +19,9 @@ export default function AdminEditPanel({
 
   editingLectures,
   setEditingLectures,
+
+  editingCertificates,
+  setEditingCertificates,
 
   regionOptions,
   targetOptions,
@@ -106,6 +110,18 @@ export default function AdminEditPanel({
         toMonthValue={toMonthValue}
 
         monthToDate={monthToDate}
+      />
+
+      <ModifyCertificateSection
+        modifyCertificates={
+          editingCertificates
+        }
+
+        setModifyCertificates={
+          setEditingCertificates
+        }
+
+        Field={Field}
       />
 
       <div className="check-grid">
