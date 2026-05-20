@@ -28,9 +28,9 @@ export default function CheckboxGroup({
     <div className="check-grid">
 
       {options.map(
-        (option) => (
+        (option, i) => (
           <label
-            key={option}
+            key={`checkbox-${option}-${i}`}
             className="check"
           >
             <input
