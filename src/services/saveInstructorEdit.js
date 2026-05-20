@@ -8,7 +8,8 @@ export async function saveInstructorEdit({
   editingItem,
   editingTrainings,
   editingWelfares,
-  editingLectures
+  editingLectures,
+  editingCertificates
 }) {
 
   if (!isValidEmail(editingItem.email)) {
@@ -199,5 +200,52 @@ export async function saveInstructorEdit({
     await supabase
       .from("lecture_experiences")
       .insert(validLectures);
+  }
+
+    /*
+    자격증
+  */
+
+  await supabase
+    .from("certificates")
+    .delete()
+    .eq(
+      "instructor_id",
+      editingItem.id
+    );
+
+  const validCertificates =
+    editingCertificates
+      .filter(
+        (c) =>
+          c.name ||
+          c.organization ||
+          c.acquired_date ||
+          c.expire_date
+      )
+      .map((c) => ({
+        instructor_id:
+          editingItem.id,
+
+        name:
+          c.name || "",
+
+        organization:
+          c.organization || "",
+
+        acquired_date:
+          c.acquired_date || null,
+
+        expire_date:
+          c.expire_date || null,
+
+        is_public:
+          !!c.is_public
+      }));
+
+  if (validCertificates.length) {
+    await supabase
+      .from("certificates")
+      .insert(validCertificates);
   }
 }
