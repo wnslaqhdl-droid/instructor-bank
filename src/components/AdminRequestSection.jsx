@@ -369,7 +369,7 @@ export default function AdminRequestSection({
                           req.requested_data?.training_courses,
                           (item) => item.course_name || "-"
                         )}
-                      
+                        
                         {renderChangedList(
                           "실무경력",
                           req.instructors?.welfare_experiences,
@@ -377,7 +377,7 @@ export default function AdminRequestSection({
                           (item) =>
                             `${item.organization || "-"} / ${item.position || "-"}`
                         )}
-                      
+                        
                         {renderChangedList(
                           "강의경력",
                           req.instructors?.lecture_experiences,
@@ -385,7 +385,7 @@ export default function AdminRequestSection({
                           (item) =>
                             `${item.title || "-"} / ${item.organization || "-"}`
                         )}
-                      
+                        
                         {renderChangedList(
                           "자격증",
                           req.instructors?.certificates,
