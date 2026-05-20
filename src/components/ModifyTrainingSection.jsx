@@ -10,7 +10,10 @@ export default function ModifyTrainingSection({
       <h3>양성과정 수료 정보</h3>
 
       {modifyTrainings.map((t, i) => (
-        <div key={i} className="repeat">
+        <div
+          key={`training-edit-${t.id || i}`}
+          className="repeat"
+        >
 
           <div className="grid grid-3">
 
