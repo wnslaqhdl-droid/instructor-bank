@@ -563,7 +563,7 @@ function AdminPage(){
   
         {oldValue.length
           ? oldValue.map((item, i) => (
-              <div key={`old-${i}`}>
+              <div key={`old-${label}-${i}`}>
                 {renderItem(item)}
               </div>
             ))
@@ -579,7 +579,7 @@ function AdminPage(){
         <div className="changed-value">
           {newValue.length
             ? newValue.map((item, i) => (
-                <div key={`new-${i}`}>
+                <div key={`new-${label}-${i}`}>
                   {renderItem(item)}
                 </div>
               ))
