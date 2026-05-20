@@ -41,12 +41,6 @@ export default function ModifyPage() {
   const [email,setEmail] =
     useState("");
 
-  const [certificates,
-    setCertificates] =
-    useState([
-      clone(emptyCertificate)
-    ]);
-
   const {
     session,
     loading,
@@ -118,12 +112,14 @@ export default function ModifyPage() {
       modifyTrainings,
       modifyWelfares,
       modifyLectures,
-      certificates,
+      modifyCertificates,
+      
 
       originalInstructor,
       originalTrainings,
       originalWelfares,
       originalLectures,
+      originalCertificates,
 
       setError,
       setMessage,
@@ -286,8 +282,8 @@ export default function ModifyPage() {
           />
 
           <RegisterCertificateSection
-            certificates={certificates}
-            setCertificates={setCertificates}
+            certificates={modifyCertificates}
+            setCertificates={setModifyCertificates}
             emptyCertificate={emptyCertificate}
             Field={Field}
             Repeater={Repeater}
