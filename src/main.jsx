@@ -326,6 +326,7 @@ function AdminPage(){
     const [openRequestId, setOpenRequestId] = useState(null);
     const {
       message,
+      setMessage,
       loadAdmin,
       loadRequests,
       items,
