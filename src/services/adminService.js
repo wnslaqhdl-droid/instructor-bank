@@ -51,6 +51,7 @@ export async function applyUpdateRequest(req) {
       show_email: instructorData.show_email,
       show_profile: instructorData.show_profile,
       center_verified: instructorData.center_verified,
+      profile_image: instructorData.profile_image,
     })
     .eq("id", req.instructor_id);
 
