@@ -335,33 +335,12 @@ th{background:#f8fafc;color:#334155}
   display: block;
 }
 
-.card-main-layout {
-  display: grid;
-  grid-template-columns: 90px minmax(0, 1fr);
-  gap: 16px;
-  align-items: center;
-}
-
 .card-profile-image {
   width: 90px;
   height: 120px;
   object-fit: cover;
   border-radius: 10px;
   display: block;
-}
-
-.compact-row {
-  display: grid;
-  grid-template-columns:
-    120px
-    minmax(120px, 2fr)
-    minmax(100px, 1fr)
-    minmax(120px, 1fr)
-    minmax(100px, 1fr);
-
-  gap: 12px;
-  align-items: center;
-  min-width: 0;
 }
 
 .compact-row span {
@@ -387,5 +366,66 @@ th{background:#f8fafc;color:#334155}
       120px
       1fr
       1fr;
+  }
+}
+
+/* 카드 전체 */
+.card-main-layout{
+  display:grid;
+
+  /* 사진 + 기존 5칸 */
+  grid-template-columns:
+    90px
+    120px
+    minmax(120px,2fr)
+    minmax(100px,1fr)
+    minmax(120px,1fr)
+    minmax(100px,1fr);
+
+  gap:12px;
+  align-items:center;
+}
+
+/* 사진 */
+.card-profile-image{
+  width:90px;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+  display:block;
+}
+
+/* 기존 row는 이제 내부 grid 제거 */
+.compact-row{
+  display:contents;
+}
+
+/* 텍스트 */
+.compact-row span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  min-width:0;
+}
+
+/* 모바일 */
+@media (max-width:700px){
+
+  .card-main-layout{
+    grid-template-columns:
+      70px
+      120px
+      1fr;
+  }
+
+  .card-profile-image{
+    width:70px;
+    height:94px;
+  }
+
+  .col-type,
+  .col-target,
+  .col-region{
+    display:none;
   }
 }
