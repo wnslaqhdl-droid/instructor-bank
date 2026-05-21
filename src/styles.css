@@ -334,3 +334,11 @@ th{background:#f8fafc;color:#334155}
   border-radius: 12px;
   display: block;
 }
+
+.card-profile-image {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
