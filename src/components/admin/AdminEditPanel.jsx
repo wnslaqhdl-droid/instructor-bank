@@ -74,7 +74,7 @@ export default function AdminEditPanel({
             <img
               src={editingItem.profile_image}
               alt="프로필"
-              className="profile-image"
+              className="admin-profile-preview"
             />
           </div>
         )}
