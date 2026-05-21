@@ -3,6 +3,7 @@ import ModifyTrainingSection from "../ModifyTrainingSection";
 import ModifyWelfareSection from "../ModifyWelfareSection";
 import ModifyLectureSection from "../ModifyLectureSection";
 import ModifyCertificateSection from "../ModifyCertificateSection";
+import { uploadProfileImage } from "../../utils/uploadProfileImage";
 
 export default function AdminEditPanel({
   editingItem,
@@ -10,6 +11,7 @@ export default function AdminEditPanel({
 
   updateEdit,
   saveEdit,
+  setMessage,
 
   editingTrainings,
   setEditingTrainings,
@@ -65,6 +67,41 @@ export default function AdminEditPanel({
         Field={Field}
         CheckboxGroup={CheckboxGroup}
       />
+
+      <Field label="프로필 사진">
+        {editingItem.profile_image && (
+          <div className="profile-preview">
+            <img
+              src={editingItem.profile_image}
+              alt="프로필"
+              className="profile-image"
+            />
+          </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={async (e) => {
+            const file =
+              e.target.files?.[0];
+            if (!file) return;
+            try {
+              const imageUrl =
+                await uploadProfileImage(
+                  file,
+                  editingItem.id
+                );
+              setEditingItem({
+                ...editingItem,
+                profile_image:
+                  imageUrl
+              });
+            } catch (err) {
+              setMessage(err.message);
+            }
+          }}
+        />
+      </Field>
 
       <ModifyTrainingSection
         modifyTrainings={editingTrainings}
