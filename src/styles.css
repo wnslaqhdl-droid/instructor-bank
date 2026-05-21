@@ -335,49 +335,58 @@ th{background:#f8fafc;color:#334155}
   display: block;
 }
 
-/* ===== 강사 카드 ===== */
+/* =========================
+   강사 카드 레이아웃
+========================= */
 
 .card-main-layout{
-  display:grid;
-
-  grid-template-columns:
-    90px
-    120px
-    minmax(160px,2fr)
-    minmax(120px,1fr)
-    minmax(140px,1fr)
-    minmax(140px,1fr);
-
-  gap:16px;
+  display:flex;
   align-items:center;
+  gap:16px;
   width:100%;
 }
 
-.compact-row{
-  display:contents;
-}
-
+/* 사진 영역 */
 .profile-col{
   width:90px;
-  height:120px;
+  flex-shrink:0;
 }
 
+/* 프로필 이미지 */
 .card-profile-image{
   width:90px;
   height:120px;
   object-fit:cover;
   border-radius:10px;
   display:block;
-  background:#f1f5f9;
+  background:#e5e7eb;
 }
 
+/* 이미지 없을 때 */
 .empty-profile{
   width:90px;
   height:120px;
   border-radius:10px;
-  background:#f1f5f9;
+  background:#e5e7eb;
 }
 
+/* 오른쪽 정보 영역 */
+.compact-row{
+  flex:1;
+  display:grid;
+  grid-template-columns:
+    140px
+    minmax(160px,2fr)
+    minmax(120px,1fr)
+    minmax(140px,1fr)
+    minmax(120px,1fr);
+
+  gap:16px;
+  align-items:center;
+  min-width:0;
+}
+
+/* 텍스트 overflow 방지 */
 .compact-row span{
   overflow:hidden;
   text-overflow:ellipsis;
@@ -385,44 +394,43 @@ th{background:#f8fafc;color:#334155}
   min-width:0;
 }
 
+/* 이름 */
+.compact-name{
+  font-weight:700;
+}
+
+/* 이름 + 배지 */
 .name-cell{
-  display:flex !important;
+  display:flex;
   flex-direction:column;
   align-items:flex-start;
   gap:4px;
-  min-width:0;
-}
-
-.name-text{
-  display:block;
-  width:100%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
 }
 
 /* 모바일 */
-
 @media (max-width:700px){
 
   .card-main-layout{
-    grid-template-columns:
-      70px
-      1fr
-      1fr;
-
-    gap:10px;
+    align-items:flex-start;
   }
 
-  .profile-col,
+  .profile-col{
+    width:70px;
+  }
+
   .card-profile-image,
   .empty-profile{
     width:70px;
     height:94px;
   }
 
-  .col-region,
-  .col-target,
+  .compact-row{
+    grid-template-columns:
+      1fr
+      1fr;
+    gap:10px;
+  }
+
   .col-type{
     display:none;
   }
