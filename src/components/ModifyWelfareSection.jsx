@@ -26,10 +26,11 @@ export default function ModifyWelfareSection({
                 onChange={(e)=>
                   updateArrayItem(
                     modifyWelfares,
-                    setModifyWelfares,
                     i,
-                    "organization",
-                    e.target.value
+                    {
+                      organization: e.target.value
+                    },
+                    setModifyWelfares
                   )
                 }
               />
@@ -41,11 +42,13 @@ export default function ModifyWelfareSection({
                 onChange={(e)=>
                   updateArrayItem(
                     modifyWelfares,
-                    setModifyWelfares,
                     i,
-                    "role",
-                    e.target.value
+                    {
+                      role: e.target.value
+                    },
+                    setModifyWelfares
                   )
+                }
                 }
               />
             </Field>
