@@ -335,20 +335,57 @@ th{background:#f8fafc;color:#334155}
   display: block;
 }
 
+.card-main-layout {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
 .card-profile-image {
   width: 90px;
   height: 120px;
   object-fit: cover;
   border-radius: 10px;
-  flex-shrink: 0;
-}
-
-.card-main-layout {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  display: block;
 }
 
 .compact-row {
-  flex: 1;
+  display: grid;
+  grid-template-columns:
+    120px
+    minmax(120px, 2fr)
+    minmax(100px, 1fr)
+    minmax(120px, 1fr)
+    minmax(100px, 1fr);
+
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+
+.compact-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+
+  .card-main-layout {
+    grid-template-columns: 70px 1fr;
+    gap: 12px;
+  }
+
+  .card-profile-image {
+    width: 70px;
+    height: 94px;
+  }
+
+  .compact-row {
+    grid-template-columns:
+      120px
+      1fr
+      1fr;
+  }
 }
