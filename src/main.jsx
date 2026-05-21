@@ -698,7 +698,8 @@ function AdminPage(){
         editingItem,
         editingTrainings,
         editingWelfares,
-        editingLectures
+        editingLectures,
+        editingCertificates
       });
 
       window.alert("수정 완료");
