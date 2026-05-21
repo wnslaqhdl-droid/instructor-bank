@@ -27,10 +27,11 @@ export default function ModifyLectureSection({
                 onChange={(e)=>
                   updateArrayItem(
                     modifyLectures,
-                    setModifyLectures,
                     i,
-                    "organization",
-                    e.target.value
+                    {
+                      organization: e.target.value
+                    },
+                    setModifyLectures
                   )
                 }
               />
@@ -42,10 +43,11 @@ export default function ModifyLectureSection({
                 onChange={(e)=>
                   updateArrayItem(
                     modifyLectures,
-                    setModifyLectures,
                     i,
-                    "target",
-                    e.target.value
+                    {
+                      target: e.target.value
+                    },
+                    setModifyLectures
                   )
                 }
               />
@@ -57,10 +59,11 @@ export default function ModifyLectureSection({
                 onChange={(e)=>
                   updateArrayItem(
                     modifyLectures,
-                    setModifyLectures,
                     i,
-                    "topic",
-                    e.target.value
+                    {
+                      topic: e.target.value
+                    },
+                    setModifyLectures
                   )
                 }
               />
@@ -72,10 +75,11 @@ export default function ModifyLectureSection({
                 onChange={(e)=>
                   updateArrayItem(
                     modifyLectures,
-                    setModifyLectures,
                     i,
-                    "count",
-                    e.target.value
+                    {
+                      count: e.target.value
+                    },
+                    setModifyLectures
                   )
                 }
               />
@@ -126,10 +130,11 @@ export default function ModifyLectureSection({
               onChange={(date)=>
                 updateArrayItem(
                   modifyLectures,
-                  setModifyLectures,
                   i,
-                  "end_date",
-                  date
+                  {
+                    end_date: date
+                  },
+                  setModifyLectures
                 )
               }
             />
