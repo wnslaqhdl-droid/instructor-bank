@@ -14,65 +14,65 @@ export default function InstructorCard({
       style={{ cursor: "pointer" }}
     >
 
-      <div className="card-main-layout">
+      <div className="compact-row">
 
-  {item.profile_image && (
-    <img
-      src={item.profile_image}
-      alt={item.name}
-      className="card-profile-image"
-    />
-  )}
+        <div className="profile-col">
+          {item.profile_image ? (
+            <img
+              src={item.profile_image}
+              alt={item.name}
+              className="card-profile-image"
+            />
+          ) : (
+            <div className="empty-profile" />
+          )}
+        </div>
 
-  <div className="compact-row">
+        <span className="compact-name name-cell">
+          <span className="name-text">
+            {item.name || "-"}
+          </span>
 
-      <span className="compact-name name-cell">
-        <span className="name-text">
-          {item.name || "-"}
+          {item.center_verified && (
+            <button
+              type="button"
+              className="badge verified-badge"
+              onClick={(e)=>{
+                e.stopPropagation();
+
+                setOpenBadgeId(
+                  openBadgeId === item.id
+                    ? null
+                    : item.id
+                );
+              }}
+            >
+              개발원 과정 수료자
+            </button>
+          )}
         </span>
-  
-        {item.center_verified && (
-          <button
-            type="button"
-            className="badge verified-badge"
-            onClick={(e)=>{
-              e.stopPropagation();
-  
-              setOpenBadgeId(
-                openBadgeId === item.id
-                  ? null
-                  : item.id
-              );
-            }}
-          >
-            개발원 과정 수료자
-          </button>
-        )}
-      </span>
-  
-      <span className="col-topic">
-        {item.main_topic || "-"}
-      </span>
-  
-      <span className="col-region">
-        {(item.activity_regions || []).join(", ")
-          || item.region
-          || "-"}
-      </span>
-  
-      <span className="col-target">
-        {(item.targets || []).join(", ")
-          || "-"}
-      </span>
-  
-      <span className="col-type">
-        {(item.types || []).join(", ")
-          || "-"}
-      </span>
-  
-    </div>
-  
-  </div>
+
+        <span className="col-topic">
+          {item.main_topic || "-"}
+        </span>
+
+        <span className="col-region">
+          {(item.activity_regions || []).join(", ")
+            || item.region
+            || "-"}
+        </span>
+
+        <span className="col-target">
+          {(item.targets || []).join(", ")
+            || "-"}
+        </span>
+
+        <span className="col-type">
+          {(item.types || []).join(", ")
+            || "-"}
+        </span>
+
+      </div>
 
       {openBadgeId === item.id && (
         <div className="badge-info-box">
@@ -127,7 +127,7 @@ export default function InstructorCard({
             <div style={{gridColumn:"1 / -1"}}>
               <b>양성과정 수료 정보</b>
               <br />
-            
+
               {(item.training_courses || []).length ? (
                 item.training_courses.map((t, i)=>(
                   <div key={`training-${i}`}>
@@ -138,11 +138,11 @@ export default function InstructorCard({
                 ))
               ) : "-"}
             </div>
-            
+
             <div style={{gridColumn:"1 / -1"}}>
               <b>실무경력</b>
               <br />
-            
+
               {(item.welfare_experiences || []).length ? (
                 item.welfare_experiences.map((w, i)=>(
                   <div key={`welfare-${i}`}>
@@ -152,7 +152,7 @@ export default function InstructorCard({
                       w.start_date,
                       w.end_date
                     )}
-            
+
                     {w.description
                       ? ` / ${w.description}`
                       : ""}
@@ -160,11 +160,11 @@ export default function InstructorCard({
                 ))
               ) : "-"}
             </div>
-            
+
             <div style={{gridColumn:"1 / -1"}}>
               <b>강의경력</b>
               <br />
-            
+
               {(item.lecture_experiences || []).length ? (
                 item.lecture_experiences.map((l, i)=>(
                   <div key={`lecture-${i}`}>
@@ -176,37 +176,37 @@ export default function InstructorCard({
                 ))
               ) : "-"}
             </div>
-            
+
             <div style={{gridColumn:"1 / -1"}}>
               <b>자격증</b>
               <br />
-            
+
               {(item.certificates || [])
                 .filter((c) => c.is_public)
                 .length ? (
-            
+
                 item.certificates
                   .filter((c) => c.is_public)
                   .map((c, i)=>(
                     <div key={`certificate-${i}`}>
-            
+
                       {c.name || "-"}
-            
+
                       {" / "}
-            
+
                       {c.organization || "-"}
-            
+
                       {" / 취득일: "}
-            
+
                       {c.acquired_date || "-"}
-            
+
                       {c.expire_date
                         ? ` / 만료일: ${c.expire_date}`
                         : ""}
-            
+
                     </div>
                   ))
-            
+
               ) : "-"}
             </div>
 
