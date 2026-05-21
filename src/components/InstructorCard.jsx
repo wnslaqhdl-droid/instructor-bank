@@ -14,7 +14,7 @@ export default function InstructorCard({
       style={{ cursor: "pointer" }}
     >
 
-      <div className="compact-row">
+      <div className="card-grid">
 
         {/* 사진 */}
         <div className="profile-col">
@@ -30,17 +30,16 @@ export default function InstructorCard({
         </div>
 
         {/* 이름 */}
-        <div className="compact-name name-cell">
-
-          <span className="name-text">
+        <div className="name-cell">
+          <div className="name-text">
             {item.name || "-"}
-          </span>
+          </div>
 
           {item.center_verified && (
             <button
               type="button"
               className="badge verified-badge"
-              onClick={(e) => {
+              onClick={(e)=>{
                 e.stopPropagation();
 
                 setOpenBadgeId(
@@ -53,7 +52,6 @@ export default function InstructorCard({
               개발원 과정 수료자
             </button>
           )}
-
         </div>
 
         {/* 주요 강의주제 */}
@@ -126,127 +124,17 @@ export default function InstructorCard({
                 || "-"}
             </div>
 
-            <div style={{ gridColumn: "1 / -1" }}>
+            <div style={{gridColumn:"1 / -1"}}>
               <b>강의 소개</b>
               <br />
               {item.intro || "-"}
             </div>
 
-            <div style={{ gridColumn: "1 / -1" }}>
-              <b>양성과정 수료 정보</b>
-              <br />
-
-              {(item.training_courses || []).length ? (
-                item.training_courses.map((t, i) => (
-                  <div key={`training-${i}`}>
-                    {t.course_name || "-"} /
-                    {t.institution || "-"} /
-                    {t.completion_year || "-"}
-                  </div>
-                ))
-              ) : "-"}
-            </div>
-
-            <div style={{ gridColumn: "1 / -1" }}>
-              <b>실무경력</b>
-              <br />
-
-              {(item.welfare_experiences || []).length ? (
-                item.welfare_experiences.map((w, i) => (
-                  <div key={`welfare-${i}`}>
-                    {w.organization || "-"} /
-                    {w.role || "-"} /
-                    {formatPeriod(
-                      w.start_date,
-                      w.end_date
-                    )}
-
-                    {w.description
-                      ? ` / ${w.description}`
-                      : ""}
-                  </div>
-                ))
-              ) : "-"}
-            </div>
-
-            <div style={{ gridColumn: "1 / -1" }}>
-              <b>강의경력</b>
-              <br />
-
-              {(item.lecture_experiences || []).length ? (
-                item.lecture_experiences.map((l, i) => (
-                  <div key={`lecture-${i}`}>
-                    {l.organization || "-"} /
-                    {l.target || "-"} /
-                    {l.topic || "-"} /
-                    {l.count || "-"}회
-                  </div>
-                ))
-              ) : "-"}
-            </div>
-
-            <div style={{ gridColumn: "1 / -1" }}>
-              <b>자격증</b>
-              <br />
-
-              {(item.certificates || [])
-                .filter((c) => c.is_public)
-                .length ? (
-
-                item.certificates
-                  .filter((c) => c.is_public)
-                  .map((c, i) => (
-                    <div key={`certificate-${i}`}>
-
-                      {c.name || "-"}
-
-                      {" / "}
-
-                      {c.organization || "-"}
-
-                      {" / 취득일: "}
-
-                      {c.acquired_date || "-"}
-
-                      {c.expire_date
-                        ? ` / 만료일: ${c.expire_date}`
-                        : ""}
-
-                    </div>
-                  ))
-
-              ) : "-"}
-            </div>
-
-            {item.show_phone && (
-              <div>
-                <b>연락처</b>
-                <br />
-
-                {item.phone ? (
-                  <a href={`tel:${item.phone}`}>
-                    {item.phone}
-                  </a>
-                ) : "-"}
-              </div>
-            )}
-
-            {item.show_email && (
-              <div>
-                <b>이메일</b>
-                <br />
-
-                {item.email ? (
-                  <a href={`mailto:${item.email}`}>
-                    {item.email}
-                  </a>
-                ) : "-"}
-              </div>
-            )}
-
           </div>
+
         </div>
       )}
+
     </article>
   );
 }
