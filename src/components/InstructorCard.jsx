@@ -15,7 +15,13 @@ export default function InstructorCard({
     >
 
       <div className="compact-row">
-
+        {item.profile_image && (
+          <img
+            src={item.profile_image}
+            alt={item.name}
+            className="card-profile-image"
+          />
+        )}
         <span className="compact-name name-cell">
           <span className="name-text">
             {item.name || "-"}
