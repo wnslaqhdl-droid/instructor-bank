@@ -14,59 +14,65 @@ export default function InstructorCard({
       style={{ cursor: "pointer" }}
     >
 
-      <div className="compact-row">
-        {item.profile_image && (
-          <img
-            src={item.profile_image}
-            alt={item.name}
-            className="card-profile-image"
-          />
+      <div className="card-main-layout">
+
+  {item.profile_image && (
+    <img
+      src={item.profile_image}
+      alt={item.name}
+      className="card-profile-image"
+    />
+  )}
+
+  <div className="compact-row">
+
+      <span className="compact-name name-cell">
+        <span className="name-text">
+          {item.name || "-"}
+        </span>
+  
+        {item.center_verified && (
+          <button
+            type="button"
+            className="badge verified-badge"
+            onClick={(e)=>{
+              e.stopPropagation();
+  
+              setOpenBadgeId(
+                openBadgeId === item.id
+                  ? null
+                  : item.id
+              );
+            }}
+          >
+            개발원 과정 수료자
+          </button>
         )}
-        <span className="compact-name name-cell">
-          <span className="name-text">
-            {item.name || "-"}
-          </span>
-
-          {item.center_verified && (
-            <button
-              type="button"
-              className="badge verified-badge"
-              onClick={(e)=>{
-                e.stopPropagation();
-
-                setOpenBadgeId(
-                  openBadgeId === item.id
-                    ? null
-                    : item.id
-                );
-              }}
-            >
-              개발원 과정 수료자
-            </button>
-          )}
-        </span>
-
-        <span className="col-topic">
-          {item.main_topic || "-"}
-        </span>
-
-        <span className="col-region">
-          {(item.activity_regions || []).join(", ")
-            || item.region
-            || "-"}
-        </span>
-
-        <span className="col-target">
-          {(item.targets || []).join(", ")
-            || "-"}
-        </span>
-
-        <span className="col-type">
-          {(item.types || []).join(", ")
-            || "-"}
-        </span>
-
-      </div>
+      </span>
+  
+      <span className="col-topic">
+        {item.main_topic || "-"}
+      </span>
+  
+      <span className="col-region">
+        {(item.activity_regions || []).join(", ")
+          || item.region
+          || "-"}
+      </span>
+  
+      <span className="col-target">
+        {(item.targets || []).join(", ")
+          || "-"}
+      </span>
+  
+      <span className="col-type">
+        {(item.types || []).join(", ")
+          || "-"}
+      </span>
+  
+    </div>
+  
+  </div>
 
       {openBadgeId === item.id && (
         <div className="badge-info-box">
