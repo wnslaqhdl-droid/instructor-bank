@@ -49,7 +49,6 @@ export default function ModifyWelfareSection({
                     setModifyWelfares
                   )
                 }
-                }
               />
             </Field>
 
