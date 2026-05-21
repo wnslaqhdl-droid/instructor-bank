@@ -826,6 +826,7 @@ function AdminPage(){
         setEditingItem={setEditingItem}
         updateEdit={updateEdit}
         saveEdit={saveEdit}
+        setMessage={setMessage}
       
         editingTrainings={editingTrainings}
         setEditingTrainings={setEditingTrainings}
