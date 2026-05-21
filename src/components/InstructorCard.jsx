@@ -16,6 +16,7 @@ export default function InstructorCard({
 
       <div className="compact-row">
 
+        {/* 사진 */}
         <div className="profile-col">
           {item.profile_image ? (
             <img
@@ -28,7 +29,9 @@ export default function InstructorCard({
           )}
         </div>
 
-        <span className="compact-name name-cell">
+        {/* 이름 */}
+        <div className="compact-name name-cell">
+
           <span className="name-text">
             {item.name || "-"}
           </span>
@@ -37,7 +40,7 @@ export default function InstructorCard({
             <button
               type="button"
               className="badge verified-badge"
-              onClick={(e)=>{
+              onClick={(e) => {
                 e.stopPropagation();
 
                 setOpenBadgeId(
@@ -50,27 +53,32 @@ export default function InstructorCard({
               개발원 과정 수료자
             </button>
           )}
-        </span>
 
-        <span className="col-topic">
+        </div>
+
+        {/* 주요 강의주제 */}
+        <div className="col-topic">
           {item.main_topic || "-"}
-        </span>
+        </div>
 
-        <span className="col-region">
+        {/* 활동지역 */}
+        <div className="col-region">
           {(item.activity_regions || []).join(", ")
             || item.region
             || "-"}
-        </span>
+        </div>
 
-        <span className="col-target">
+        {/* 교육대상 */}
+        <div className="col-target">
           {(item.targets || []).join(", ")
             || "-"}
-        </span>
+        </div>
 
-        <span className="col-type">
+        {/* 교육유형 */}
+        <div className="col-type">
           {(item.types || []).join(", ")
             || "-"}
-        </span>
+        </div>
 
       </div>
 
@@ -118,18 +126,18 @@ export default function InstructorCard({
                 || "-"}
             </div>
 
-            <div style={{gridColumn:"1 / -1"}}>
+            <div style={{ gridColumn: "1 / -1" }}>
               <b>강의 소개</b>
               <br />
               {item.intro || "-"}
             </div>
 
-            <div style={{gridColumn:"1 / -1"}}>
+            <div style={{ gridColumn: "1 / -1" }}>
               <b>양성과정 수료 정보</b>
               <br />
 
               {(item.training_courses || []).length ? (
-                item.training_courses.map((t, i)=>(
+                item.training_courses.map((t, i) => (
                   <div key={`training-${i}`}>
                     {t.course_name || "-"} /
                     {t.institution || "-"} /
@@ -139,12 +147,12 @@ export default function InstructorCard({
               ) : "-"}
             </div>
 
-            <div style={{gridColumn:"1 / -1"}}>
+            <div style={{ gridColumn: "1 / -1" }}>
               <b>실무경력</b>
               <br />
 
               {(item.welfare_experiences || []).length ? (
-                item.welfare_experiences.map((w, i)=>(
+                item.welfare_experiences.map((w, i) => (
                   <div key={`welfare-${i}`}>
                     {w.organization || "-"} /
                     {w.role || "-"} /
@@ -161,12 +169,12 @@ export default function InstructorCard({
               ) : "-"}
             </div>
 
-            <div style={{gridColumn:"1 / -1"}}>
+            <div style={{ gridColumn: "1 / -1" }}>
               <b>강의경력</b>
               <br />
 
               {(item.lecture_experiences || []).length ? (
-                item.lecture_experiences.map((l, i)=>(
+                item.lecture_experiences.map((l, i) => (
                   <div key={`lecture-${i}`}>
                     {l.organization || "-"} /
                     {l.target || "-"} /
@@ -177,7 +185,7 @@ export default function InstructorCard({
               ) : "-"}
             </div>
 
-            <div style={{gridColumn:"1 / -1"}}>
+            <div style={{ gridColumn: "1 / -1" }}>
               <b>자격증</b>
               <br />
 
@@ -187,7 +195,7 @@ export default function InstructorCard({
 
                 item.certificates
                   .filter((c) => c.is_public)
-                  .map((c, i)=>(
+                  .map((c, i) => (
                     <div key={`certificate-${i}`}>
 
                       {c.name || "-"}
