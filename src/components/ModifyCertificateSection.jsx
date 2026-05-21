@@ -12,7 +12,7 @@ export default function ModifyCertificateSection({
 
       {modifyCertificates.map((c, i) => (
         <div
-          key={`certificate-${i}`}
+          key={`certificate-${c.id || i}`}
           className="repeat"
         >
 
@@ -24,10 +24,11 @@ export default function ModifyCertificateSection({
                 onChange={(e) =>
                   updateArrayItem(
                     modifyCertificates,
-                    setModifyCertificates,
                     i,
-                    "name",
-                    e.target.value
+                    {
+                      name: e.target.value
+                    },
+                    setModifyCertificates
                   )
                 }
               />
@@ -39,10 +40,12 @@ export default function ModifyCertificateSection({
                 onChange={(e) =>
                   updateArrayItem(
                     modifyCertificates,
-                    setModifyCertificates,
                     i,
-                    "organization",
-                    e.target.value
+                    {
+                      organization:
+                        e.target.value
+                    },
+                    setModifyCertificates
                   )
                 }
               />
@@ -55,10 +58,12 @@ export default function ModifyCertificateSection({
                 onChange={(e) =>
                   updateArrayItem(
                     modifyCertificates,
-                    setModifyCertificates,
                     i,
-                    "acquired_date",
-                    e.target.value
+                    {
+                      acquired_date:
+                        e.target.value
+                    },
+                    setModifyCertificates
                   )
                 }
               />
@@ -71,10 +76,12 @@ export default function ModifyCertificateSection({
                 onChange={(e) =>
                   updateArrayItem(
                     modifyCertificates,
-                    setModifyCertificates,
                     i,
-                    "expire_date",
-                    e.target.value
+                    {
+                      expire_date:
+                        e.target.value
+                    },
+                    setModifyCertificates
                   )
                 }
               />
@@ -87,10 +94,12 @@ export default function ModifyCertificateSection({
                 onChange={(e) =>
                   updateArrayItem(
                     modifyCertificates,
-                    setModifyCertificates,
                     i,
-                    "is_public",
-                    e.target.checked
+                    {
+                      is_public:
+                        e.target.checked
+                    },
+                    setModifyCertificates
                   )
                 }
               />
