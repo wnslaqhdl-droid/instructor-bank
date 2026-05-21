@@ -52,7 +52,9 @@ export async function saveInstructorEdit({
       show_profile:
         editingItem.show_profile,
       center_verified:
-        editingItem.center_verified
+        editingItem.center_verified,
+      profile_image:
+        editingItem.profile_image,
     })
     .eq("id", editingItem.id);
 
