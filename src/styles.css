@@ -335,72 +335,49 @@ th{background:#f8fafc;color:#334155}
   display: block;
 }
 
-.card-profile-image {
-  width: 90px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 10px;
-  display: block;
-}
+/* ===== 강사 카드 ===== */
 
-.compact-row span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 700px) {
-
-  .card-main-layout {
-    grid-template-columns: 70px 1fr;
-    gap: 12px;
-  }
-
-  .card-profile-image {
-    width: 70px;
-    height: 94px;
-  }
-
-  .compact-row {
-    grid-template-columns:
-      120px
-      1fr
-      1fr;
-  }
-}
-
-/* 카드 전체 */
 .card-main-layout{
   display:grid;
 
-  /* 사진 + 기존 5칸 */
   grid-template-columns:
     90px
     120px
-    minmax(120px,2fr)
-    minmax(100px,1fr)
+    minmax(160px,2fr)
     minmax(120px,1fr)
-    minmax(100px,1fr);
+    minmax(140px,1fr)
+    minmax(140px,1fr);
 
-  gap:12px;
+  gap:16px;
   align-items:center;
+  width:100%;
 }
 
-/* 사진 */
+.compact-row{
+  display:contents;
+}
+
+.profile-col{
+  width:90px;
+  height:120px;
+}
+
 .card-profile-image{
   width:90px;
   height:120px;
   object-fit:cover;
   border-radius:10px;
   display:block;
+  background:#f1f5f9;
 }
 
-/* 기존 row는 이제 내부 grid 제거 */
-.compact-row{
-  display:contents;
+.empty-profile{
+  width:90px;
+  height:120px;
+  border-radius:10px;
+  background:#f1f5f9;
 }
 
-/* 텍스트 */
 .compact-row span{
   overflow:hidden;
   text-overflow:ellipsis;
@@ -408,24 +385,45 @@ th{background:#f8fafc;color:#334155}
   min-width:0;
 }
 
+.name-cell{
+  display:flex !important;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+  min-width:0;
+}
+
+.name-text{
+  display:block;
+  width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
 /* 모바일 */
+
 @media (max-width:700px){
 
   .card-main-layout{
     grid-template-columns:
       70px
-      120px
+      1fr
       1fr;
+
+    gap:10px;
   }
 
-  .card-profile-image{
+  .profile-col,
+  .card-profile-image,
+  .empty-profile{
     width:70px;
     height:94px;
   }
 
-  .col-type,
+  .col-region,
   .col-target,
-  .col-region{
+  .col-type{
     display:none;
   }
 }
