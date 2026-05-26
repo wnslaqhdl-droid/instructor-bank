@@ -374,24 +374,75 @@ export default function AdminRequestSection({
                           "실무경력",
                           req.instructors?.welfare_experiences,
                           req.requested_data?.welfare_experiences,
-                          (item) =>
-                            `${item.organization || "-"} / ${item.position || "-"}`
+                          (item) => (
+                            <div>
+                              <div>
+                                {item.organization || "-"} /
+                                {item.role || "-"}
+                              </div>
+                              {item.attachment_url && (
+                                <div style={{marginTop:4}}>
+                                  <a
+                                    href={item.attachment_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    증빙파일 보기
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          )
                         )}
                         
                         {renderChangedList(
                           "강의경력",
                           req.instructors?.lecture_experiences,
                           req.requested_data?.lecture_experiences,
-                          (item) =>
-                            `${item.title || "-"} / ${item.organization || "-"}`
+                          (item) => (
+                            <div>
+                              <div>
+                                {item.topic || "-"} /
+                                {item.organization || "-"}
+                              </div>
+                              {item.attachment_url && (
+                                <div style={{marginTop:4}}>
+                                  <a
+                                    href={item.attachment_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    증빙파일 보기
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          )
                         )}
                         
                         {renderChangedList(
                           "자격증",
                           req.instructors?.certificates,
                           req.requested_data?.certificates,
-                          (item) =>
-                            `${item.name || "-"} / ${item.issuer || "-"}`
+                          (item) => (
+                            <div>
+                              <div>
+                                {item.name || "-"} /
+                                {item.organization || "-"}
+                              </div>
+                              {item.attachment_url && (
+                                <div style={{marginTop:4}}>
+                                  <a
+                                    href={item.attachment_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    증빙파일 보기
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          )
                         )}
                       
                       </div>
