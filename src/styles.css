@@ -423,3 +423,46 @@ th{background:#f8fafc;color:#334155}
     display:none;
   }
 }
+
+.header-grid{
+  display:grid;
+
+  grid-template-columns:
+    90px
+    140px
+    minmax(180px, 2fr)
+    minmax(120px, 1fr)
+    minmax(140px, 1fr)
+    minmax(140px, 1fr);
+
+  gap:16px;
+
+  align-items:center;
+
+  padding:12px 16px;
+
+  background:#f1f5f9;
+
+  border-radius:12px;
+
+  font-weight:700;
+
+  margin-bottom:12px;
+}
+
+@media (max-width:700px){
+
+  .header-grid{
+    grid-template-columns:
+      70px
+      1fr;
+
+    gap:12px;
+  }
+
+  .header-grid div:nth-child(4),
+  .header-grid div:nth-child(5),
+  .header-grid div:nth-child(6){
+    display:none;
+  }
+}
