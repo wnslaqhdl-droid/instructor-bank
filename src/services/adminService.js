@@ -161,7 +161,10 @@ export async function applyUpdateRequest(req) {
             t.institution || "",
 
           completion_year:
-            t.completion_year || ""
+            t.completion_year || "",
+
+          attachment_url:
+            t.attachment_url || null
         }))
       );
   }
