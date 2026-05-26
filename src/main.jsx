@@ -225,29 +225,27 @@ function SearchPage() {
           setOnlyVerified={setOnlyVerified}
         />
 
-        <div className="compact-row header-row">
+        <div className="header-grid">
 
-          <span className="compact-name">
-            이름
-          </span>
-
-          <span>
-            주요 강의주제
-          </span>
-
-          <span className="col-region">
-            활동지역
-          </span>
-
-          <span className="col-target">
-            교육대상
-          </span>
-
-          <span className="col-type">
-            교육유형
-          </span>
-
+        <div></div>
+      
+        <div>이름</div>
+      
+        <div>주요 강의주제</div>
+      
+        <div className="col-region">
+          활동지역
         </div>
+      
+        <div className="col-target">
+          교육대상
+        </div>
+      
+        <div className="col-type">
+          교육유형
+        </div>
+      
+      </div>
 
         {loading && (
           <div className="skeleton-list">
