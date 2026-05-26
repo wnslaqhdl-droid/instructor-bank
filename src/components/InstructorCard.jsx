@@ -91,47 +91,99 @@ export default function InstructorCard({
 
       {openId === item.id && (
 
-        <div className="detail-box">
+        <div className="detail-grid">
 
-          <div className="detail-grid">
-
-            <div>
-              <b>활동지역</b>
-              <br />
-              {(item.activity_regions || []).join(", ")
-                || item.region
-                || "-"}
-            </div>
-
-            <div>
-              <b>교육대상</b>
-              <br />
-              {(item.targets || []).join(", ")
-                || "-"}
-            </div>
-
-            <div>
-              <b>교육유형</b>
-              <br />
-              {(item.types || []).join(", ")
-                || "-"}
-            </div>
-
-            <div>
-              <b>강의분야</b>
-              <br />
-              {(item.specialties || []).join(", ")
-                || "-"}
-            </div>
-
-            <div style={{gridColumn:"1 / -1"}}>
-              <b>강의 소개</b>
-              <br />
-              {item.intro || "-"}
-            </div>
-
+          <div>
+            <b>활동지역</b>
+            <br />
+            {(item.activity_regions || []).join(", ")
+              || item.region
+              || "-"}
           </div>
-
+        
+          <div>
+            <b>교육대상</b>
+            <br />
+            {(item.targets || []).join(", ")
+              || "-"}
+          </div>
+        
+          <div>
+            <b>교육유형</b>
+            <br />
+            {(item.types || []).join(", ")
+              || "-"}
+          </div>
+        
+          <div>
+            <b>강의분야</b>
+            <br />
+            {(item.specialties || []).join(", ")
+              || "-"}
+          </div>
+        
+          <div style={{gridColumn:"1 / -1"}}>
+            <b>강의 소개</b>
+            <br />
+            {item.intro || "-"}
+          </div>
+        
+          <div style={{gridColumn:"1 / -1"}}>
+            <b>실무경력</b>
+            <br />
+        
+            {(item.welfare_experiences || []).length ? (
+              item.welfare_experiences.map((w, i)=>(
+                <div key={`welfare-${i}`}>
+                  {w.organization || "-"}
+                  {" / "}
+                  {w.role || "-"}
+                  {" / "}
+                  {formatPeriod(
+                    w.start_date,
+                    w.end_date
+                  )}
+        
+                  {w.description
+                    ? ` / ${w.description}`
+                    : ""}
+                </div>
+              ))
+            ) : "-"}
+          </div>
+        
+          <div style={{gridColumn:"1 / -1"}}>
+            <b>강의경력</b>
+            <br />
+        
+            {(item.lecture_experiences || []).length ? (
+              item.lecture_experiences.map((l, i)=>(
+                <div key={`lecture-${i}`}>
+                  {l.organization || "-"}
+                  {" / "}
+                  {l.target || "-"}
+                  {" / "}
+                  {l.topic || "-"}
+                  {" / "}
+                  {l.count || "-"}회
+                </div>
+              ))
+            ) : "-"}
+          </div>
+        
+          {item.show_phone && (
+            <div>
+              <b>연락처</b>
+              <br />
+        
+              {item.phone ? (
+                <a href={`tel:${item.phone}`}>
+                  {item.phone}
+                </a>
+              ) : "-"}
+            </div>
+          )}
+        
         </div>
       )}
 
