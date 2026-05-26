@@ -367,7 +367,14 @@ export default function AdminRequestSection({
                           "양성과정",
                           req.instructors?.training_courses,
                           req.requested_data?.training_courses,
-                          (item) => item.course_name || "-"
+                          (item) =>
+                            `${item.course_name || "-"} / ${
+                              item.institution || "-"
+                            }${
+                              item.attachment_url
+                                ? " / 증빙파일"
+                                : ""
+                            }`
                         )}
                         
                         {renderChangedList(
