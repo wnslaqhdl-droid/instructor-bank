@@ -42,22 +42,8 @@ export async function registerInstructor({
 
   }
 
-  // 로그인 사용자 확인
-  const {
-    data: authData,
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (
-    authError ||
-    !authData.user
-  ) {
-
-    throw new Error(
-      "로그인이 필요합니다."
-    );
-
-  }
+  // 로그인 사용자 확인: 제거됨
+  
 
   // 강사 기본정보 저장
   const {
@@ -73,9 +59,6 @@ export async function registerInstructor({
     .insert([
       {
         ...safeForm,
-  
-        auth_user_id:
-          authData.user.id,
   
         email:
           normalizedEmail,
@@ -340,6 +323,7 @@ export async function registerInstructor({
   return {
     success: true,
     instructor_id,
+    email: normalizedEmail
   };
 }
 
