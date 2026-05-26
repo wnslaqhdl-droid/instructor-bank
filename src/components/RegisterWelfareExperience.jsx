@@ -138,6 +138,42 @@ export default function RegisterWelfareExperience({
             />
           </Field>
 
+          <Field label="증빙파일">
+            {item.attachment_url && (
+              <div style={{marginBottom:8}}>
+                <a
+                  href={item.attachment_url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  기존 첨부파일 보기
+                </a>
+              </div>
+            )}
+            <input
+              type="file"
+              accept=".pdf,image/*"
+              onChange={(e)=>{
+                const file =
+                  e.target.files?.[0];
+                if(!file){
+                  return;
+                }
+                updateItem(
+                  index,
+                  "attachment_file",
+                  file
+                );
+              }}
+            />
+            <div
+              className="muted small"
+              style={{marginTop:4}}
+            >
+              PDF, JPG, PNG 업로드 가능
+            </div>
+          </Field>
+
         </div>
       )}
     />
