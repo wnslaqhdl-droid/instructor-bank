@@ -149,6 +149,7 @@ export async function applyUpdateRequest(req) {
           acquired_date: c.acquired_date || null,
           expire_date: c.expire_date || null,
           is_public: !!c.is_public,
+          attachment_url: c.attachment_url || null
         }))
       );
   }
