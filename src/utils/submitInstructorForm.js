@@ -156,6 +156,15 @@ export async function submitInstructorForm({
     });
 
     if (authError) {
+      if (
+        authError.message?.includes(
+          "User already registered"
+        )
+      ) {
+        throw new Error(
+          "이미 가입된 이메일입니다. 로그인 후 이용해 주세요."
+        );
+      }
       throw new Error(authError.message);
     }
 
