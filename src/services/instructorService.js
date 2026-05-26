@@ -1,5 +1,6 @@
 import { supabase } from "../supabase";
 import { uploadProfileImage } from "../utils/uploadProfileImage";
+import { uploadCertificateAttachment } from "../utils/uploadCertificateAttachment";
 export async function registerInstructor({
   form,
   trainingCourses,
@@ -204,33 +205,43 @@ export async function registerInstructor({
       }));
 
   // 자격증 정리
-  const validCertificates =
-    certificates
-      .filter(
-        (x)=>
-          x.name ||
-          x.organization ||
-          x.acquired_date ||
-          x.expire_date
-      )
-      .map((x)=>({
+  const validCertificates = [];
+    
+    for (const cert of certificates) {
+      const isValid =
+        cert.name ||
+        cert.organization ||
+        cert.acquired_date ||
+        cert.expire_date;
+      if (!isValid) {
+        continue;
+      }
+      let attachmentUrl =
+        cert.attachment_url || null;
+      if (cert.attachment_file) {
+        attachmentUrl =
+          await uploadCertificateAttachment(
+            cert.attachment_file,
+            instructor_id,
+            cert.attachment_url
+          );
+      }
+      validCertificates.push({
         instructor_id,
-
         name:
-          x.name || "",
-
+          cert.name || "",
         organization:
-          x.organization || "",
-
+          cert.organization || "",
         acquired_date:
-          x.acquired_date || null,
-
+          cert.acquired_date || null,
         expire_date:
-          x.expire_date || null,
-
+          cert.expire_date || null,
         is_public:
-          !!x.is_public,
-      }));
+          !!cert.is_public,
+        attachment_url:
+          attachmentUrl
+      });
+    };
 
   // 양성과정 저장
   if (validTrainings.length) {
