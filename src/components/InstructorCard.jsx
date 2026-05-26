@@ -159,19 +159,33 @@ export default function InstructorCard({
             {(item.certificates || [])
               .filter((c)=>c.is_public)
               .length ? (
-          
               item.certificates
                 .filter((c)=>c.is_public)
                 .map((c, i)=>(
-                  <div key={`cert-${i}`}>
-                    {c.name || "-"}
-                    {" / "}
-                    {c.organization || "-"}
-                    {" / "}
-                    {c.acquired_date || "-"}
+                  <div
+                    key={`cert-${i}`}
+                    style={{marginBottom:8}}
+                  >
+                    <div>
+                      {c.name || "-"}
+                      {" / "}
+                      {c.organization || "-"}
+                      {" / "}
+                      {c.acquired_date || "-"}
+                    </div>
+                    {c.attachment_url && (
+                      <div style={{marginTop:4}}>
+                        <a
+                          href={c.attachment_url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          증빙파일 보기
+                        </a>
+                      </div>
+                    )}
                   </div>
                 ))
-          
             ) : "-"}
           </div>
         
@@ -181,19 +195,34 @@ export default function InstructorCard({
         
             {(item.welfare_experiences || []).length ? (
               item.welfare_experiences.map((w, i)=>(
-                <div key={`welfare-${i}`}>
-                  {w.organization || "-"}
-                  {" / "}
-                  {w.role || "-"}
-                  {" / "}
-                  {formatPeriod(
-                    w.start_date,
-                    w.end_date
+                <div
+                  key={`welfare-${i}`}
+                  style={{marginBottom:8}}
+                >
+                  <div>
+                    {w.organization || "-"}
+                    {" / "}
+                    {w.role || "-"}
+                    {" / "}
+                    {formatPeriod(
+                      w.start_date,
+                      w.end_date
+                    )}
+                    {w.description
+                      ? ` / ${w.description}`
+                      : ""}
+                  </div>
+                  {w.attachment_url && (
+                    <div style={{marginTop:4}}>
+                      <a
+                        href={w.attachment_url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        증빙파일 보기
+                      </a>
+                    </div>
                   )}
-        
-                  {w.description
-                    ? ` / ${w.description}`
-                    : ""}
                 </div>
               ))
             ) : "-"}
@@ -205,20 +234,35 @@ export default function InstructorCard({
         
             {(item.lecture_experiences || []).length ? (
               item.lecture_experiences.map((l, i)=>(
-                <div key={`lecture-${i}`}>
-                  {l.organization || "-"}
-                  {" / "}
-                  {l.target || "-"}
-                  {" / "}
-                  {l.topic || "-"}
-                  {" / "}
-                  {formatPeriod(
-                    l.start_date,
-                    l.end_date
+                <div
+                  key={`lecture-${i}`}
+                  style={{marginBottom:8}}
+                >
+                  <div>
+                    {l.organization || "-"}
+                    {" / "}
+                    {l.target || "-"}
+                    {" / "}
+                    {l.topic || "-"}
+                    {" / "}
+                    {formatPeriod(
+                      l.start_date,
+                      l.end_date
+                    )}
+                    {" / "}
+                    {l.count || "-"}회
+                  </div>
+                  {l.attachment_url && (
+                    <div style={{marginTop:4}}>
+                      <a
+                        href={l.attachment_url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        증빙파일 보기
+                      </a>
+                    </div>
                   )}
-                  
-                  {" / "}
-                  {l.count || "-"}회
                 </div>
               ))
             ) : "-"}
