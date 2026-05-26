@@ -25,43 +25,6 @@ export default function RegisterProfileSettings({
         </p>
 
         <div className="grid">
-
-          <Field label="프로필 사진">
-            {form.profile_image && (
-              <div style={{marginBottom:12}}>
-                <img
-                  src={form.profile_image}
-                  alt="미리보기"
-                  className="admin-profile-preview"
-                />
-              </div>
-            )}
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e)=>{
-
-                const file =
-                  e.target.files?.[0];
-
-                if(!file){
-                  return;
-                }
-
-                update(
-                  "profile_image_file",
-                  file
-                );
-
-                update(
-                  "profile_image",
-                  URL.createObjectURL(file)
-                );
-              }}
-            />
-          </Field>
-
           <Field label="활동 가능 지역">
             <CheckboxGroup
               options={regionOptions}
