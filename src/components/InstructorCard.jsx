@@ -138,7 +138,6 @@ export default function InstructorCard({
           <div style={{gridColumn:"1 / -1"}}>
             <b>양성과정</b>
             <br />
-          
             {(item.training_courses || []).length ? (
               item.training_courses.map((t, i)=>(
                 <div key={`training-${i}`}>
@@ -147,6 +146,21 @@ export default function InstructorCard({
                   {t.institution || "-"}
                   {" / "}
                   {t.completion_year || "-"}
+                  {t.attachment_url && (
+                    <>
+                      {" / "}
+                      <a
+                        href={t.attachment_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e)=>{
+                          e.stopPropagation();
+                        }}
+                      >
+                        증빙파일
+                      </a>
+                    </>
+                  )}
                 </div>
               ))
             ) : "-"}
