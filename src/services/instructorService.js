@@ -1,4 +1,5 @@
 import { supabase } from "../supabase";
+import { uploadProfileImage } from "./uploadProfileImage";
 
 export async function registerInstructor({
   form,
@@ -94,6 +95,36 @@ export async function registerInstructor({
 
   const instructor_id =
     inserted.id;
+
+  // 프로필 이미지 업로드
+  if(form.profile_image_file){
+  
+    const profileImageUrl =
+      await uploadProfileImage(
+        form.profile_image_file,
+        instructor_id
+      );
+  
+    const { error: imageUpdateError } =
+      await supabase
+        .from("instructors")
+        .update({
+          profile_image:
+            profileImageUrl
+        })
+        .eq(
+          "id",
+          instructor_id
+        );
+  
+    if(imageUpdateError){
+  
+      throw new Error(
+        "프로필 이미지 저장 실패: " +
+        imageUpdateError.message
+      );
+    }
+  }
 
   // 양성과정 정리
   const validTrainings =
