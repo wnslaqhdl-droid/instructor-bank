@@ -9,11 +9,13 @@ export default function ModifyLectureSection({
   toMonthValue,
   monthToDate
 }) {
+
   return (
     <>
       <h3>강의경력</h3>
 
       {modifyLectures.map((l, i) => (
+
         <div
           key={`lecture-${l.id || i}`}
           className="repeat"
@@ -22,77 +24,93 @@ export default function ModifyLectureSection({
           <div className="grid grid-2">
 
             <Field label="강의기관">
+
               <input
                 value={l.organization || ""}
                 onChange={(e)=>
+
                   updateArrayItem(
                     modifyLectures,
                     i,
                     {
-                      organization: e.target.value
+                      organization:
+                        e.target.value
                     },
                     setModifyLectures
                   )
                 }
               />
+
             </Field>
 
             <Field label="교육대상">
+
               <input
                 value={l.target || ""}
                 onChange={(e)=>
+
                   updateArrayItem(
                     modifyLectures,
                     i,
                     {
-                      target: e.target.value
+                      target:
+                        e.target.value
                     },
                     setModifyLectures
                   )
                 }
               />
+
             </Field>
 
             <Field label="강의주제">
+
               <input
                 value={l.topic || ""}
                 onChange={(e)=>
+
                   updateArrayItem(
                     modifyLectures,
                     i,
                     {
-                      topic: e.target.value
+                      topic:
+                        e.target.value
                     },
                     setModifyLectures
                   )
                 }
               />
+
             </Field>
 
             <Field label="강의횟수">
+
               <input
                 value={l.count || ""}
                 onChange={(e)=>
+
                   updateArrayItem(
                     modifyLectures,
                     i,
                     {
-                      count: e.target.value
+                      count:
+                        e.target.value
                     },
                     setModifyLectures
                   )
                 }
               />
+
             </Field>
 
             <MonthSelect
               label="시작월"
               value={l.start_date}
               max={getCurrentMonthKST()}
-              onChange={(date) => {
-                const copy = [
-                  ...modifyLectures
-                ];
+              onChange={(date)=>{
+
+                const copy =
+                  [...modifyLectures];
 
                 const nextStartMonth =
                   toMonthValue(date);
@@ -103,8 +121,11 @@ export default function ModifyLectureSection({
                   );
 
                 copy[i] = {
+
                   ...copy[i],
-                  start_date: date,
+
+                  start_date:
+                    date,
 
                   end_date:
                     currentEndMonth &&
@@ -128,11 +149,13 @@ export default function ModifyLectureSection({
               max={getCurrentMonthKST()}
               disabled={!!l.is_current}
               onChange={(date)=>
+
                 updateArrayItem(
                   modifyLectures,
                   i,
                   {
-                    end_date: date
+                    end_date:
+                      date
                   },
                   setModifyLectures
                 )
@@ -140,31 +163,35 @@ export default function ModifyLectureSection({
             />
 
             <label className="check">
+
               <input
                 type="checkbox"
                 checked={!!l.is_current}
-                onChange={(e) => {
+                onChange={(e)=>{
+
                   const checked =
                     e.target.checked;
 
-                  const copy = [
-                    ...modifyLectures
-                  ];
+                  const copy =
+                    [...modifyLectures];
 
                   copy[i] = {
+
                     ...copy[i],
+
                     is_current:
                       checked,
 
-                    end_date: checked
-                      ? null
-                      : (
-                          copy[i]
-                            .end_date ||
-                          monthToDate(
-                            getCurrentMonthKST()
+                    end_date:
+                      checked
+                        ? null
+                        : (
+                            copy[i]
+                              .end_date ||
+                            monthToDate(
+                              getCurrentMonthKST()
+                            )
                           )
-                        )
                   };
 
                   setModifyLectures(copy);
@@ -174,17 +201,78 @@ export default function ModifyLectureSection({
               <span>
                 현재 진행 중
               </span>
+
             </label>
+
+            <Field label="증빙파일">
+
+              {l.attachment_url && (
+
+                <div
+                  style={{
+                    marginBottom:8
+                  }}
+                >
+
+                  <a
+                    href={
+                      l.attachment_url
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    기존 첨부파일 보기
+                  </a>
+
+                </div>
+              )}
+
+              <input
+                type="file"
+                accept=".pdf,image/*"
+                onChange={(e)=>{
+
+                  const file =
+                    e.target.files?.[0];
+
+                  if(!file){
+                    return;
+                  }
+
+                  updateArrayItem(
+                    modifyLectures,
+                    i,
+                    {
+                      attachment_file:
+                        file
+                    },
+                    setModifyLectures
+                  );
+                }}
+              />
+
+              <div
+                className="muted small"
+                style={{
+                  marginTop:4
+                }}
+              >
+                PDF, JPG, PNG 업로드 가능
+              </div>
+
+            </Field>
 
           </div>
 
           <div className="actions">
+
             <button
               className="btn danger"
-              onClick={() => {
+              onClick={()=>{
+
                 setModifyLectures(
                   modifyLectures.filter(
-                    (_, idx) =>
+                    (_, idx)=>
                       idx !== i
                   )
                 );
@@ -192,6 +280,7 @@ export default function ModifyLectureSection({
             >
               삭제
             </button>
+
           </div>
 
         </div>
@@ -199,9 +288,12 @@ export default function ModifyLectureSection({
 
       <button
         className="btn"
-        onClick={() => {
+        onClick={()=>{
+
           setModifyLectures([
+
             ...modifyLectures,
+
             {
               organization: "",
               target: "",
@@ -209,13 +301,15 @@ export default function ModifyLectureSection({
               start_date: "",
               end_date: "",
               count: "",
-              is_current: false
+              is_current: false,
+              attachment_url: ""
             }
           ]);
         }}
       >
         강의경력 추가
       </button>
+
     </>
   );
 }
