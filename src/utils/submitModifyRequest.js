@@ -247,7 +247,8 @@ export default async function submitModifyRequest({
       const profileImageUrl =
         await uploadProfileImage(
           found.profile_image_file,
-          found.id
+          found.id,
+          originalInstructor?.profile_image
         );
       payload.instructor.profile_image =
         profileImageUrl;
