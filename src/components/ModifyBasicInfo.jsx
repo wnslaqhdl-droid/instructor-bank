@@ -205,6 +205,41 @@ export default function ModifyBasicInfo({
 
       </div>
 
+      <Field label="프로필 사진">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            updateField(
+              "profile_image_file",
+              file
+            );
+            updateField(
+              "profile_image_preview",
+              URL.createObjectURL(file)
+            );
+          }}
+        />
+        {(found.profile_image_preview
+          || found.profile_image) && (
+          <div style={{ marginTop: "12px" }}>
+            <img
+              src={
+                found.profile_image_preview
+                || found.profile_image
+              }
+              alt="프로필 미리보기"
+              className="admin-profile-preview"
+            />
+          </div>
+        )}
+        <div className="help">
+          새 사진 업로드 시 기존 사진은 교체됩니다.
+        </div>
+      </Field>
+
       <Field label="강사 소개">
         <textarea
           value={found.intro || ""}
