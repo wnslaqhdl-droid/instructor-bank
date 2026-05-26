@@ -2,6 +2,7 @@ import {
   isValidEmail,
   isValidPhone
 } from "../utils/validators";
+import { uploadProfileImage } from "../utils/uploadProfileImage";
 
 export async function saveInstructorEdit({
   supabase,
@@ -24,45 +25,58 @@ export async function saveInstructorEdit({
     );
   }
 
-  const { error } = await supabase
-    .from("instructors")
-    .update({
-      name: editingItem.name,
-      phone: editingItem.phone,
-      email: editingItem.email,
-      region: editingItem.region,
-      activity_regions:
-        editingItem.activity_regions,
-      organization:
-        editingItem.organization,
-      position: editingItem.position,
-      main_topic:
-        editingItem.main_topic,
-      specialties:
-        editingItem.specialties,
-      other_specialty:
-        editingItem.other_specialty,
-      targets: editingItem.targets,
-      types: editingItem.types,
-      intro: editingItem.intro,
-      show_phone:
-        editingItem.show_phone,
-      show_email:
-        editingItem.show_email,
-      show_profile:
-        editingItem.show_profile,
-      center_verified:
-        editingItem.center_verified,
-      profile_image:
-        editingItem.profile_image,
-    })
-    .eq("id", editingItem.id);
+  let profileImageUrl =
+  editingItem.profile_image;
 
-  if (error) {
-    throw new Error(
-      "수정 실패: " + error.message
+if(editingItem.profile_image_file){
+
+  profileImageUrl =
+    await uploadProfileImage(
+      editingItem.profile_image_file,
+      editingItem.id,
+      editingItem.profile_image
     );
-  }
+}
+
+const { error } = await supabase
+  .from("instructors")
+  .update({
+    name: editingItem.name,
+    phone: editingItem.phone,
+    email: editingItem.email,
+    region: editingItem.region,
+    activity_regions:
+      editingItem.activity_regions,
+    organization:
+      editingItem.organization,
+    position: editingItem.position,
+    main_topic:
+      editingItem.main_topic,
+    specialties:
+      editingItem.specialties,
+    other_specialty:
+      editingItem.other_specialty,
+    targets: editingItem.targets,
+    types: editingItem.types,
+    intro: editingItem.intro,
+    show_phone:
+      editingItem.show_phone,
+    show_email:
+      editingItem.show_email,
+    show_profile:
+      editingItem.show_profile,
+    center_verified:
+      editingItem.center_verified,
+    profile_image:
+      profileImageUrl,
+  })
+  .eq("id", editingItem.id);
+
+if (error) {
+  throw new Error(
+    "수정 실패: " + error.message
+  );
+}
 
   /*
     양성과정
