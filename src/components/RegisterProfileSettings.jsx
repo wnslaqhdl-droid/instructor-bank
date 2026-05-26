@@ -111,6 +111,39 @@ export default function RegisterProfileSettings({
             </div>
           </Field>
 
+          <Field label="프로필 사진">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+          
+                if (!file) return;
+          
+                update("profile_image_file", file);
+          
+                update(
+                  "profile_image_preview",
+                  URL.createObjectURL(file)
+                );
+              }}
+            />
+          
+            {form.profile_image_preview && (
+              <div style={{ marginTop: "12px" }}>
+                <img
+                  src={form.profile_image_preview}
+                  alt="미리보기"
+                  className="admin-profile-preview"
+                />
+              </div>
+            )}
+          
+            <div className="help">
+              JPG, PNG 업로드 가능
+            </div>
+          </Field>
+
           <Field label="강사 소개">
             <textarea
               value={form.intro}
