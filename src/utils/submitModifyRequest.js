@@ -7,7 +7,7 @@ import {
   submitInstructorUpdateRequest
 } from "../services/instructorService";
 
-import { uploadProfileImage } from "../services/uploadProfileImage";
+import { uploadProfileImage } from "./uploadProfileImage";
 
 export default async function submitModifyRequest({
 
