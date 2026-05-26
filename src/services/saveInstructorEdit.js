@@ -123,7 +123,7 @@ export async function saveInstructorEdit({
     );
   }
 
-  /*
+    /*
     양성과정
   */
 
@@ -135,28 +135,51 @@ export async function saveInstructorEdit({
       editingItem.id
     );
 
-  const validTrainings =
-    editingTrainings
-      .filter(
-        (t)=>
-          t.course_name ||
-          t.institution ||
-          t.completion_year
-      )
-      .map((t)=>({
+  const validTrainings = [];
 
-        instructor_id:
+  for (const t of editingTrainings) {
+
+    const isValid =
+      t.course_name ||
+      t.institution ||
+      t.completion_year;
+
+    if (!isValid) {
+      continue;
+    }
+
+    let attachmentUrl =
+      t.attachment_url || null;
+
+    // 새 파일 업로드
+    if (t.attachment_file) {
+
+      attachmentUrl =
+        await uploadExperienceAttachment(
+          t.attachment_file,
           editingItem.id,
+          t.attachment_url
+        );
+    }
 
-        course_name:
-          t.course_name || "",
+    validTrainings.push({
 
-        institution:
-          t.institution || "",
+      instructor_id:
+        editingItem.id,
 
-        completion_year:
-          t.completion_year || ""
-      }));
+      course_name:
+        t.course_name || "",
+
+      institution:
+        t.institution || "",
+
+      completion_year:
+        t.completion_year || "",
+
+      attachment_url:
+        attachmentUrl
+    });
+  }
 
   if (validTrainings.length) {
 
