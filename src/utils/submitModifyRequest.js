@@ -103,9 +103,18 @@ export default async function submitModifyRequest({
           );
       }
       processedCertificates.push({
-        ...cert,
-        attachment_url: attachmentUrl,
-        attachment_file: undefined
+        name:
+          cert.name || "",
+        organization:
+          cert.organization || "",
+        acquired_date:
+          cert.acquired_date || null,
+        expire_date:
+          cert.expire_date || null,
+        is_public:
+          !!cert.is_public,
+        attachment_url:
+          attachmentUrl
       });
     }
 
