@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { uploadProfileImage } from "../utils/uploadProfileImage";
 import { uploadCertificateAttachment } from "../utils/uploadCertificateAttachment";
+import { uploadExperienceAttachment } from "../utils/uploadExperienceAttachment";
 export async function registerInstructor({
   form,
   trainingCourses,
@@ -145,68 +146,85 @@ export async function registerInstructor({
       }));
 
   // 실무경력 정리
-  const validWelfare =
-    welfareExperiences
-      .filter(
-        (x)=>
-          x.organization ||
-          x.role ||
-          x.start_date ||
-          x.end_date ||
-          x.description
-      )
-      .map((x)=>({
+  const validWelfare = [];
+    for (const x of welfareExperiences) {
+      const isValid =
+        x.organization ||
+        x.role ||
+        x.start_date ||
+        x.end_date ||
+        x.description;
+      if (!isValid) {
+        continue;
+      }
+      let attachmentUrl =
+        x.attachment_url || null;
+      if (x.attachment_file) {
+        attachmentUrl =
+          await uploadExperienceAttachment(
+            x.attachment_file,
+            instructor_id,
+            x.attachment_url
+          );
+      }
+      validWelfare.push({
         instructor_id,
-
         organization:
           x.organization || "",
-
         role:
           x.role || "",
-
         start_date:
           x.start_date || null,
-
         end_date:
           x.end_date || null,
-
         description:
           x.description || "",
-      }));
+        attachment_url:
+          attachmentUrl
+      });
+    }
 
   // 강의경력 정리
-  const validLectures =
-    lectureExperiences
-      .filter(
-        (x)=>
-          x.organization ||
-          x.target ||
-          x.topic ||
-          x.start_date ||
-          x.end_date ||
-          x.count
-      )
-      .map((x)=>({
+  const validLectures = [];
+    for (const x of lectureExperiences) {
+      const isValid =
+        x.organization ||
+        x.target ||
+        x.topic ||
+        x.start_date ||
+        x.end_date ||
+        x.count;
+      if (!isValid) {
+        continue;
+      }
+      let attachmentUrl =
+        x.attachment_url || null;
+      if (x.attachment_file) {
+        attachmentUrl =
+          await uploadExperienceAttachment(
+            x.attachment_file,
+            instructor_id,
+            x.attachment_url
+          );
+      }
+      validLectures.push({
         instructor_id,
-
         organization:
           x.organization || "",
-
         target:
           x.target || "",
-
         topic:
           x.topic || "",
-
         start_date:
           x.start_date || null,
-
         end_date:
           x.end_date || null,
-
         count:
           x.count || "",
-      }));
+        attachment_url:
+          attachmentUrl
+      });
+    }
 
   // 자격증 정리
   const validCertificates = [];
