@@ -23,7 +23,7 @@ export const emptyInstructor = {
   profile_image:"",
   profile_image_file:null
 };
-export const emptyTraining = { course_name:"", institution:"", completion_year:"" };
+export const emptyTraining = { course_name:"", institution:"", completion_year:"", attachment_url:"" };
 export const emptyWelfare = { organization:"", role:"", start_date:"", end_date:"", description:"", attachment_url:"" };
 export const emptyLecture = { organization:"", target:"", topic:"", start_date:"", end_date:"", count:"", attachment_url:"" };
 export const emptyCertificate = { name: "", organization: "", acquired_date: "", expire_date: "", is_public: true};
