@@ -3,6 +3,7 @@ import {
   isValidPhone
 } from "../utils/validators";
 import { uploadProfileImage } from "../utils/uploadProfileImage";
+import { uploadCertificateAttachment } from "../utils/uploadCertificateAttachment";
 
 export async function saveInstructorEdit({
   supabase,
@@ -230,34 +231,43 @@ if (error) {
       editingItem.id
     );
 
-  const validCertificates =
-    editingCertificates
-      .filter(
-        (c) =>
-          c.name ||
-          c.organization ||
-          c.acquired_date ||
-          c.expire_date
-      )
-      .map((c) => ({
+  const validCertificates = [];
+    for (const cert of editingCertificates) {
+      const isValid =
+        cert.name ||
+        cert.organization ||
+        cert.acquired_date ||
+        cert.expire_date;
+      if (!isValid) {
+        continue;
+      }
+      let attachmentUrl =
+        cert.attachment_url || null;
+      if (cert.attachment_file) {
+        attachmentUrl =
+          await uploadCertificateAttachment(
+            cert.attachment_file,
+            editingItem.id,
+            cert.attachment_url
+          );
+      }
+      validCertificates.push({
         instructor_id:
           editingItem.id,
-
         name:
-          c.name || "",
-
+          cert.name || "",
         organization:
-          c.organization || "",
-
+          cert.organization || "",
         acquired_date:
-          c.acquired_date || null,
-
+          cert.acquired_date || null,
         expire_date:
-          c.expire_date || null,
-
+          cert.expire_date || null,
         is_public:
-          !!c.is_public
-      }));
+          !!cert.is_public,
+        attachment_url:
+          attachmentUrl
+      });
+    };
 
   if (validCertificates.length) {
     await supabase
