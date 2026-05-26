@@ -183,6 +183,19 @@ export default function InstructorCard({
               ) : "-"}
             </div>
           )}
+
+          {item.show_email && (
+            <div>
+              <b>이메일</b>
+              <br />
+          
+              {item.email ? (
+                <a href={`mailto:${item.email}`}>
+                  {item.email}
+                </a>
+              ) : "-"}
+            </div>
+          )}
         
         </div>
       )}
