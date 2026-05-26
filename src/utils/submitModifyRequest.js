@@ -86,6 +86,17 @@ export default async function submitModifyRequest({
     return;
   }
 
+  for (const cert of modifyCertificates) {
+    if (cert.attachment_file) {
+      cert.attachment_url =
+        await uploadCertificateAttachment(
+          cert.attachment_file,
+          found.id,
+          cert.attachment_url
+        );
+    }
+  }
+
   const payload = {
 
     instructor: {
