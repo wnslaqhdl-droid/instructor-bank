@@ -1,6 +1,5 @@
 import { supabase } from "../supabase";
-import { uploadProfileImage } from "./uploadProfileImage";
-
+import { uploadProfileImage } from "../utils/uploadProfileImage";
 export async function registerInstructor({
   form,
   trainingCourses,
