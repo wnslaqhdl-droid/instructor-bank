@@ -7,6 +7,8 @@ import {
   submitInstructorUpdateRequest
 } from "../services/instructorService";
 
+import { uploadProfileImage } from "../services/uploadProfileImage";
+
 export default async function submitModifyRequest({
 
   found,
@@ -240,6 +242,16 @@ export default async function submitModifyRequest({
   );
 
   try {
+
+    if(found.profile_image_file){
+      const profileImageUrl =
+        await uploadProfileImage(
+          found.profile_image_file,
+          found.id
+        );
+      payload.instructor.profile_image =
+        profileImageUrl;
+    }
 
     await submitInstructorUpdateRequest(
       found.id,
