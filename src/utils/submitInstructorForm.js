@@ -214,12 +214,16 @@ export async function submitInstructorForm({
     scrollToTop();
 
   } catch (err) {
-
+  
+    // 회원가입만 되고
+    // 등록 실패한 경우 로그아웃 처리
+    await supabase.auth.signOut();
+  
     setError(
       err.message ||
       "등록 중 오류가 발생했습니다."
     );
-
+  
     scrollToTop();
   }
 }
