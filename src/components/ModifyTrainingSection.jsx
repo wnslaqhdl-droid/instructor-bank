@@ -68,6 +68,45 @@ export default function ModifyTrainingSection({
               />
             </Field>
 
+            <Field label="증빙파일">
+              {t.attachment_url && (
+                <div style={{marginBottom:8}}>
+                  <a
+                    href={t.attachment_url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    기존 첨부파일 보기
+                  </a>
+                </div>
+              )}
+              <input
+                type="file"
+                accept=".pdf,image/*"
+                onChange={(e)=>{
+                  const file =
+                    e.target.files?.[0];
+                  if(!file){
+                    return;
+                  }
+                  updateArrayItem(
+                    modifyTrainings,
+                    i,
+                    {
+                      attachment_file:file
+                    },
+                    setModifyTrainings
+                  );
+                }}
+              />
+              <div
+                className="muted small"
+                style={{marginTop:4}}
+              >
+                PDF, JPG, PNG 업로드 가능
+              </div>
+            </Field>
+
           </div>
 
           <div className="actions">
