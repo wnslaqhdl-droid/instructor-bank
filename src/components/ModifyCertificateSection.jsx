@@ -87,6 +87,45 @@ export default function ModifyCertificateSection({
               />
             </Field>
 
+            <Field label="증빙파일">
+              {c.attachment_url && (
+                <div style={{marginBottom:8}}>
+                  <a
+                    href={c.attachment_url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    기존 첨부파일 보기
+                  </a>
+                </div>
+              )}
+              <input
+                type="file"
+                accept=".pdf,image/*"
+                onChange={(e)=>{
+                  const file =
+                    e.target.files?.[0];
+                  if(!file){
+                    return;
+                  }
+                  updateArrayItem(
+                    modifyCertificates,
+                    i,
+                    {
+                      attachment_file: file
+                    },
+                    setModifyCertificates
+                  );
+                }}
+              />
+              <div
+                className="muted small"
+                style={{marginTop:4}}
+              >
+                PDF, JPG, PNG 업로드 가능
+              </div>
+            </Field>
+
             <label className="check">
               <input
                 type="checkbox"
@@ -139,7 +178,8 @@ export default function ModifyCertificateSection({
               organization: "",
               acquired_date: "",
               expire_date: "",
-              is_public: true
+              is_public: true,
+              attachment_url: ""
             }
           ]);
         }}
