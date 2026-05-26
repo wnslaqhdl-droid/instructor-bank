@@ -105,7 +105,7 @@ export default function RegisterCertificateSection({
             {item.attachment_url && (
               <div style={{marginBottom:8}}>
                 <a
-                  href={cert.attachment_url}
+                  href={item.attachment_url}
                   target="_blank"
                   rel="noreferrer"
                 >
