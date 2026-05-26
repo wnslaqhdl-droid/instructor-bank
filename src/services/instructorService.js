@@ -60,30 +60,34 @@ export async function registerInstructor({
 
   // 강사 기본정보 저장
   const {
+    profile_image_file,
+    ...safeForm
+  } = form;
+  
+  const {
     data: inserted,
     error: insertError
   } = await supabase
     .from("instructors")
     .insert([
       {
-        ...form,
-
+        ...safeForm,
+  
         auth_user_id:
           authData.user.id,
-
+  
         email:
           normalizedEmail,
-
+  
         public_status:
           "검토중",
-
+  
         update_status:
           "정상",
       },
     ])
     .select("id")
     .single();
-
   if (insertError) {
 
     throw new Error(
