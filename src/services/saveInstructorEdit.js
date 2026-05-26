@@ -214,60 +214,75 @@ if (error) {
       }));
 
   if (validLectures.length) {
+      await supabase
+        .from("lecture_experiences")
+        .insert(validLectures);
+    }
+  
+      /*
+      자격증
+    */
+  
     await supabase
-      .from("lecture_experiences")
-      .insert(validLectures);
-  }
-
-    /*
-    자격증
-  */
-
-  await supabase
-    .from("certificates")
-    .delete()
-    .eq(
-      "instructor_id",
-      editingItem.id
-    );
-
-  const validCertificates = [];
-    for (const cert of editingCertificates) {
-      const isValid =
-        cert.name ||
-        cert.organization ||
-        cert.acquired_date ||
-        cert.expire_date;
-      if (!isValid) {
-        continue;
-      }
-      let attachmentUrl =
-        cert.attachment_url || null;
-      if (cert.attachment_file) {
-        attachmentUrl =
-          await uploadCertificateAttachment(
-            cert.attachment_file,
-            editingItem.id,
-            cert.attachment_url
-          );
-      }
-      validCertificates.push({
-        instructor_id:
+      .from("certificates")
+      .delete()
+      .eq(
+        "instructor_id",
+        editingItem.id
+      );
+  
+    const validCertificates = [];
+  
+  for (const cert of editingCertificates) {
+  
+    const isValid =
+      cert.name ||
+      cert.organization ||
+      cert.acquired_date ||
+      cert.expire_date;
+  
+    if (!isValid) {
+      continue;
+    }
+  
+    let attachmentUrl =
+      cert.attachment_url || null;
+  
+    // 새 파일 업로드
+    if (cert.attachment_file) {
+  
+      attachmentUrl =
+        await uploadCertificateAttachment(
+          cert.attachment_file,
           editingItem.id,
-        name:
-          cert.name || "",
-        organization:
-          cert.organization || "",
-        acquired_date:
-          cert.acquired_date || null,
-        expire_date:
-          cert.expire_date || null,
-        is_public:
-          !!cert.is_public,
-        attachment_url:
-          attachmentUrl
-      });
-    };
+          cert.attachment_url
+        );
+    }
+  
+    validCertificates.push({
+  
+      instructor_id:
+        editingItem.id,
+  
+      name:
+        cert.name || "",
+  
+      organization:
+        cert.organization || "",
+  
+      acquired_date:
+        cert.acquired_date || null,
+  
+      expire_date:
+        cert.expire_date || null,
+  
+      is_public:
+        !!cert.is_public,
+  
+      attachment_url:
+        attachmentUrl
+    });
+  };
 
   if (validCertificates.length) {
     await supabase
