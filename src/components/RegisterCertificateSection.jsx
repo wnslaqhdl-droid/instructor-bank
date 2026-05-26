@@ -102,7 +102,7 @@ export default function RegisterCertificateSection({
           </Field>
 
           <Field label="증빙파일">
-            {cert.attachment_url && (
+            {item.attachment_url && (
               <div style={{marginBottom:8}}>
                 <a
                   href={cert.attachment_url}
@@ -122,9 +122,11 @@ export default function RegisterCertificateSection({
                 if(!file){
                   return;
                 }
-                updateItem(index,{
-                  attachment_file: file
-                });
+                updateItem(
+                  index,
+                  "attachment_file",
+                  file
+                );
               }}
             />
             <div
