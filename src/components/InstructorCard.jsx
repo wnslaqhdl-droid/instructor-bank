@@ -127,6 +127,53 @@ export default function InstructorCard({
             <br />
             {item.intro || "-"}
           </div>
+
+          <div style={{gridColumn:"1 / -1"}}>
+            <b>기타 강의주제</b>
+            <br />
+          
+            {item.other_specialty || "-"}
+          </div>
+          
+          <div style={{gridColumn:"1 / -1"}}>
+            <b>양성과정</b>
+            <br />
+          
+            {(item.training_courses || []).length ? (
+              item.training_courses.map((t, i)=>(
+                <div key={`training-${i}`}>
+                  {t.course_name || "-"}
+                  {" / "}
+                  {t.institution || "-"}
+                  {" / "}
+                  {t.completion_year || "-"}
+                </div>
+              ))
+            ) : "-"}
+          </div>
+          
+          <div style={{gridColumn:"1 / -1"}}>
+            <b>자격증</b>
+            <br />
+          
+            {(item.certificates || [])
+              .filter((c)=>c.is_public)
+              .length ? (
+          
+              item.certificates
+                .filter((c)=>c.is_public)
+                .map((c, i)=>(
+                  <div key={`cert-${i}`}>
+                    {c.name || "-"}
+                    {" / "}
+                    {c.organization || "-"}
+                    {" / "}
+                    {c.acquired_date || "-"}
+                  </div>
+                ))
+          
+            ) : "-"}
+          </div>
         
           <div style={{gridColumn:"1 / -1"}}>
             <b>실무경력</b>
@@ -164,6 +211,12 @@ export default function InstructorCard({
                   {l.target || "-"}
                   {" / "}
                   {l.topic || "-"}
+                  {" / "}
+                  {formatPeriod(
+                    l.start_date,
+                    l.end_date
+                  )}
+                  
                   {" / "}
                   {l.count || "-"}회
                 </div>
