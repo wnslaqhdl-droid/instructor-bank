@@ -144,86 +144,113 @@ export async function submitInstructorForm({
     return;
   }
 
+  let instructorResult = null;
+
   try {
 
-    // 회원가입
-    const {
-      data: authData,
-      error: authError
-    } = await supabase.auth.signUp({
-      email: form.email.trim().toLowerCase(),
-      password
-    });
-
-    if (authError) {
-      if (
-        authError.message?.includes(
-          "User already registered"
-        )
-      ) {
-        throw new Error(
-          "이미 가입된 이메일입니다. 로그인 후 이용해 주세요."
-        );
-      }
-      throw new Error(authError.message);
-    }
-
-    // 강사 등록
+  // 먼저 강사 등록
+  instructorResult =
     await registerInstructor({
-
-      form: {
-        ...form,
-        auth_user_id: authData.user.id
-      },
-
+      form,
       trainingCourses,
       welfareExperiences,
       lectureExperiences,
       certificates
     });
 
-    window.alert(
-      "등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다."
+  // 마지막에 회원가입
+  const {
+    data: authData,
+    error: authError
+  } = await supabase.auth.signUp({
+    email:
+      form.email
+        .trim()
+        .toLowerCase(),
+    password
+  });
+
+  if (authError) {
+    // 회원가입 실패 시
+    // 등록된 강사 데이터 삭제
+    await supabase
+      .from("instructors")
+      .delete()
+      .eq(
+        "id",
+        instructorResult.instructor_id
+      );
+    if (
+      authError.message?.includes(
+        "User already registered"
+      )
+    ) {
+      throw new Error(
+        "이미 가입된 이메일입니다. 로그인 후 이용해 주세요."
+      );
+    }
+    throw new Error(
+      authError.message
     );
-
-    // 초기화
-    setForm(
-      clone(emptyInstructor)
-    );
-
-    setTrainingCourses([
-      clone(emptyTraining)
-    ]);
-
-    setWelfareExperiences([
-      clone(emptyWelfare)
-    ]);
-
-    setLectureExperiences([
-      clone(emptyLecture)
-    ]);
-
-    setCertificates([
-      clone(emptyCertificate)
-    ]);
-
-    setMessage(
-      "등록 신청이 완료되었습니다."
-    );
-
-    scrollToTop();
-
-  } catch (err) {
-  
-    // 회원가입만 되고
-    // 등록 실패한 경우 로그아웃 처리
-    await supabase.auth.signOut();
-  
-    setError(
-      err.message ||
-      "등록 중 오류가 발생했습니다."
-    );
-  
-    scrollToTop();
   }
+
+  // auth_user_id 연결
+  const {
+    error: authLinkError
+  } = await supabase
+    .from("instructors")
+    .update({
+      auth_user_id:
+        authData.user.id
+    })
+    .eq(
+      "id",
+      instructorResult.instructor_id
+    );
+  if (authLinkError) {
+    // 연결 실패 시 강사 데이터 삭제
+    await supabase
+      .from("instructors")
+      .delete()
+      .eq(
+        "id",
+        instructorResult.instructor_id
+      );
+    throw new Error(
+      "회원 정보 연결 실패: " +
+      authLinkError.message
+    );
+  }
+  window.alert(
+    "등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다."
+  );
+  // 초기화
+  setForm(
+    clone(emptyInstructor)
+  );
+  setTrainingCourses([
+    clone(emptyTraining)
+  ]);
+  setWelfareExperiences([
+    clone(emptyWelfare)
+  ]);
+  setLectureExperiences([
+    clone(emptyLecture)
+  ]);
+  setCertificates([
+    clone(emptyCertificate)
+  ]);
+  setMessage(
+    "등록 신청이 완료되었습니다."
+  );
+  scrollToTop();
+} catch (err) {
+
+  setError(
+    err.message ||
+    "등록 중 오류가 발생했습니다."
+  );
+
+  scrollToTop();
+}
 }
