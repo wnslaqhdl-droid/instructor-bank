@@ -115,18 +115,37 @@ export async function registerInstructor({
   }
 
   // 양성과정 정리
-  const validTrainings =
-    trainingCourses
-      .filter(
-        (x)=>
-          x.course_name ||
-          x.institution ||
-          x.completion_year
-      )
-      .map((x)=>({
+  const validTrainings = [];
+    for (const x of trainingCourses) {
+      const isValid =
+        x.course_name ||
+        x.institution ||
+        x.completion_year;
+      if (!isValid) {
+        continue;
+      }
+      let attachmentUrl =
+        x.attachment_url || null;
+      if (x.attachment_file) {
+        attachmentUrl =
+          await uploadExperienceAttachment(
+            x.attachment_file,
+            instructor_id,
+            x.attachment_url
+          );
+      }
+      validTrainings.push({
         instructor_id,
-        ...x,
-      }));
+        course_name:
+          x.course_name || "",
+        institution:
+          x.institution || "",
+        completion_year:
+          x.completion_year || "",
+        attachment_url:
+          attachmentUrl
+      });
+    }
 
   // 실무경력 정리
   const validWelfare = [];
