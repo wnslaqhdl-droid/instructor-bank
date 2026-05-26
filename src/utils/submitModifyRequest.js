@@ -90,16 +90,24 @@ export default async function submitModifyRequest({
     return;
   }
 
-  for (const cert of modifyCertificates) {
-    if (cert.attachment_file) {
-      cert.attachment_url =
-        await uploadCertificateAttachment(
-          cert.attachment_file,
-          found.id,
-          cert.attachment_url
-        );
+  const processedCertificates = [];
+    for (const cert of modifyCertificates) {
+      let attachmentUrl =
+        cert.attachment_url || null;
+      if (cert.attachment_file) {
+        attachmentUrl =
+          await uploadCertificateAttachment(
+            cert.attachment_file,
+            found.id,
+            cert.attachment_url
+          );
+      }
+      processedCertificates.push({
+        ...cert,
+        attachment_url: attachmentUrl,
+        attachment_file: undefined
+      });
     }
-  }
 
   const payload = {
 
@@ -117,7 +125,7 @@ export default async function submitModifyRequest({
       modifyLectures,
 
     certificates:
-      modifyCertificates
+      processedCertificates,
   };
 
   const hasInstructorChange = [
