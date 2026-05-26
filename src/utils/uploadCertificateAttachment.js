@@ -1,5 +1,39 @@
 import { supabase } from "../supabase";
 
+export async function deleteCertificateAttachment(
+  fileUrl
+) {
+
+  if (!fileUrl) {
+    return;
+  }
+
+  try {
+
+    const filePath =
+      decodeURIComponent(
+        fileUrl.split(
+          "/storage/v1/object/public/certificate-files/"
+        )[1] || ""
+      );
+
+    if (!filePath) {
+      return;
+    }
+
+    await supabase.storage
+      .from("certificate-files")
+      .remove([filePath]);
+
+  } catch (err) {
+
+    console.error(
+      "첨부파일 삭제 실패",
+      err
+    );
+  }
+}
+
 export async function uploadCertificateAttachment(
   file,
   instructorId,
@@ -10,31 +44,12 @@ export async function uploadCertificateAttachment(
     return null;
   }
 
+  // 기존 파일 삭제
   if (oldUrl) {
 
-    try {
-
-      const oldPath =
-        decodeURIComponent(
-          oldUrl.split(
-            "/storage/v1/object/public/certificate-files/"
-          )[1] || ""
-        );
-
-      if (oldPath) {
-
-        await supabase.storage
-          .from("certificate-files")
-          .remove([oldPath]);
-      }
-
-    } catch (err) {
-
-      console.error(
-        "기존 첨부파일 삭제 실패",
-        err
-      );
-    }
+    await deleteCertificateAttachment(
+      oldUrl
+    );
   }
 
   const fileExt =
