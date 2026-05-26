@@ -26,6 +26,42 @@ export default function RegisterProfileSettings({
 
         <div className="grid">
 
+          <Field label="프로필 사진">
+            {form.profile_image && (
+              <div style={{marginBottom:12}}>
+                <img
+                  src={form.profile_image}
+                  alt="미리보기"
+                  className="admin-profile-preview"
+                />
+              </div>
+            )}
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e)=>{
+
+                const file =
+                  e.target.files?.[0];
+
+                if(!file){
+                  return;
+                }
+
+                update(
+                  "profile_image_file",
+                  file
+                );
+
+                update(
+                  "profile_image",
+                  URL.createObjectURL(file)
+                );
+              }}
+            />
+          </Field>
+
           <Field label="활동 가능 지역">
             <CheckboxGroup
               options={regionOptions}
@@ -108,39 +144,6 @@ export default function RegisterProfileSettings({
             <div className="help">
               {(form.main_topic || "").length}
               {" / 80"}
-            </div>
-          </Field>
-
-          <Field label="프로필 사진">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-          
-                if (!file) return;
-          
-                update("profile_image_file", file);
-          
-                update(
-                  "profile_image_preview",
-                  URL.createObjectURL(file)
-                );
-              }}
-            />
-          
-            {form.profile_image_preview && (
-              <div style={{ marginTop: "12px" }}>
-                <img
-                  src={form.profile_image_preview}
-                  alt="미리보기"
-                  className="admin-profile-preview"
-                />
-              </div>
-            )}
-          
-            <div className="help">
-              JPG, PNG 업로드 가능
             </div>
           </Field>
 
