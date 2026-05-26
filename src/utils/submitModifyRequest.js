@@ -9,6 +9,10 @@ import {
 
 import { uploadProfileImage } from "./uploadProfileImage";
 
+import {
+  uploadCertificateAttachment
+} from "./uploadCertificateAttachment";
+
 export default async function submitModifyRequest({
 
   found,
