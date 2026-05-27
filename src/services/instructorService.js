@@ -48,6 +48,7 @@ export async function registerInstructor({
   // 강사 기본정보 저장
   const {
     profile_image_file,
+    auth_user_id,
     ...safeForm
   } = form;
   
