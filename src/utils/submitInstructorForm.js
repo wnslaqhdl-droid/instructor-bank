@@ -230,38 +230,6 @@ export async function submitInstructorForm({
     );
   }
 
-  // 연결 확인
-  const {
-    data: linkedInstructor,
-    error: verifyError
-  } = await supabase
-    .from("instructors")
-    .select(`
-      id,
-      auth_user_id,
-      email
-    `)
-    .eq(
-      "id",
-      instructorResult.instructor_id
-    )
-    .single();
-
-  console.log(
-    "최종 연결된 강사 데이터",
-    linkedInstructor
-  );
-
-  if (
-    verifyError ||
-    !linkedInstructor?.auth_user_id
-  ) {
-
-    throw new Error(
-      "auth_user_id 연결 검증 실패"
-    );
-  }
-
   window.alert(
     "등록 신청이 완료되었습니다. 관리자 검토 후 공개됩니다."
   );
