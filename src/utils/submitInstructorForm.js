@@ -1,3 +1,4 @@
+```js
 import {
   hasRequiredInstructorFields,
   isValidEmail,
@@ -47,7 +48,10 @@ export async function submitInstructorForm({
   setMessage("");
   setError("");
 
-  // 필수값 검사
+  /*
+    필수값 검사
+  */
+
   if (!hasRequiredInstructorFields(form)) {
 
     setError(
@@ -58,7 +62,10 @@ export async function submitInstructorForm({
     return;
   }
 
-  // 이메일 검사
+  /*
+    이메일 검사
+  */
+
   if (!isValidEmail(form.email)) {
 
     setError(
@@ -69,7 +76,10 @@ export async function submitInstructorForm({
     return;
   }
 
-  // 전화번호 검사
+  /*
+    전화번호 검사
+  */
+
   if (!isValidPhone(form.phone)) {
 
     setError(
@@ -80,7 +90,10 @@ export async function submitInstructorForm({
     return;
   }
 
-  // 비밀번호 검사
+  /*
+    비밀번호 검사
+  */
+
   if (password.length < 8) {
 
     setError(
@@ -91,7 +104,54 @@ export async function submitInstructorForm({
     return;
   }
 
-  // 최종 확인
+  /*
+    자격증 검사
+  */
+
+  for (const cert of certificates) {
+
+    const isEmpty =
+      !cert.name &&
+      !cert.organization &&
+      !cert.acquired_date &&
+      !cert.expire_date;
+
+    if (isEmpty) {
+      continue;
+    }
+
+    if (
+      !cert.name ||
+      !cert.organization ||
+      !cert.acquired_date
+    ) {
+
+      setError(
+        "자격증명, 발급기관, 취득일은 필수입니다."
+      );
+
+      scrollToTop();
+      return;
+    }
+
+    if (
+      cert.expire_date &&
+      cert.expire_date < cert.acquired_date
+    ) {
+
+      setError(
+        `자격증 '${cert.name}'의 만료일은 취득일보다 빠를 수 없습니다.`
+      );
+
+      scrollToTop();
+      return;
+    }
+  }
+
+  /*
+    최종 확인
+  */
+
   if (
     !window.confirm(
       "입력한 내용으로 강사 등록을 신청하시겠습니까?"
@@ -100,13 +160,32 @@ export async function submitInstructorForm({
     return;
   }
 
-  let authUserId = null;
+  let instructorId = null;
 
   try {
 
     /*
       1.
-      회원가입 먼저
+      강사 데이터 먼저 저장
+    */
+
+    const registerResult =
+      await registerInstructor({
+
+        form,
+
+        trainingCourses,
+        welfareExperiences,
+        lectureExperiences,
+        certificates
+      });
+
+    instructorId =
+      registerResult.instructor_id;
+
+    /*
+      2.
+      auth 회원가입
     */
 
     const {
@@ -124,6 +203,19 @@ export async function submitInstructorForm({
 
     if (authError) {
 
+      /*
+        auth 실패 시
+        강사 데이터 삭제
+      */
+
+      await supabase
+        .from("instructors")
+        .delete()
+        .eq(
+          "id",
+          instructorId
+        );
+
       if (
         authError.message?.includes(
           "User already registered"
@@ -140,27 +232,46 @@ export async function submitInstructorForm({
       );
     }
 
-    authUserId =
-      authData.user.id;
-
     /*
-      2.
-      강사 등록
+      3.
+      auth_user_id 연결
     */
 
-    await registerInstructor({
+    const {
+      error: linkError
+    } = await supabase
+      .from("instructors")
+      .update({
 
-      form: {
-        ...form,
         auth_user_id:
-          authUserId
-      },
+          authData.user.id
 
-      trainingCourses,
-      welfareExperiences,
-      lectureExperiences,
-      certificates
-    });
+      })
+      .eq(
+        "id",
+        instructorId
+      );
+
+    if (linkError) {
+
+      /*
+        연결 실패 시
+        강사 데이터 삭제
+      */
+
+      await supabase
+        .from("instructors")
+        .delete()
+        .eq(
+          "id",
+          instructorId
+        );
+
+      throw new Error(
+        "회원 정보 연결 실패: " +
+        linkError.message
+      );
+    }
 
     /*
       성공
@@ -198,16 +309,6 @@ export async function submitInstructorForm({
 
   } catch (err) {
 
-    /*
-      실패 시
-      auth 계정 제거
-    */
-
-    if (authUserId) {
-
-      await supabase.auth.signOut();
-    }
-
     setError(
       err.message ||
       "등록 중 오류가 발생했습니다."
@@ -216,3 +317,4 @@ export async function submitInstructorForm({
     scrollToTop();
   }
 }
+```
