@@ -138,11 +138,11 @@ export async function submitInstructorForm({
       cert.expire_date &&
       cert.expire_date < cert.acquired_date
     ) {
-
+    
       setError(
         `자격증 '${cert.name}'의 만료일은 취득일보다 빠를 수 없습니다.`
       );
-
+    
       scrollToTop();
       return;
     }
