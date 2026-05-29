@@ -1,6 +1,6 @@
 export default function CheckboxGroup({
-  options,
-  values,
+  options = [],
+  values = [],
   onChange
 }) {
 
@@ -9,6 +9,7 @@ export default function CheckboxGroup({
     if (
       values.includes(option)
     ) {
+
       onChange(
         values.filter(
           (v) => v !== option
@@ -29,15 +30,19 @@ export default function CheckboxGroup({
 
       {options.map(
         (option, i) => (
+
           <label
             key={`checkbox-${option}-${i}`}
             className="check"
           >
+
             <input
               type="checkbox"
+
               checked={values.includes(
                 option
               )}
+
               onChange={() =>
                 toggle(option)
               }
@@ -46,6 +51,7 @@ export default function CheckboxGroup({
             <span>
               {option}
             </span>
+
           </label>
         )
       )}
