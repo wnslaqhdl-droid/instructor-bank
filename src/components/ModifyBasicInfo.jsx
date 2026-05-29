@@ -149,6 +149,159 @@ export default function ModifyBasicInfo({
           />
         </Field>
 
+        <Field label="활동 가능 지역">
+          <CheckboxGroup
+            options={regionOptions}
+            value={
+              found.activity_regions || []
+            }
+            onChange={(value)=>
+              updateField(
+                "activity_regions",
+                value
+              )
+            }
+          />
+        </Field>
+
+        <Field label="교육대상">
+          <CheckboxGroup
+            options={targetOptions}
+            value={
+              found.targets || []
+            }
+            onChange={(value)=>
+              updateField(
+                "targets",
+                value
+              )
+            }
+          />
+        </Field>
+
+        <Field label="교육유형">
+          <CheckboxGroup
+            options={typeOptions}
+            value={
+              found.types || []
+            }
+            onChange={(value)=>
+              updateField(
+                "types",
+                value
+              )
+            }
+          />
+        </Field>
+
+        <Field label="강의 분야">
+          <CheckboxGroup
+            options={specialtyOptions}
+            value={
+              found.specialties || []
+            }
+            onChange={(value)=>
+              updateField(
+                "specialties",
+                value
+              )
+            }
+          />
+        </Field>
+
+        <Field label="그 외 주제">
+          <input
+            value={
+              found.other_specialty || ""
+            }
+            onChange={(e)=>
+              updateField(
+                "other_specialty",
+                e.target.value
+              )
+            }
+          />
+        </Field>
+
+        <Field label="주요 강의주제">
+          <input
+            value={
+              found.main_topic || ""
+            }
+            onChange={(e)=>
+              updateField(
+                "main_topic",
+                e.target.value
+              )
+            }
+          />
+        </Field>
+
+      </div>
+
+      <Field label="강사 소개">
+        <textarea
+          rows={6}
+          value={found.intro || ""}
+          onChange={(e)=>
+            updateField(
+              "intro",
+              e.target.value
+            )
+          }
+        />
+      </Field>
+
+      <div className="check-grid">
+
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={
+              !!found.show_profile
+            }
+            onChange={(e)=>
+              updateField(
+                "show_profile",
+                e.target.checked
+              )
+            }
+          />
+          프로필 공개
+        </label>
+
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={
+              !!found.show_phone
+            }
+            onChange={(e)=>
+              updateField(
+                "show_phone",
+                e.target.checked
+              )
+            }
+          />
+          연락처 공개
+        </label>
+
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={
+              !!found.show_email
+            }
+            onChange={(e)=>
+              updateField(
+                "show_email",
+                e.target.checked
+              )
+            }
+          />
+          이메일 공개
+        </label>
+
       </div>
 
     </>
