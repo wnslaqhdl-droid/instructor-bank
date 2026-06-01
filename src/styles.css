@@ -1030,3 +1030,29 @@ tr.processed-row {
 
   padding-bottom:8px;
 }
+
+.search-sticky-header{
+  position:sticky;
+  top:70px;
+  z-index:90;
+
+  background:#fff;
+
+  border-bottom:1px solid #e2e8f0;
+
+  margin-bottom:8px;
+}
+
+.search-sticky-header .search-summary-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:8px 16px;
+
+  background:#fff;
+}
+
+.search-sticky-header .header-grid{
+  margin-bottom:0;
+}
