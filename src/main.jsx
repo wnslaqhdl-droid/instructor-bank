@@ -193,22 +193,6 @@ function SearchPage() {
 
       <div className="list">
 
-        <div
-          className="search-summary-row muted small"
-        >
-          <span>
-            검색 결과: 총 {filtered.length}명
-          </span>
-          <span>
-            정렬 기준:{" "}
-            {sortType === "latest"
-              ? "최신순"
-              : sortType === "name"
-              ? "이름순"
-              : "지역순"}
-          </span>
-        </div>
-
         <ActiveFilters
           region={region}
           setRegion={setRegion}
@@ -221,8 +205,49 @@ function SearchPage() {
           onlyVerified={onlyVerified}
           setOnlyVerified={setOnlyVerified}
         />
-
-        <div className="header-grid">
+        
+        <div className="search-sticky-header">
+        
+          <div
+            className="search-summary-row muted small"
+          >
+            <span>
+              검색 결과: 총 {filtered.length}명
+            </span>
+        
+            <span>
+              정렬 기준:{" "}
+              {sortType === "latest"
+                ? "최신순"
+                : sortType === "name"
+                ? "이름순"
+                : "지역순"}
+            </span>
+          </div>
+        
+          <div className="header-grid">
+        
+            <div></div>
+        
+            <div>이름</div>
+        
+            <div>주요 강의주제</div>
+        
+            <div className="col-region">
+              활동지역
+            </div>
+        
+            <div className="col-target">
+              교육대상
+            </div>
+        
+            <div className="col-type">
+              교육유형
+            </div>
+        
+          </div>
+        
+        </div>
 
         <div></div>
       
