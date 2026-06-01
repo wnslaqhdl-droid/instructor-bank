@@ -993,3 +993,12 @@ tr.processed-row {
   width:16px;
   height:16px;
 }
+
+.page-size-selector{
+  width:auto !important;
+}
+
+.page-size-selector select{
+  width:auto !important;
+  min-width:120px;
+}
