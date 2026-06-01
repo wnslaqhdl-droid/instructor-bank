@@ -89,10 +89,10 @@ export default function SearchFilters({
       </div>
 
       <div
-        className="grid grid-3"
-        style={{marginTop:14}}
+        className="search-bottom-row"
+        style={{ marginTop: 14 }}
       >
-
+      
         <Field label="강의 분야">
           <select
             value={specialty}
@@ -101,7 +101,7 @@ export default function SearchFilters({
             }
           >
             <option value="">전체</option>
-
+      
             {specialtyOptions.map((r)=>(
               <option key={r} value={r}>
                 {r}
@@ -109,7 +109,7 @@ export default function SearchFilters({
             ))}
           </select>
         </Field>
-
+      
         <Field label="정렬">
           <select
             value={sortType}
@@ -117,50 +117,32 @@ export default function SearchFilters({
               setSortType(e.target.value)
             }
           >
-            <option value="latest">
-              최신순
-            </option>
-
-            <option value="name">
-              이름순
-            </option>
-
-            <option value="region">
-              지역순
-            </option>
-
+            <option value="latest">최신순</option>
+            <option value="name">이름순</option>
+            <option value="region">지역순</option>
           </select>
         </Field>
-
-        <label
-          style={{
-            display:"block",
-            marginTop:8
-          }}
-        >
-          <input
-            type="checkbox"
-            checked={onlyVerified}
-            onChange={(e)=>
-              setOnlyVerified(
-                e.target.checked
-              )
-            }
-          />
-
-          <span style={{marginLeft:6}}>
-            개발원 과정 수료자만 보기
-          </span>
-
-        </label>
-
-        <div
-          style={{
-            display:"flex",
-            alignItems:"end",
-            justifyContent:"flex-end"
-          }}
-        >
+      
+        <div className="search-actions">
+      
+          <label className="verified-checkbox">
+      
+            <input
+              type="checkbox"
+              checked={onlyVerified}
+              onChange={(e)=>
+                setOnlyVerified(
+                  e.target.checked
+                )
+              }
+            />
+      
+            <span>
+              개발원 과정 수료자만 보기
+            </span>
+      
+          </label>
+      
           <button
             className="btn"
             onClick={()=>{
@@ -175,8 +157,9 @@ export default function SearchFilters({
           >
             필터 초기화
           </button>
+      
         </div>
-
+      
       </div>
 
     </section>
