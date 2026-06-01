@@ -998,3 +998,28 @@ tr.processed-row {
 .page-size-selector{
   width:auto !important;
 }
+
+.search-sticky-header{
+  position:sticky;
+  top:0;
+  z-index:50;
+
+  background:#fff;
+
+  border-bottom:1px solid #e5e7eb;
+}
+
+.search-summary-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:8px 16px;
+
+  background:#f8fafc;
+}
+
+.header-grid{
+  position:relative;
+  background:#fff;
+}
