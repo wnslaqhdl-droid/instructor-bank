@@ -1003,10 +1003,7 @@ tr.processed-row {
   position:sticky;
   top:0;
   z-index:50;
-
   background:#fff;
-
-  border-bottom:1px solid #e5e7eb;
 }
 
 .search-summary-row{
