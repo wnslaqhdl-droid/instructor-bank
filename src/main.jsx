@@ -194,22 +194,19 @@ function SearchPage() {
       <div className="list">
 
         <div
-          className="muted small"
-          style={{ marginBottom: 8 }}
+          className="search-summary-row muted small"
         >
-          검색 결과: 총 {filtered.length}명
-        </div>
-        <div
-          className="muted small"
-          style={{ marginBottom: 8 }}
-        >
-          정렬 기준:
-          {" "}
-          {sortType === "latest"
-            ? "최신순"
-            : sortType === "name"
-            ? "이름순"
-            : "지역순"}
+          <span>
+            검색 결과: 총 {filtered.length}명
+          </span>
+          <span>
+            정렬 기준:{" "}
+            {sortType === "latest"
+              ? "최신순"
+              : sortType === "name"
+              ? "이름순"
+              : "지역순"}
+          </span>
         </div>
 
         <ActiveFilters
