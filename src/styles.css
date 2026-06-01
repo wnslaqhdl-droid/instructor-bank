@@ -1021,3 +1021,40 @@ tr.processed-row {
 .search-sticky-header .header-grid{
   margin-bottom:0;
 }
+
+
+@media (max-width: 700px) {
+  .search-bottom-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .search-actions {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .verified-checkbox {
+    width: 100%;
+    white-space: normal;
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+
+  .verified-checkbox input {
+    margin-top: 3px;
+    flex: 0 0 auto;
+  }
+
+  .search-actions .btn {
+    width: 100%;
+  }
+
+  .search-bottom-row select {
+    width: 100%;
+    min-width: 0;
+  }
+}
