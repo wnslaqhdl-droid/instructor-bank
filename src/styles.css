@@ -959,3 +959,11 @@ tr.processed-row {
   color: #c2410c;
   font-weight: 600;
 }
+
+.search-summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 8px;
+}
