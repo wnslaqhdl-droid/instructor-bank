@@ -324,7 +324,8 @@ th{background:#f8fafc;color:#334155}
 
 .page-size-select{
   width:auto;
-  min-width:130px;
+  min-width:120px;
+  flex:0 0 auto;
 }
 
 .admin-profile-preview {
@@ -996,15 +997,4 @@ tr.processed-row {
 
 .page-size-selector{
   width:auto !important;
-}
-
-.page-size-selector select{
-  width:auto !important;
-  min-width:120px;
-}
-
-.page-size-select{
-  width:auto;
-  min-width:120px;
-  flex:0 0 auto;
 }
