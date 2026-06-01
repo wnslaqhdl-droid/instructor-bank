@@ -967,3 +967,32 @@ tr.processed-row {
   align-items: center;
   margin-bottom: 8px;
 }
+
+.search-bottom-row{
+  display:grid;
+  grid-template-columns:2fr 2fr 1.6fr;
+  gap:16px;
+  align-items:end;
+}
+
+.search-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  height:100%;
+}
+
+.verified-checkbox{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  white-space:nowrap;
+  margin:0;
+}
+
+.verified-checkbox input{
+  width:16px;
+  height:16px;
+}
