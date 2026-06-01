@@ -1020,3 +1020,13 @@ tr.processed-row {
   position:relative;
   background:#fff;
 }
+
+.search-sticky-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+
+  background:#fff;
+
+  padding-bottom:8px;
+}
