@@ -2,7 +2,6 @@ export default function PageSizeSelector({
   value,
   onChange
 }) {
-
   return (
     <select
       value={value}
@@ -11,23 +10,12 @@ export default function PageSizeSelector({
           Number(e.target.value)
         )
       }
-      className="select"
+      className="page-size-select"
     >
-      <option value={10}>
-        10개씩
-      </option>
-
-      <option value={20}>
-        20개씩
-      </option>
-
-      <option value={50}>
-        50개씩
-      </option>
-
-      <option value={100}>
-        100개씩
-      </option>
+      <option value={10}>10개씩</option>
+      <option value={20}>20개씩</option>
+      <option value={50}>50개씩</option>
+      <option value={100}>100개씩</option>
     </select>
   );
 }
