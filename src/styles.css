@@ -1033,7 +1033,7 @@ tr.processed-row {
 
 .search-sticky-header{
   position:sticky;
-  top:110px;
+  top:90px;
   z-index:90;
 
   background:#fff;
